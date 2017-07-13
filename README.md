@@ -56,7 +56,7 @@ sudo yum install groovy
 If you’re on Windows, you can also use the NSIS Windows installer:
 https://dl.bintray.com/groovy/Distributions/groovy-2.5.0-beta-1-installer.exe
 
-# How to generate my project's drop-in extention wrangler header and source
+# How to generate my project's drop-in extention wrangler header and source?
 ```
 GLBrebis -p <prefix>
 
@@ -66,7 +66,7 @@ Available options (use -h for help):
 ```
 And if everything goes well, you should have `output/src/<prefix>GL.c`, `output/include/<prefix>GL.h` and `output/include/<prefix>GLext.h` on your file system. Take these three files, and drop them in your project, add <prefix>GL.c to your `CMakeLists.txt`
 
-#How to use the generated extention wrangler?
+# How to use the generated extention wrangler code in my project?
 
 1. make sure you include `#include "<prefix>GL.h"` instead of including the regular.
 2. create your window *and* your GL context.
