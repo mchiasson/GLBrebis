@@ -54,7 +54,7 @@
 ** MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
 *******************************************************************************/
 
-#include "<%=Prefix%>GL.h"
+#include <%='<'%><%=includePrefix%><%=Prefix%>GL.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,8 +69,6 @@
     #include <dlfcn.h>
 #endif
 
-static void *s_pLibHandle = NULL;
-
 static const char* const s_<%=prefix%>GLExtensionsStr[<%=result.getAllUniqueVersionGroups().size() + result.getAllUniqueExtensionGroups().size() + 1%>] = {
     "UNKNOWN"<%
     for (group in result.getAllUniqueVersionGroups()) {
@@ -83,17 +81,12 @@ static const char* const s_<%=prefix%>GLExtensionsStr[<%=result.getAllUniqueVers
 
 <%=Prefix%>GLAPIConfig <%=prefix%>GLAPI = {0};
 
-<%=prefix%>GLProc <%=prefix%>GLGetProcAddress(const char* procName){
+static inline <%=prefix%>GLProc <%=prefix%>GLGetProcAddress(const char* procName){
     <%=prefix%>GLProc proc;
 #if defined(_WIN32)
     *(void**) (&proc) = wglGetProcAddress(procName);
 #else
-    if (s_pLibHandle) {
-        *(void**) (&proc) = dlsym(s_pLibHandle, procName);
-    }
-    if (!proc) {
-        *(void**) (&proc) = dlsym(NULL, procName);
-    }
+    *(void**) (&proc) = dlsym(NULL, procName);
 #endif
     return proc;
 }
@@ -132,14 +125,6 @@ static void <%=prefix%>GLAddExtension(const char* const extensionStr, size_t ext
 
 bool <%=prefix%>GLInit(){
 #if <%=PREFIX%>_WRANGLER_ENABLED
-
-#if !defined(_WIN32)
-    s_pLibHandle = dlopen("libGL.so.1", RTLD_NOW | RTLD_GLOBAL);
-    if (s_pLibHandle == NULL) s_pLibHandle = dlopen("libGL.so", RTLD_NOW | RTLD_GLOBAL);
-    if (s_pLibHandle == NULL) s_pLibHandle = dlopen("libGLESv2.so", RTLD_NOW | RTLD_GLOBAL);
-    if (s_pLibHandle == NULL) s_pLibHandle = dlopen(0, RTLD_NOW | RTLD_GLOBAL);
-#endif
-
     /* Version procedures */
     <%for (function in result.getAllUniqueVersionFunctions()) {%>
     <%=prefix%>GLAPI.<%=prefix%>Gl<%=function.name.substring(2)%>Proc = <%=prefix%>GLGetProcAddress("<%=function.name%>");<%}%>
@@ -240,12 +225,6 @@ bool <%=prefix%>GLInit(){
 }
 
 void <%=prefix%>GLShutdown() {
-#if !defined(_WIN32)
-    if (s_pLibHandle) {
-        dlclose(s_pLibHandle);
-        s_pLibHandle = NULL;
-    }
-#endif
     memset(&<%=prefix%>GLAPI, 0, sizeof(<%=Prefix%>GLAPIConfig));
 }
 

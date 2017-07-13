@@ -28,12 +28,15 @@ class GLBrebis
     static main(args)
     {
         def cli = new CliBuilder(
-            usage: 'GLBrebis -p <prefix>',
+            usage: 'GLBrebis -p <prefix> [-s /path/to/src] [-H /path/to/include] [-i includePrefix]',
             header: '\nAvailable options (use -h for help):\n')
 
         cli.with {
             h(longOpt: 'help', 'Usage Information', required: false)
-            p(longOpt: 'prefix', 'Project prefix', args: 1, required: true)
+            p(longOpt: 'prefix', 'Project prefix to append to every generated files and symbols',                                args: 1, required: true)
+            H(longOpt: 'headerPath', 'path to dump the generated headers into. Default : \'output/include\' ',                   args: 1, required: false)
+            s(longOpt: 'srcPath', 'path to dump the generated source into. Default : \'output/src\' ',                           args: 1, required: false)
+            i(longOpt: 'includePrefix', 'prefix path for the generated source to properly include the headers. Default : \'\' ', args: 1, required: false)
         }
 
         def opt = cli.parse(args)
@@ -42,12 +45,36 @@ class GLBrebis
         
         def prefix = opt.p
 
+        def srcPath = "output/src/"
+        if (opt.s) {
+            srcPath = opt.s
+            if (!srcPath.endsWith('/')) {
+                srcPath += '/'
+            }
+        }
+
+        def headerPath = "output/include/"
+        if (opt.H) {
+            headerPath = opt.H
+            if (!headerPath.endsWith('/')) {
+                headerPath += '/'
+            }
+        }
+
+        def includePrefix = ""
+        if (opt.i) {
+            includePrefix = opt.i
+            if (!includePrefix.endsWith('/')) {
+                includePrefix += '/'
+            }
+        }
+
         GLBrebisASTParser parser = new GLBrebisASTParser()
         parser.parse("https://www.khronos.org/registry/gles/api/GLES3/gl32.h", "GLES3/gl32.h")
         parser.parse("https://www.khronos.org/registry/gles/api/GLES2/gl2ext.h", "GLES2/gl2ext.h")
         parser.parse("https://www.opengl.org/registry/api/GL/glcorearb.h", "GL/glcorearb.h")
         parser.parse("https://www.opengl.org/registry/api/GL/glext.h", "GL/glext.h")
         
-        new GLBrebisCodeGenerator(prefix, parser.getResults())
+        new GLBrebisCodeGenerator(prefix, srcPath, headerPath, includePrefix, parser.getResults())
     }
 }

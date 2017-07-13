@@ -176,11 +176,18 @@
 extern "C" {
 #endif
 
-typedef void (*<%=prefix%>GLProc)(void);
-
+/*!
+ * User is required to call this function as soon as the GL context has been created.
+ * Failing to calling this function will result in a crash.
+ */
 bool <%=prefix%>GLInit();
+
+/*!
+ * User should call this function as soon as the GL context is destroyed. It is not
+ * mandatory, but is highly recommended. User can also opt to create anew GL context
+ * and call <%=prefix%>GLInit() instead.
+ */
 void <%=prefix%>GLShutdown();
-<%=prefix%>GLProc <%=prefix%>GLGetProcAddress(const char* procName);
 
 /*!
      Utility to check if a specific OpenGL or OpenGL ES function or extension is supported and available.
@@ -237,6 +244,8 @@ void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber, const char* 
     #undef <%=prefix%>GLCheckErrorDebug
     #define <%=prefix%>GLCheckErrorDebug(x) x
 #endif
+
+typedef void (*<%=prefix%>GLProc)(void);
 
 typedef struct <%=Prefix%>GLAPIConfig
 {

@@ -58,12 +58,29 @@ https://dl.bintray.com/groovy/Distributions/groovy-2.5.0-beta-1-installer.exe
 
 # How to generate my project's drop-in extention wrangler header and source?
 ```
-GLBrebis -p <prefix>
+GLBrebis -p <prefix> [-s /path/to/src] [-H /path/to/include] [-i includePrefix]
 
 Available options (use -h for help):
- -h,--help           Usage Information
- -p,--prefix <arg>   Project prefix
+ -h,--help                  Usage Information
+ -H,--headerPath <arg>      path to dump the generated headers into.
+                            Default : 'output/include'
+ -i,--includePrefix <arg>   prefix path for the generated source to
+                            properly include the headers. Default : ''
+ -p,--prefix <arg>          Project prefix to append to every generated
+                            files and symbols
+ -s,--srcPath <arg>         path to dump the generated source into.
+                            Default : 'output/src'
+
 ```
+Example:
+```
+./GLBrebis.sh --prefix Onut --srcPath ~/git/onut/src --headerPath ~/git/onut/include/onut --includePrefix onut
+```
+* `-p,--prefix` is mandatory. If you do `--prefix Onut`, the script will generate `OnutGL.c`, `OnutGL.h` and `OnutGLExt.h`, and symbols will automatically be named after `Onut`.  For example, you will see `_ONUT_GL_H_` header guards, and utility functions will be named `onutGLInit()` and `onutGLShutdown()`, etc.
+*  `-s,--srcPath` is optional. This is where `OnutGL.c` will be dumped into. If not specified, it will be dumped in `output/src`
+*  `-H,--headerPath` is optional. This is where `OnutGL.h` and `OnutGLExt.h` will be dumped into. If not specified, it will be dumped in `output/include`
+* `-i,--includePrefix` is optional. It's mostly used by `OnutGL.c` to generate a proper `#include <onut/OnutGL.h>` line to help you match your application's source layout requirement.
+
 And if everything goes well, you should have `output/src/<prefix>GL.c`, `output/include/<prefix>GL.h` and `output/include/<prefix>GLext.h` on your file system
 
 # How to use the generated extention wrangler code in my project?

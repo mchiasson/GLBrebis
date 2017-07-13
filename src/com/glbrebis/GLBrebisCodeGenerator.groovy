@@ -29,29 +29,27 @@ import java.util.regex.Pattern;
 
 class GLBrebisCodeGenerator
 {
-    public GLBrebisCodeGenerator(String Prefix, GLBrebisParserResult result)
+    public GLBrebisCodeGenerator(String Prefix, String srcPath, String headerPath, String includePrefix, GLBrebisParserResult result)
     {
         def year = Calendar.getInstance().get(Calendar.YEAR);
         def engine = new groovy.text.GStringTemplateEngine()
         def binding = [
-            now       : def now = new Date().format("yyyy-MM-dd HH:mm:ssZ"),
-            year      : "2015-" + String.valueOf(year),
-            result    : result,
-            Prefix    : Prefix,
-            prefix    : Prefix.toLowerCase(),
-            PREFIX    : Prefix.toUpperCase(),
-            m_generator : this
+            now           : def now = new Date().format("yyyy-MM-dd HH:mm:ssZ"),
+            year          : "2015-" + String.valueOf(year),
+            result        : result,
+            Prefix        : Prefix,
+            prefix        : Prefix.toLowerCase(),
+            PREFIX        : Prefix.toUpperCase(),
+            includePrefix : includePrefix,
+            generator     : this
         ]
 
         def source
         def template
         def writer
 
-        def srcPath = "output/src/"
-        def includePath = "output/include/"
-
         new File(srcPath).mkdirs();
-        new File(includePath).mkdirs();
+        new File(headerPath).mkdirs();
 
         System.out.print("Generating " + Prefix + "GL.c ... ")
         source = new File('templates/GL.c.in').getText("UTF-8")
@@ -64,7 +62,7 @@ class GLBrebisCodeGenerator
         System.out.print("Generating " + Prefix + "GL.h ... ")
         source = new File('templates/GL.h.in').getText("UTF-8")
         template = engine.createTemplate(source).make(binding)
-        writer = new PrintWriter(new File(includePath + Prefix + "GL.h"), "UTF-8")
+        writer = new PrintWriter(new File(headerPath + Prefix + "GL.h"), "UTF-8")
         writer.print(template.toString())
         writer.close()
         System.out.println("Done!")
@@ -72,7 +70,7 @@ class GLBrebisCodeGenerator
         System.out.print("Generating " + Prefix + "GLExt.h ... ")
         source = new File('templates/GLExt.h.in').getText("UTF-8")
         template = engine.createTemplate(source).make(binding)
-        writer = new PrintWriter(new File(includePath + Prefix + "GLExt.h"), "UTF-8")
+        writer = new PrintWriter(new File(headerPath + Prefix + "GLExt.h"), "UTF-8")
         writer.print(template.toString())
         writer.close()
         System.out.println("Done!")
