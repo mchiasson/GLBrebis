@@ -64,11 +64,14 @@ Available options (use -h for help):
  -h,--help           Usage Information
  -p,--prefix <arg>   Project prefix
 ```
-And if everything goes well, you should have `output/src/<prefix>GL.c`, `output/include/<prefix>GL.h` and `output/include/<prefix>GLext.h` on your file system. Take these three files, and drop them in your project, add <prefix>GL.c to your `CMakeLists.txt`
+And if everything goes well, you should have `output/src/<prefix>GL.c`, `output/include/<prefix>GL.h` and `output/include/<prefix>GLext.h` on your file system
 
 #How to use the generated extention wrangler?
 
-1. make sure you include `#include "<prefix>GL.h"` instead of including the regular.
-2. create your window *and* your GL context.
-3. Once the gl context successfully created, simply call `bool success = <prefix>GLInit();`.
-3. When shutting down, don't forget to call `<prefix>GLShutdown();`
+1. Drop-in the three generated files into your project
+2. Add `<prefix>GL.c` to your CMakeLists.txt/Makefile/VCProj/etc
+3. make sure you include `#include "<prefix>GL.h"` instead of including the regular.
+4. create your window *and* your GL context.
+5. Once the gl context successfully created, simply call `bool success = <prefix>GLInit();`.
+6. When shutting down, don't forget to call `<prefix>GLShutdown();`
+
