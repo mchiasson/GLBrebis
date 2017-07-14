@@ -58,9 +58,11 @@ https://dl.bintray.com/groovy/Distributions/groovy-2.5.0-beta-1-installer.exe
 
 # How to generate my project's drop-in extention wrangler header and source?
 ```
-GLBrebis -p <prefix> [-s /path/to/src] [-H /path/to/include] [-i includePrefix]
+GLBrebis -p <prefix> [-s /path/to/src] [-H /path/to/include] [-i includePrefix] [-f]
 
 Available options (use -h for help):
+ -f,--force                 Force a fresh re-download of Khronos GL
+                            headers.
  -h,--help                  Usage Information
  -H,--headerPath <arg>      path to dump the generated headers into.
                             Default : 'output/include'
@@ -80,6 +82,7 @@ Example:
 *  `-s,--srcPath` is optional. This is where `OnutGL.c` will be dumped into. If not specified, it will be dumped in `output/src`
 *  `-H,--headerPath` is optional. This is where `OnutGL.h` and `OnutGLExt.h` will be dumped into. If not specified, it will be dumped in `output/include`
 * `-i,--includePrefix` is optional. It's mostly used by `OnutGL.c` to generate a proper `#include <onut/OnutGL.h>` line to help you match your application's source layout requirement.
+* `-f,--force` is optional. It simply forces a full re-download of Khronos GL header, ignoring the ones that were previously downloaded from the last run.
 
 And if everything goes well, you should have `output/src/<prefix>GL.c`, `output/include/<prefix>GL.h` and `output/include/<prefix>GLext.h` on your file system
 
