@@ -103,64 +103,44 @@ class GLBrebisASTParser
         astLogBuilder.append(tabs + "</" + node.getClass().getSimpleName() + ">\n")
     }
 
-    /*!
-     * Just a helper function that detects any native and khronos types and
-     * changes them to standard types to ensure that the generated strings are
-     * going to truly be cross platform
-     */
     public static String standardize(String signature)
     {
         return signature
-                .replaceAll("\\buint8_t\\b",                     "uint8_t")
                 .replaceAll("\\bkhronos_uint8_t\\b",             "uint8_t")
-                .replaceAll("\\bunsigned\\s+?char\\b",           "uint8_t")
-                .replaceAll("\\bint8_t\\b",                      "int8_t")
                 .replaceAll("\\bkhronos_int8_t\\b",              "int8_t")
-                .replaceAll("\\bsigned\\s+?char\\b",             "int8_t")
-                .replaceAll("\\buint16_t\\b",                    "uint16_t")
                 .replaceAll("\\bkhronos_uint16_t\\b",            "uint16_t")
+                .replaceAll("\\bkhronos_int16_t\\b",             "int16_t")
+                .replaceAll("\\bkhronos_uint32_t\\b",            "uint32_t")
+                .replaceAll("\\bkhronos_int32_t\\b",             "int32_t")
+                .replaceAll("\\bkhronos_uint64_t\\b",            "uint64_t")
+                .replaceAll("\\bkhronos_utime_nanoseconds_t\\b", "uint64_t")
+                .replaceAll("\\bkhronos_int64_t\\b",             "int64_t")
+                .replaceAll("\\bkhronos_stime_nanoseconds_t\\b", "int64_t")
+                .replaceAll("\\bkhronos_float_t\\b",             "float")
+                .replaceAll("\\bkhronos_double_t\\b",            "double")
+                .replaceAll("\\bkhronos_uintptr_t\\b",           "uintptr_t")
+                .replaceAll("\\bkhronos_intptr_t\\b",            "intptr_t")
+                .replaceAll("\\bkhronos_usize_t\\b",             "size_t")
+                .replaceAll("\\bkhronos_ssize_t\\b",             "intptr_t")
+                .replaceAll("\\bunsigned\\s+?char\\b",           "uint8_t")
+                .replaceAll("\\bsigned\\s+?char\\b",             "int8_t")
                 .replaceAll("\\bunsigned\\s+?short\\s+?int\\b",  "uint16_t")
                 .replaceAll("\\bunsigned\\s+?short\\b",          "uint16_t")
-                .replaceAll("\\bint16_t\\b",                     "int16_t")
-                .replaceAll("\\bkhronos_int16_t\\b",             "int16_t")
                 .replaceAll("\\bsigned\\s+?short\\s+?int\\b",    "int16_t")
                 .replaceAll("\\bsigned\\s+?short\\b",            "int16_t")
                 .replaceAll("\\bshort\\s+?int\\b",               "int16_t")
                 .replaceAll("\\bshort\\b",                       "int16_t")
-                .replaceAll("\\buint32_t\\b",                    "uint32_t")
-                .replaceAll("\\bkhronos_uint32_t\\b",            "uint32_t")
                 .replaceAll("\\bunsigned\\s+?int\\b",            "uint32_t")
-                .replaceAll("\\bint32_t\\b",                     "int32_t")
-                .replaceAll("\\bkhronos_int32_t\\b",             "int32_t")
                 .replaceAll("\\bsigned\\s+?int\\b",              "int32_t")
                 .replaceAll("\\bint\\b",                         "int32_t")
-                .replaceAll("\\buint64_t\\b",                    "uint64_t")
-                .replaceAll("\\bkhronos_uint64_t\\b",            "uint64_t")
-                .replaceAll("\\bkhronos_utime_nanoseconds_t\\b", "uint64_t")
-                .replaceAll("\\bint64_t\\b",                     "int64_t")
-                .replaceAll("\\bkhronos_int64_t\\b",             "int64_t")
-                .replaceAll("\\bkhronos_stime_nanoseconds_t\\b", "int64_t")
-                .replaceAll("\\bfloat\\b",                       "float")
-                .replaceAll("\\bkhronos_float_t\\b",             "float")
-                .replaceAll("\\bdouble\\b",                      "double")
-                .replaceAll("\\bkhronos_double_t\\b",            "double")
-                .replaceAll("\\bptrdiff_t\\b",                   "ptrdiff_t")
-                .replaceAll("\\buintptr_t\\b",                   "size_t")
-                .replaceAll("\\bkhronos_uintptr_t\\b",           "size_t")
-                .replaceAll("\\bintptr_t\\b",                    "ptrdiff_t")
-                .replaceAll("\\bkhronos_intptr_t\\b",            "ptrdiff_t")
-                .replaceAll("\\bsize_t\\b",                      "size_t")
-                .replaceAll("\\bkhronos_usize_t\\b",             "size_t")
-                .replaceAll("\\bssize_t\\b",                     "ptrdiff_t")
-                .replaceAll("\\bkhronos_ssize_t\\b",             "ptrdiff_t")
-                .replaceAll("\\bchar\\s*?\\*\\s?",               "char* ")
-                .replaceAll("\\bchar\\b",                        "char")
+                .replaceAll("\\bssize_t\\b",                     "intptr_t")
+                .replaceAll("\\busize_t\\b",                     "size_t")
     }
 
 
-    public void parse(String url, String fileName)
+    public void parse(String url, String fileName, Boolean force)
     {
-        GLBrebisUtilities.download(url, s_includePath + fileName)
+        GLBrebisUtilities.download(url, s_includePath + fileName, force)
         parse(fileName)
     }
 
@@ -238,17 +218,10 @@ class GLBrebisASTParser
 
         if (!newFile.groups.isEmpty())
         {
-            // Save the AST tree into a log file. This could be very handy to
-            // learn how the AST tree is structure, and how inconsistent it can
-            // be... :facepalm:
-            StringBuilder astLogBuilder = new StringBuilder()
-            logASTTree(astLogBuilder, translationUnit, 1)
-            GLBrebisUtilities.writeFile("logs/" + fileName.replace("/", "_") + ".log.xml", astLogBuilder.toString())
+            //StringBuilder astLogBuilder = new StringBuilder()
+            //logASTTree(astLogBuilder, translationUnit, 1)
+            //GLBrebisUtilities.writeFile("logs/" + fileName.replace("/", "_") + ".log.xml", astLogBuilder.toString())
 
-            // this visitor will traverse the AST tree and populate variable
-            // with what it finds in there. Check to *.log.xml files if you need
-            // to take a look at the AST tree structure, it's not that simple
-            // and not that consistent unfortunately...
             GLBrebisASTVisitor visitor = new GLBrebisASTVisitor(newFile.groups)
             visitor.shouldVisitTranslationUnit = true
             visitor.shouldVisitDeclarations = true
@@ -352,7 +325,13 @@ class GLBrebisASTParser
                     GLBrebisDeclaration oldDefine =  m_result.getDefine(newDeclaration.name)
                     if (oldDefine)
                     {
-                        if (!newDeclaration.value.equals(oldDefine.value) && newDeclaration.name != "GL_ACTIVE_PROGRAM_EXT")
+                        if (!newDeclaration.value.equals(oldDefine.value) && 
+                            // We've addressed this critical issue in the code generator. 
+                            // only function impacted was glGetProgramPipelineivEXT, where
+                            // one of the expected parameter can be either GL_ACTIVE_SHADER
+                            // or GL_CURRENT_SHADER depending if we're on GL or GLES.
+                            newDeclaration.name != "GL_ACTIVE_PROGRAM_EXT" 
+                            )
                         {
                             System.err.println("CRITICAL! Detected duplicated define '" + newDeclaration + "'")
                             System.err.println("\tfrom previously parsed '" + oldDefine + "'")
@@ -368,7 +347,17 @@ class GLBrebisASTParser
                     GLBrebisDeclaration oldTypedef = m_result.getTypedef(newDeclaration.name)
                     if (oldTypedef)
                     {
-                        if (!newDeclaration.value.equals(oldTypedef.value) && newDeclaration.name != "GLfixed")
+                        if (!newDeclaration.value.equals(oldTypedef.value) && 
+                            // We've checked this warning. GLint vs int32_t. 
+                            // can be safely ignore.
+                            newDeclaration.name != "GLfixed" && 
+                            // We've checked this warning: ptrdiff_t vs intptr_t. 
+                            // can be safely ignore.
+                            newDeclaration.name != "GLintptr" &&
+                            // We've checked this warning: ptrdiff_t vs intptr_t.
+                            // can be safely ignore. 
+                            newDeclaration.name != "GLsizeiptr" 
+                            )
                         {
                             System.err.println("WARNING! Detected duplicated typedef '" + newDeclaration + "'")
                             System.err.println("\tfrom previously parsed '" + oldTypedef + "'")

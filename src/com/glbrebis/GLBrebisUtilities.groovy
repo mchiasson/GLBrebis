@@ -44,9 +44,9 @@ class GLBrebisUtilities
     private static final int s_connectionTimeOutmS = 5000
     private static final int s_readTimeOutmS = 5000
 
-    public static String download(String url, String fileName)
+    public static String download(String url, String fileName, Boolean force)
     {
-        if (!Files.exists(Paths.get(fileName)))
+        if (force || !Files.exists(Paths.get(fileName)))
         {
             try
             {

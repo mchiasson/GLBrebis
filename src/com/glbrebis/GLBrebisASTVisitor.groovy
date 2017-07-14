@@ -47,91 +47,9 @@ class GLBrebisASTVisitor extends ASTVisitor
     Deque<GLBrebisDeclaration> m_currentDeclarations = null
     Deque<GLBrebisFunction> m_currentFunctions = null
 
-    /* This is used to remember the specifier of a function parameter. We are
-     * using this to add You.i Hungarian prefix to the parameter (known as the
-     * declarator node in this AST tree)
-     */
-    String m_currentParamSpecifier = null
-
     boolean m_bIsParameter = false
     boolean m_bIsTypedef = false
     boolean m_bIsStruct = false
-
-    private String hungarianize(String declarator, int pointerOpCount)
-    {
-        String prefix = ""
-        String varName = ""
-
-        // Now we remove the underscores from the declarator, capitalizing every
-        // parts except the first one. variable names always start with a lower
-        // case.
-        for (token in declarator.split("_"))
-        {
-            varName += varName.isEmpty() ? token : GLBrebisUtilities.capitalizeFirstChar(token)
-        }
-
-        prefix += 'p'*pointerOpCount
-
-        if (m_currentParamSpecifier.matches("^(const\\s)?E?GL(ClientBuffer|Config|APIConfig|DeviceEXT|Display|eglImageOES|Image|ImageKHR|NativeDisplayType|NativePixmapType|NativeWindowType|OutputLayerEXT|OutputPortEXT|sizeiptrARB|GLvdpauSurfaceNV|StreamKHR|Surface|[Ss]ync|SyncKHR|SyncNV)\$"))
-        {
-            prefix += 'p'
-        }
-        else if (m_currentParamSpecifier.matches("^(HDC|HGLRC|LPGLYPHMETRICSFLOAT|LPLAYERPLANEDESCRIPTOR)\$"))
-        {
-            prefix += 'p'
-        }
-        else if (m_currentParamSpecifier.matches("^(const\\s)?E?GL[Bb]oolean\$"))
-        {
-            prefix += 'b'
-        }
-        else if (m_currentParamSpecifier.matches("^(BOOL)\$"))
-        {
-            prefix += 'b'
-        }
-        else if (m_currentParamSpecifier.matches("^(const\\s)?(GL)?char\$"))
-        {
-            if (pointerOpCount == 0)
-            {
-                prefix += 'c'
-            }
-        }
-        else if (m_currentParamSpecifier.matches("^(const\\s)?E?GL(Attrib|AttribKHR|byte|fixed|int|int64|int64EXT|NativeFileDescriptorKHR|nsecsANDROID|sizeiANDROID|short|sizei|)\$"))
-        {
-            prefix += 'n'
-        }
-        else if (m_currentParamSpecifier.matches("^(int)\$"))
-        {
-            prefix += 'n'
-        }
-        else if (m_currentParamSpecifier.matches("^(const\\s)?E?GL(bitfield|half|halfARB|halfNV|handleARB|Time|TimeKHR|TimeNV|ubyte|uint|uint64|uint64EXT|uint64KHR|uint64NV|ushort)\$"))
-        {
-            prefix += 'u'
-        }
-        else if (m_currentParamSpecifier.matches("^(UINT|DWORD)\$"))
-        {
-            prefix += 'u'
-        }
-        else if (m_currentParamSpecifier.matches("^(const\\s)?GL(clampf|clampd|float|double)\$"))
-        {
-            prefix += 'f'
-        }
-        else if (m_currentParamSpecifier.matches("^(FLOAT)\$"))
-        {
-            prefix += 'f'
-        }
-        else if (m_currentParamSpecifier.matches("^(const\\s)?E?GLenum\$"))
-        {
-            prefix += 'e'
-        }
-
-        // but if we have a prefix, we need to capitalize our varName
-        if (!prefix.isEmpty())
-        {
-            varName = prefix + GLBrebisUtilities.capitalizeFirstChar(varName)
-        }
-
-        return varName
-    }
 
     GLBrebisASTVisitor(Deque<GLBrebisGroup> groups)
     {
@@ -275,9 +193,7 @@ class GLBrebisASTVisitor extends ASTVisitor
     {
         if (m_bIsParameter)
         {
-            // only parameter declaration needs the specifier. The parameter call gets nothing.
-            m_currentParamSpecifier = specifier.toString()
-            m_currentFunctions.getLast().paramDeclaration += " " + m_currentParamSpecifier
+            m_currentFunctions.getLast().paramDeclaration += " " + specifier.toString()
             m_currentFunctions.getLast().paramDeclaration = m_currentFunctions.getLast().paramDeclaration.trim()
         }
         else if (m_bIsTypedef)
@@ -353,17 +269,15 @@ class GLBrebisASTVisitor extends ASTVisitor
         }
         else if (m_bIsParameter)
         {
-            int pointerOpCount = 0
             // let's check if it has an IASTPointer Node
             for (pointerOp in declarator.getPointerOperators())
             {
                 // The pointer goes only to the function declaration
                 m_currentFunctions.getLast().paramDeclaration += " " + pointerOp.getRawSignature()
                 m_currentFunctions.getLast().paramDeclaration = m_currentFunctions.getLast().paramDeclaration.trim()
-                pointerOpCount++
             }
 
-            String varName = hungarianize(declarator.getName().toString().toString(), pointerOpCount)
+            String varName = declarator.getName().toString().toString()
 
             // both parameter declaration and call strings get the parameter name
             m_currentFunctions.getLast().paramDeclaration += " " + varName
