@@ -90,6 +90,7 @@ class GLBrebisASTVisitor extends ASTVisitor
                 .replace("APIENTRYP ", "*")
                 .replace("APIENTRY ", "")
                 .replace("GLAPI", "")
+                .replace("GL_API", "")
                 .replace("( *", "(*")
     }
 
@@ -178,10 +179,6 @@ class GLBrebisASTVisitor extends ASTVisitor
             {
                 m_currentFunctions.getLast().paramDeclaration = transformSignature(m_currentFunctions.getLast().paramDeclaration)
                 m_currentFunctions.getLast().returnParam = transformSignature(m_currentFunctions.getLast().returnParam)
-                if (m_currentFunctions.getLast().returnParam.startsWith("const char"))
-                {
-                print("MATTC!!!!!!!!! "  + m_currentFunctions.getLast().returnParam)
-                }
             }
         }
 
@@ -277,7 +274,7 @@ class GLBrebisASTVisitor extends ASTVisitor
                 m_currentFunctions.getLast().paramDeclaration = m_currentFunctions.getLast().paramDeclaration.trim()
             }
 
-            String varName = declarator.getName().toString().toString()
+            String varName = GLBrebisASTParser.standardize(declarator.getName().toString().toString())
 
             // both parameter declaration and call strings get the parameter name
             m_currentFunctions.getLast().paramDeclaration += " " + varName

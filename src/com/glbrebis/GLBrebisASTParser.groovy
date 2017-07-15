@@ -135,6 +135,8 @@ class GLBrebisASTParser
                 .replaceAll("\\bint\\b",                         "int32_t")
                 .replaceAll("\\bssize_t\\b",                     "intptr_t")
                 .replaceAll("\\busize_t\\b",                     "size_t")
+                .replaceAll("\\bnear\\b",                        "zNear") // reserved keyword in MSVC
+                .replaceAll("\\bfar\\b",                         "zFar") // reserved keyword in MSVC
     }
 
 

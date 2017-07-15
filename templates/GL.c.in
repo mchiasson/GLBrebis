@@ -68,6 +68,10 @@
         #define WIN32_LEAN_AND_MEAN 1
     #endif
     #include <windows.h>
+    static HMODULE s_<%=prefix%>GLLib = NULL;
+    #ifndef <%=PREFIX%>_GL_LIBRARY
+        #define <%=PREFIX%>_GL_LIBRARY "opengl32.dll"
+    #endif
 #else
     #include <dlfcn.h>
 #endif
@@ -84,13 +88,22 @@ static const char* const s_<%=prefix%>GLExtensionsStr[<%=result.getAllUniqueVers
 
 <%=Prefix%>GLAPIConfig <%=prefix%>GLAPI = {0};
 
-#if !defined(<%=prefix%>GLGetProcAddress)
-    #if defined(_WIN32)
-        #define <%=prefix%>GLGetProcAddress(procName) wglGetProcAddress(procName)
-    #else
-        #define <%=prefix%>GLGetProcAddress(procName) dlsym(NULL, procName)
-    #endif
+typedef void(<%=PREFIX%>_STD_CALL *<%=Prefix%>GLProc)();
+
+<%=PREFIX%>_FORCE_INLINE <%=Prefix%>GLProc <%=prefix%>GLGetProcAddress(const char *procName)
+{
+    <%=Prefix%>GLProc proc;
+#if defined(_WIN32)
+    proc = (<%=Prefix%>GLProc)wglGetProcAddress(procName);
+    if (!proc)
+    {
+        proc = (<%=Prefix%>GLProc)GetProcAddress(s_<%=prefix%>GLLib, procName);
+    }
+#else
+    *(void **)(&proc) = dlsym(NULL, procName);
 #endif
+    return proc;
+}
 
 static void <%=prefix%>GLAddExtension(const char* const extensionStr, size_t extensionStrLength) {
     while (extensionStr && extensionStrLength > 0) {
@@ -103,10 +116,21 @@ static void <%=prefix%>GLAddExtension(const char* const extensionStr, size_t ext
                 }
                 break;
             }<%}%>
-            if (strncmp(extensionStr, "GL_EXT_debug_labelGL_EXT_debug_markerGL_EXT_robustness", extensionStrLength) == 0) { /* Silly Qualcomm Adreno 200 OpenGL ES driver bug */
-                <%=prefix%>GLAddExtension(s_<%=prefix%>GLExtensionsStr[GL_EXT_debug_label], strlen(s_<%=prefix%>GLExtensionsStr[GL_EXT_debug_label]));
-                <%=prefix%>GLAddExtension(s_<%=prefix%>GLExtensionsStr[GL_EXT_debug_marker], strlen(s_<%=prefix%>GLExtensionsStr[GL_EXT_debug_marker]));
-                <%=prefix%>GLAddExtension(s_<%=prefix%>GLExtensionsStr[GL_EXT_robustness], strlen(s_<%=prefix%>GLExtensionsStr[GL_EXT_robustness]));
+            // Discovered a bug in Qualcomm Adreno 200 OpenGL ES driver, where
+            // these three extensions are literally fused together.
+            if (strncmp(extensionStr, "GL_EXT_debug_labelGL_EXT_debug_markerGL_EXT_robustness", extensionStrLength) == 0) { 
+                if (!<%=prefix%>GLAPI.supportedExtensions[GL_EXT_debug_label]) {
+                    <%=prefix%>GLAPI.supportedExtensions[GL_EXT_debug_label] = true;
+                    <%=prefix%>GLAPI.extensions[<%=prefix%>GLAPI.extensionsCount++] = s_<%=prefix%>GLExtensionsStr[GL_EXT_debug_label];
+                }
+                if (!<%=prefix%>GLAPI.supportedExtensions[GL_EXT_debug_marker]) {
+                    <%=prefix%>GLAPI.supportedExtensions[GL_EXT_debug_marker] = true;
+                    <%=prefix%>GLAPI.extensions[<%=prefix%>GLAPI.extensionsCount++] = s_<%=prefix%>GLExtensionsStr[GL_EXT_debug_marker];
+                }
+                if (!<%=prefix%>GLAPI.supportedExtensions[GL_EXT_robustness]) {
+                    <%=prefix%>GLAPI.supportedExtensions[GL_EXT_robustness] = true;
+                    <%=prefix%>GLAPI.extensions[<%=prefix%>GLAPI.extensionsCount++] = s_<%=prefix%>GLExtensionsStr[GL_EXT_robustness];
+                }
                 break;
             }
         } else {
@@ -126,13 +150,18 @@ static void <%=prefix%>GLAddExtension(const char* const extensionStr, size_t ext
     }
 }
 
-bool <%=prefix%>GLInit(){
+bool <%=prefix%>GLInit() {
 #if <%=PREFIX%>_GL_WRANGLER_ENABLED
+
+#if defined(_WIN32)
+    s_<%=prefix%>GLLib = LoadLibraryA(TEXT(<%=PREFIX%>_GL_LIBRARY));
+#endif
+
     /* Version procedures */<%for (function in result.getAllUniqueVersionFunctions()) {%>
-    <%=prefix%>GLAPI.<%=prefix%><%=function.name.substring(2)%> = <%=prefix%>GLGetProcAddress("<%=function.name%>");<%}%>
+    <%=prefix%>GLAPI.<%=prefix%><%=function.name.substring(2)%> = (<%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%>(<%=PREFIX%>_STD_CALL *)(<%=function.paramDeclaration%>))<%=prefix%>GLGetProcAddress("<%=function.name%>");<%}%>
 
     /* Extension procedures */<%for (function in result.getAllUniqueExtensionFunctions()) {%>
-    <%=prefix%>GLAPI.<%=prefix%><%=function.name.substring(2)%> = <%=prefix%>GLGetProcAddress("<%=function.name%>");<%}%>
+    <%=prefix%>GLAPI.<%=prefix%><%=function.name.substring(2)%> = (<%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%>(<%=PREFIX%>_STD_CALL *)(<%=function.paramDeclaration%>))<%=prefix%>GLGetProcAddress("<%=function.name%>");<%}%>
 
     if (!<%=prefix%>GLAPI.<%=prefix%>GetError) {
         fprintf(stderr, "Could not find 'glGetError'\\n");
@@ -192,14 +221,21 @@ bool <%=prefix%>GLInit(){
         }
 
         <%=prefix%>GLAPI.pShadingLanguageVersion = (const char*)<%=prefix%>GLCheckErrorDebug(glGetString(GL_SHADING_LANGUAGE_VERSION));
-        if (sscanf(<%=prefix%>GLAPI.pShadingLanguageVersion, "%d", &<%=prefix%>GLAPI.nShadingLanguageVersionMajor) == 1) {
-            <%=prefix%>GLAPI.nShadingLanguageVersionMinor = (<%=prefix%>GLAPI.nShadingLanguageVersionMajor % 100);
-            <%=prefix%>GLAPI.nShadingLanguageVersionMajor = <%=prefix%>GLAPI.nShadingLanguageVersionMajor / 100;
+        if (sscanf(<%=prefix%>GLAPI.pShadingLanguageVersion, "%d.%d", &<%=prefix%>GLAPI.nShadingLanguageVersionMajor, &<%=prefix%>GLAPI.nShadingLanguageVersionMinor) == 0) {
+            sscanf(<%=prefix%>GLAPI.pShadingLanguageVersion, "OpenGL ES GLSL ES %d.%d", &<%=prefix%>GLAPI.nShadingLanguageVersionMajor, &<%=prefix%>GLAPI.nShadingLanguageVersionMinor);
         }
-        else if (sscanf(<%=prefix%>GLAPI.pShadingLanguageVersion, "OpenGL ES GLSL ES %d.%d", &<%=prefix%>GLAPI.nShadingLanguageVersionMajor, &<%=prefix%>GLAPI.nShadingLanguageVersionMinor) != 2) {
-            fprintf(stderr, "Could not parse shading language version from string : '%s'. Defaulting to Shading language version 1.0.\\n", <%=prefix%>GLAPI.pShadingLanguageVersion);
-            <%=prefix%>GLAPI.nShadingLanguageVersionMajor = 1;
-            <%=prefix%>GLAPI.nShadingLanguageVersionMinor = 0;
+
+        if (<%=prefix%>GLAPI.nShadingLanguageVersionMinor == 0)
+        {
+            if (<%=prefix%>GLAPI.nShadingLanguageVersionMajor > 100) {
+                <%=prefix%>GLAPI.nShadingLanguageVersionMinor = (<%=prefix%>GLAPI.nShadingLanguageVersionMajor % 100);
+                <%=prefix%>GLAPI.nShadingLanguageVersionMajor = <%=prefix%>GLAPI.nShadingLanguageVersionMajor / 100;
+            }
+            else if (<%=prefix%>GLAPI.nShadingLanguageVersionMajor == 0)
+            {
+                fprintf(stderr, "Could not parse shading language version from string : '%s'. Defaulting to Shading language version 1.0.\\n", <%=prefix%>GLAPI.pShadingLanguageVersion);
+                <%=prefix%>GLAPI.nShadingLanguageVersionMajor = 1;
+            }
         }
 
 #if <%=PREFIX%>_GL_WRANGLER_ENABLED // Emscripten and PNaCl don't have glGetIntegerv and glGetStringi in their GLES headers...

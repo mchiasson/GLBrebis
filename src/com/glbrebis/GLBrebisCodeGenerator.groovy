@@ -66,13 +66,5 @@ class GLBrebisCodeGenerator
         writer.print(template.toString())
         writer.close()
         System.out.println("Done!")
-        
-        System.out.print("Generating " + Prefix + "GLExt.h ... ")
-        source = new File('templates/GLExt.h.in').getText("UTF-8")
-        template = engine.createTemplate(source).make(binding)
-        writer = new PrintWriter(new File(headerPath + Prefix + "GLExt.h"), "UTF-8")
-        writer.print(template.toString())
-        writer.close()
-        System.out.println("Done!")
     }
 }

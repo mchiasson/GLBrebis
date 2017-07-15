@@ -1,9 +1,9 @@
 # GLBrebis
 A simple GL extension wrangler drop-in generator script for C/C++ OpenGL and OpenGL ES apps.
 
-It will generate a set of highly portable C99 compliant files with any `<prefix>` that you want, and the script will customize the generated code with any given prefix name.
+this script will generate a set of highly portable C99 compliant GL function wrangler code with any `<prefix>` customization that you want. This script will customize the generated code with any given `<prefix>`. Just generate your wrangler code, drop the two files into your project and start coding! It's as simple as that.
 
-This project replaces the need of using a 3rdparty library to wrangle your GL function pointers (e.g. GLEW). Works pretty much the same way than GLEW, with GLES support, in addition to some useful utilities, such as `<prefix>GLSupport`:
+This project replaces the need of using a 3rdparty library to wrangle your GL function pointers (e.g. GLEW). Works pretty much the same way than GLEW, but also adds GLES support, and to some useful utilities, such as `<prefix>GLSupport`:
 ```C++
 if(<prefix>GLSupport(GL_VERSION_3_0) || <prefix>GLSupport(GL_ES_VERSION_3_0))
 {
@@ -53,7 +53,7 @@ sudo yum install groovy
 ```
 
 ## Microsoft Windows
-If you’re on Windows, you can also use the NSIS Windows installer:
+If you’re on Windows, you can use the NSIS Windows installer:
 https://dl.bintray.com/groovy/Distributions/groovy-2.5.0-beta-1-installer.exe
 
 # How to generate my project's drop-in extention wrangler header and source?
@@ -78,13 +78,13 @@ Example for a fictional project called 'Mut' :
 ```
 ./GLBrebis.sh --prefix Mut --srcPath ~/git/mut/src --headerPath ~/git/mut/include/mut --includePrefix mut
 ```
-* `-p,--prefix` is mandatory. If you do `--prefix Mut`, the script will generate `MutGL.c`, `MutGL.h` and `MutGLExt.h`, and symbols will automatically be named after `Mut`.  For example, you will see `_MUT_GL_H_` header guards, and utility functions will be named `mutGLInit()` and `mutGLShutdown()`, etc.
-*  `-s,--srcPath` is optional. This is where `MutGL.c` will be dumped into. If not specified, it will be dumped in a new `output` folder relative to where the script is launched from.
-*  `-H,--headerPath` is optional. This is where `MutGL.h` and `MutGLExt.h` will be dumped into. If not specified, it will be dumped in a new `output`  folder relative to where the script is launched from.
-* `-i,--includePrefix` is optional. It's mostly used by `MutGL.c` to generate a proper `#include <mut/MutGL.h>` line to help you match your application's source layout requirement.
 * `-f,--force` is optional. It simply forces a full re-download of every Khronos GL headers, overwriting the ones that were previously downloaded from the last run.
+* `-H,--headerPath` is optional. This is where `MutGL.h` will be dumped into. If not specified, it will be dumped in a new `output`  folder relative to where the script is launched from.
+* `-i,--includePrefix` is optional. It's mostly used by `MutGL.c` to do `#include <mut/MutGL.h>` instead of just `#include <MutGL.h>` to help you match your application's file layout requirement.
+* `-p,--prefix` is mandatory. If you do `--prefix Mut`, the script will generate `MutGL.c`, and `MutGL.h`, including symbols that will automatically be named after `Mut`.  For example, you will see `_MUT_GL_H_` header guards, and utility functions will be named `mutGLInit()` and `mutGLShutdown()`, etc.
+* `-s,--srcPath` is optional. This is where `MutGL.c` will be dumped into. If not specified, it will be dumped in a new `output` folder relative to where the script is launched from.
 
-And if everything goes well, you should have `~/git/mut/src/MutGL.c`, `~/git/mut/include/mut/MutGL.h` and `~/git/mut/include/mut/MutGLext.h` on your file system
+And if everything goes well, you should have `~/git/mut/src/MutGL.c` and `~/git/mut/include/mut/MutGL.h` on your file system
 
 # How to use the generated extention wrangler code in my project?
 

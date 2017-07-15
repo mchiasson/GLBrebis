@@ -297,12 +297,10 @@ extern <%=Prefix%>GLAPIConfig <%=prefix%>GLAPI; // global instance.
 }
 
 #if <%=PREFIX%>_GL_WRANGLER_ENABLED
-<%for (function in result.getAllUniqueVersionFunctions()) {%>
-<%=PREFIX%>_FORCE_INLINE <%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%>_<%=prefix%><%=function.name.substring(2)%>(<%=function.paramDeclaration%>) {
-    <%=function.returnParam.equalsIgnoreCase("void") ? "" : "return "%><%=prefix%>GLAPI.<%=prefix%><%=function.name.substring(2)%>(<%=function.paramCall%>);
-}
-#define <%=function.name%> _<%=prefix%><%=function.name.substring(2)%>
-<%}%>
+<%for (function in result.getAllUniqueFunctions()) {%>
+<%=PREFIX%>_FORCE_INLINE <%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%>_<%=prefix%><%=function.name.substring(2)%>(<%=function.paramDeclaration%>) {<%if (function.name.equals("glGetProgramPipelineivEXT") && function.paramDeclaration.matches(".*\\bpname\\b.*")) {%> if (<%=prefix%>GLSupport(GL_ES_VERSION_2_0) && (pname == GL_CURRENT_PROGRAM)) { pname = GL_ACTIVE_PROGRAM; } else if (<%=prefix%>GLSupport(GL_VERSION_1_0) && (pname == GL_ACTIVE_PROGRAM)) { pname = GL_CURRENT_PROGRAM; }<%}%> <%=function.returnParam.equalsIgnoreCase("void") ? "" : "return "%><%=prefix%>GLAPI.<%=prefix%><%=function.name.substring(2)%>(<%=function.paramCall%>); }<%}%>
+<%for (function in result.getAllUniqueFunctions()) {%>
+#define <%=function.name%> _<%=prefix%><%=function.name.substring(2)%><%}%>
 #endif /* <%=PREFIX%>_GL_WRANGLER_ENABLED */
 
 #ifdef __cplusplus
