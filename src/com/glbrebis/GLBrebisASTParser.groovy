@@ -177,6 +177,7 @@ class GLBrebisASTParser
         definedSymbols.put("FAR", "")
         definedSymbols.put("GL_GLEXT_PROTOTYPES", "1")
         definedSymbols.put("GLAPI", "extern")
+        definedSymbols.put("GL_API", "extern")
         definedSymbols.put("GL_APIENTRY", "")
         definedSymbols.put("GL_APIENTRYP", "*")
         definedSymbols.put("GL_APICALL", "extern")

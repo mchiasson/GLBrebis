@@ -13,8 +13,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,40 +23,41 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *******************************************************************************/
+ ******************************************************************************/
 
 /*******************************************************************************
- * The generated content of this file is the result of parsing the following headers:
+ * The generated content of this file is the result of parsing the following
+ * headers from Khronos Group Inc. 
  * https://www.khronos.org/registry/gles/api/GLES3/gl32.h
  * https://www.khronos.org/registry/gles/api/GLES2/gl2ext.h
  * https://www.opengl.org/registry/api/GL/glcorearb.h
  * https://www.opengl.org/registry/api/GL/glext.h
  *******************************************************************************
- * GLES3/gl32.h, GLES2/gl2ext.h, GL/glcorearb.h, GL/glext.h License
+ * Khronos License
  *******************************************************************************
-** Copyright (c) 2013-2017 The Khronos Group Inc.
-**
-** Permission is hereby granted, free of charge, to any person obtaining a
-** copy of this software and/or associated documentation files (the
-** "Materials"), to deal in the Materials without restriction, including
-** without limitation the rights to use, copy, modify, merge, publish,
-** distribute, sublicense, and/or sell copies of the Materials, and to
-** permit persons to whom the Materials are furnished to do so, subject to
-** the following conditions:
-**
-** The above copyright notice and this permission notice shall be included
-** in all copies or substantial portions of the Materials.
-**
-** THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-** MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-** CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-** TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-** MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
-*******************************************************************************/
+ * Copyright (c) 2013-2017 The Khronos Group Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and/or associated documentation files (the
+ * "Materials"), to deal in the Materials without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Materials, and to
+ * permit persons to whom the Materials are furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Materials.
+ *
+ * THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
+ ******************************************************************************/
 #ifndef _<%=PREFIX%>_GL_H_
-#define _<%=PREFIX%>_GL_H_
+#define _<%=PREFIX%>_GL_H_ 1
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -68,6 +69,16 @@
         #define <%=PREFIX%>_GL_WRANGLER_ENABLED 0
     #else
         #define <%=PREFIX%>_GL_WRANGLER_ENABLED 1
+    #endif
+#endif
+
+#if !defined(<%=PREFIX%>_FORCE_INLINE)
+    #if defined(_MSC_VER)
+        #define <%=PREFIX%>_FORCE_INLINE __forceinline
+    #elif ( (defined(__GNUC__) && (__GNUC__ >= 4) ) || defined(__clang__) )
+        #define <%=PREFIX%>_FORCE_INLINE __attribute__((always_inline)) static __inline__
+    #else
+        #define <%=PREFIX%>_FORCE_INLINE static inline
     #endif
 #endif
 
@@ -210,7 +221,7 @@ void <%=prefix%>GLShutdown();
      }
      \\endcode
  */
-static inline bool <%=prefix%>GLSupport(size_t extensionID);
+<%=PREFIX%>_FORCE_INLINE bool <%=prefix%>GLSupport(size_t extensionID);
 
 /*!
      Checks if a specific OpenGL or OpenGL ES command triggered an error.
@@ -231,19 +242,29 @@ static inline bool <%=prefix%>GLSupport(size_t extensionID);
      build won't be impacted. If you want to use <%=prefix%>GLCheckError, make sure it is not called
      during time critical code path.
  */
-void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber, const char* functionName);
+void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber);
 #if !defined(<%=prefix%>GLCheckError)
-    #define <%=prefix%>GLCheckError(x) x; _<%=prefix%>GLCheckError(__FILE__, __LINE__, __func__)
+    #define <%=prefix%>GLCheckError(x) x; _<%=prefix%>GLCheckError(__FILE__, __LINE__)
 #endif
 #if !defined(<%=prefix%>GLCheckErrorDebug)
-    #if defined(_DEBUG) && !defined(NDEBUG)
-        #define <%=prefix%>GLCheckErrorDebug(x) x; _<%=prefix%>GLCheckError(__FILE__, __LINE__, __func__)
+    #if defined(_DEBUG) || !defined(NDEBUG)
+        #define <%=prefix%>GLCheckErrorDebug(x) x; _<%=prefix%>GLCheckError(__FILE__, __LINE__)
     #else
         #define <%=prefix%>GLCheckErrorDebug(x) x
     #endif
 #endif
 
-typedef void (*<%=prefix%>GLProc)(void);
+
+#if <%=PREFIX%>_GL_WRANGLER_ENABLED
+/* Type definitions */<%for (typedef in result.getAllUniqueTypedefs()) {%>
+<%=typedef.signature%><%}%>
+    
+/* Function pointer type definitions */<%for (funcPtr in result.getAllUniqueFuncPtrs()) {%>
+<%=funcPtr.signature%><%}%>
+    
+/* Data structures */<%for (struct in result.getAllUniqueStructs()) {%>
+<%=struct.getSignature()%><%}%>
+#endif
 
 typedef struct <%=Prefix%>GLAPIConfig
 {
@@ -260,34 +281,27 @@ typedef struct <%=Prefix%>GLAPIConfig
     int32_t     nShadingLanguageVersionMinor;
     bool        supportedExtensions[<%=result.getAllUniqueVersionGroups().size() + result.getAllUniqueExtensionGroups().size() + 1%>];
 
+#if <%=PREFIX%>_GL_WRANGLER_ENABLED
     /* GL function pointers */<%for (function in result.getAllUniqueVersionFunctions()) {%>
-    <%=prefix%>GLProc <%=prefix%>Gl<%=function.name.substring(2)%>Proc;<%}%>
+    <%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%>(<%=PREFIX%>_STD_CALL *<%=prefix%><%=function.name.substring(2)%>)(<%=function.paramDeclaration%>);<%}%>
 
     /* GL extension function pointers */<%for (function in result.getAllUniqueExtensionFunctions()) {%>
-    <%=prefix%>GLProc <%=prefix%>Gl<%=function.name.substring(2)%>Proc;<%}%>
+    <%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%>(<%=PREFIX%>_STD_CALL *<%=prefix%><%=function.name.substring(2)%>)(<%=function.paramDeclaration%>);<%}%>
+#endif
 } <%=Prefix%>GLAPIConfig;
 
-extern <%=Prefix%>GLAPIConfig <%=prefix%>GLAPI;
+extern <%=Prefix%>GLAPIConfig <%=prefix%>GLAPI; // global instance.
 
-static inline bool <%=prefix%>GLSupport(size_t extensionID) {
+<%=PREFIX%>_FORCE_INLINE bool <%=prefix%>GLSupport(size_t extensionID) {
     return <%=prefix%>GLAPI.supportedExtensions[extensionID];
 }
 
 #if <%=PREFIX%>_GL_WRANGLER_ENABLED
-/* Type definitions */<%for (typedef in result.getAllUniqueTypedefs()) {%>
-<%=typedef.signature%><%}%>
-    
-/* Function pointer type definitions */<%for (funcPtr in result.getAllUniqueFuncPtrs()) {%>
-<%=funcPtr.signature%><%}%>
-    
-/* Data structures */<%for (struct in result.getAllUniqueStructs()) {%>
-<%=struct.getSignature()%><%}%>
-
 <%for (function in result.getAllUniqueVersionFunctions()) {%>
-static inline <%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%><%=prefix%>GL<%=function.name.substring(2)%>(<%=function.paramDeclaration%>) {
-    <%=function.returnParam.equalsIgnoreCase("void") ? "" : "return "%>((<%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%>(<%=PREFIX%>_STD_CALL *)(<%=function.paramDeclaration%>))<%=prefix%>GLAPI.<%=prefix%>Gl<%=function.name.substring(2)%>Proc)(<%=function.paramCall%>);
+<%=PREFIX%>_FORCE_INLINE <%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%>_<%=prefix%><%=function.name.substring(2)%>(<%=function.paramDeclaration%>) {
+    <%=function.returnParam.equalsIgnoreCase("void") ? "" : "return "%><%=prefix%>GLAPI.<%=prefix%><%=function.name.substring(2)%>(<%=function.paramCall%>);
 }
-#define <%=function.name%> <%=prefix%>GL<%=function.name.substring(2)%>
+#define <%=function.name%> _<%=prefix%><%=function.name.substring(2)%>
 <%}%>
 #endif /* <%=PREFIX%>_GL_WRANGLER_ENABLED */
 

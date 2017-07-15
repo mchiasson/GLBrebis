@@ -13,8 +13,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,38 +23,39 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *******************************************************************************/
+ ******************************************************************************/
 
 /*******************************************************************************
- * The generated content of this file is the result of parsing the following headers:
+ * The generated content of this file is the result of parsing the following
+ * headers from Khronos Group Inc. 
  * https://www.khronos.org/registry/gles/api/GLES3/gl32.h
  * https://www.khronos.org/registry/gles/api/GLES2/gl2ext.h
  * https://www.opengl.org/registry/api/GL/glcorearb.h
  * https://www.opengl.org/registry/api/GL/glext.h
  *******************************************************************************
- * GLES3/gl32.h, GLES2/gl2ext.h, GL/glcorearb.h, GL/glext.h License
+ * Khronos License
  *******************************************************************************
-** Copyright (c) 2013-2017 The Khronos Group Inc.
-**
-** Permission is hereby granted, free of charge, to any person obtaining a
-** copy of this software and/or associated documentation files (the
-** "Materials"), to deal in the Materials without restriction, including
-** without limitation the rights to use, copy, modify, merge, publish,
-** distribute, sublicense, and/or sell copies of the Materials, and to
-** permit persons to whom the Materials are furnished to do so, subject to
-** the following conditions:
-**
-** The above copyright notice and this permission notice shall be included
-** in all copies or substantial portions of the Materials.
-**
-** THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-** MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-** CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-** TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-** MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
-*******************************************************************************/
+ * Copyright (c) 2013-2017 The Khronos Group Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and/or associated documentation files (the
+ * "Materials"), to deal in the Materials without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Materials, and to
+ * permit persons to whom the Materials are furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Materials.
+ *
+ * THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
+ ******************************************************************************/
 
 #include <%='<'%><%=includePrefix%><%=Prefix%>GL.h>
 
@@ -83,15 +84,13 @@ static const char* const s_<%=prefix%>GLExtensionsStr[<%=result.getAllUniqueVers
 
 <%=Prefix%>GLAPIConfig <%=prefix%>GLAPI = {0};
 
-static inline <%=prefix%>GLProc <%=prefix%>GLGetProcAddress(const char* procName){
-    <%=prefix%>GLProc proc;
-#if defined(_WIN32)
-    *(void**) (&proc) = wglGetProcAddress(procName);
-#else
-    *(void**) (&proc) = dlsym(NULL, procName);
+#if !defined(<%=prefix%>GLGetProcAddress)
+    #if defined(_WIN32)
+        #define <%=prefix%>GLGetProcAddress(procName) wglGetProcAddress(procName)
+    #else
+        #define <%=prefix%>GLGetProcAddress(procName) dlsym(NULL, procName)
+    #endif
 #endif
-    return proc;
-}
 
 static void <%=prefix%>GLAddExtension(const char* const extensionStr, size_t extensionStrLength) {
     while (extensionStr && extensionStrLength > 0) {
@@ -120,27 +119,27 @@ static void <%=prefix%>GLAddExtension(const char* const extensionStr, size_t ext
                 break;
             }<%}%>
         }
+#if defined(_DEBUG) || !defined(NDEBUG)
         fprintf(stderr, "Found unwrangled extension: %.*s\\n", (int)extensionStrLength, extensionStr);
+#endif
         break;
     }
 }
 
 bool <%=prefix%>GLInit(){
 #if <%=PREFIX%>_GL_WRANGLER_ENABLED
-    /* Version procedures */
-    <%for (function in result.getAllUniqueVersionFunctions()) {%>
-    <%=prefix%>GLAPI.<%=prefix%>Gl<%=function.name.substring(2)%>Proc = <%=prefix%>GLGetProcAddress("<%=function.name%>");<%}%>
+    /* Version procedures */<%for (function in result.getAllUniqueVersionFunctions()) {%>
+    <%=prefix%>GLAPI.<%=prefix%><%=function.name.substring(2)%> = <%=prefix%>GLGetProcAddress("<%=function.name%>");<%}%>
 
-    /* Extension procedures */
-    <%for (function in result.getAllUniqueExtensionFunctions()) {%>
-    <%=prefix%>GLAPI.<%=prefix%>Gl<%=function.name.substring(2)%>Proc = <%=prefix%>GLGetProcAddress("<%=function.name%>");<%}%>
+    /* Extension procedures */<%for (function in result.getAllUniqueExtensionFunctions()) {%>
+    <%=prefix%>GLAPI.<%=prefix%><%=function.name.substring(2)%> = <%=prefix%>GLGetProcAddress("<%=function.name%>");<%}%>
 
-    if (!<%=prefix%>GLAPI.<%=prefix%>GlGetErrorProc){
+    if (!<%=prefix%>GLAPI.<%=prefix%>GetError) {
         fprintf(stderr, "Could not find 'glGetError'\\n");
         return false;
     }
 
-    if (!<%=prefix%>GLAPI.<%=prefix%>GlGetStringProc){
+    if (!<%=prefix%>GLAPI.<%=prefix%>GetString) {
         fprintf(stderr, "Could not find 'glGetString'\\n");
         return false;
     }
@@ -172,7 +171,8 @@ bool <%=prefix%>GLInit(){
                 if (versionMatcher.find()) {
                     String major = versionMatcher.group(1)
                     String minor = versionMatcher.group(2)
-            %><%=prefix%>GLAPI.supportedExtensions[<%=version.name%>] = ((<%=prefix%>GLAPI.nVersionMajor > <%=major%>) || ((<%=prefix%>GLAPI.nVersionMajor == <%=major%>) && (<%=prefix%>GLAPI.nVersionMinor >= <%=minor%>)));<%
+            %><%=prefix%>GLAPI.supportedExtensions[<%=version.name%>] = ((<%=prefix%>GLAPI.nVersionMajor > <%=major%>) || ((<%=prefix%>GLAPI.nVersionMajor == <%=major%>) && (<%=prefix%>GLAPI.nVersionMinor >= <%=minor%>)));
+            <%
                 }
             }
             %>
@@ -184,7 +184,8 @@ bool <%=prefix%>GLInit(){
                 {
                     String major = versionMatcher.group(1)
                     String minor = versionMatcher.group(2)
-            %><%=prefix%>GLAPI.supportedExtensions[<%=version.name%>] = ((<%=prefix%>GLAPI.nVersionMajor > <%=major%>) || ((<%=prefix%>GLAPI.nVersionMajor == <%=major%>) && (<%=prefix%>GLAPI.nVersionMinor >= <%=minor%>)));<%
+            %><%=prefix%>GLAPI.supportedExtensions[<%=version.name%>] = ((<%=prefix%>GLAPI.nVersionMajor > <%=major%>) || ((<%=prefix%>GLAPI.nVersionMajor == <%=major%>) && (<%=prefix%>GLAPI.nVersionMinor >= <%=minor%>)));
+            <%
                 }
             }
             %>
@@ -201,7 +202,7 @@ bool <%=prefix%>GLInit(){
             <%=prefix%>GLAPI.nShadingLanguageVersionMinor = 0;
         }
 
-#if !(<%=PREFIX%>_GL_WRANGLER_ENABLED)
+#if <%=PREFIX%>_GL_WRANGLER_ENABLED // Emscripten and PNaCl don't have glGetIntegerv and glGetStringi in their GLES headers...
         if (<%=prefix%>GLAPI.supportedExtensions[GL_VERSION_3_0] || <%=prefix%>GLAPI.supportedExtensions[GL_ES_VERSION_3_0]) {
             int32_t i = 0;
             int32_t nExtensionsCount = 0;
@@ -230,7 +231,7 @@ void <%=prefix%>GLShutdown() {
     memset(&<%=prefix%>GLAPI, 0, sizeof(<%=Prefix%>GLAPIConfig));
 }
 
-void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber, const char* functionName) {
+void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber) {
     GLenum eErrorID = glGetError();
     if (eErrorID != GL_NO_ERROR) {
         do {
@@ -247,9 +248,9 @@ void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber, const char* 
 
             size_t uErrorIndex = eErrorID - GL_INVALID_ENUM;
             if (uErrorIndex > sizeof(errMsg)) {
-                fprintf(stderr, "file %s, line %d, function %s : Unknown error 0x%X\\n", fileName, lineNumber, functionName, eErrorID);
+                fprintf(stderr, "file %s, line %d : Unknown error 0x%X\\n", fileName, lineNumber, eErrorID);
             } else {
-                fprintf(stderr, "file %s, line %d, function %s : %s\\n", fileName, lineNumber, functionName, errMsg[uErrorIndex]);
+                fprintf(stderr, "file %s, line %d : %s\\n", fileName, lineNumber, errMsg[uErrorIndex]);
             }
         } while((eErrorID = glGetError()) != GL_NO_ERROR);
     }

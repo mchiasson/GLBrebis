@@ -1010,7 +1010,7 @@ class GLBrebisParserResult
                     {
                         for(function in group.functions)
                         {
-                            if (!allUniqueExtensionFunctions.contains(function))
+                            if (!allUniqueExtensionFunctions.contains(function) && !getAllUniqueVersionFunctions().contains(function))
                             {
                                 allUniqueExtensionFunctions.add(function)
                             }

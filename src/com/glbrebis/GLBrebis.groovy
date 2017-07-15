@@ -34,8 +34,8 @@ class GLBrebis
         cli.with {
             h(longOpt: 'help', 'Usage Information', required: false)
             p(longOpt: 'prefix', 'Project prefix to append to every generated files and symbols',                                args: 1, required: true)
-            H(longOpt: 'headerPath', 'path to dump the generated headers into. Default : \'output/include\' ',                   args: 1, required: false)
-            s(longOpt: 'srcPath', 'path to dump the generated source into. Default : \'output/src\' ',                           args: 1, required: false)
+            H(longOpt: 'headerPath', 'path to dump the generated headers into. Default : \'output\' ',                           args: 1, required: false)
+            s(longOpt: 'srcPath', 'path to dump the generated source into. Default : \'output\' ',                               args: 1, required: false)
             i(longOpt: 'includePrefix', 'prefix path for the generated source to properly include the headers. Default : \'\' ', args: 1, required: false)
             f(longOpt: 'force', "Force a fresh re-download of Khronos GL headers.",                                              args: 0, required: false)
         }
@@ -46,7 +46,7 @@ class GLBrebis
         
         def prefix = opt.p
 
-        def srcPath = "output/src/"
+        def srcPath = "output/"
         if (opt.s) {
             srcPath = opt.s
             if (!srcPath.endsWith('/')) {
@@ -54,7 +54,7 @@ class GLBrebis
             }
         }
 
-        def headerPath = "output/include/"
+        def headerPath = "output/"
         if (opt.H) {
             headerPath = opt.H
             if (!headerPath.endsWith('/')) {
@@ -71,10 +71,11 @@ class GLBrebis
         }
 
         GLBrebisASTParser parser = new GLBrebisASTParser()
-        parser.parse("https://www.khronos.org/registry/gles/api/GLES3/gl32.h", "GLES3/gl32.h", opt.f)
-        parser.parse("https://www.khronos.org/registry/gles/api/GLES2/gl2ext.h", "GLES2/gl2ext.h", opt.f)
-        parser.parse("https://www.opengl.org/registry/api/GL/glcorearb.h", "GL/glcorearb.h", opt.f)
-        parser.parse("https://www.opengl.org/registry/api/GL/glext.h", "GL/glext.h", opt.f)
+        parser.parse("https://www.khronos.org/registry/gles/api/GLES3/gl32.h",   "GLES3/gl32.h",     opt.f)
+        parser.parse("https://www.khronos.org/registry/gles/api/GLES2/gl2ext.h", "GLES2/gl2ext.h",   opt.f)
+        parser.parse("https://www.opengl.org/registry/api/GL/glcorearb.h",       "GL/glcorearb.h",   opt.f)
+        parser.parse("https://www.opengl.org/registry/api/GL/glext.h",           "GL/glext.h",       opt.f)
+        parser.parse("extensions/GL/glext_extra.h",                              "GL/glext_extra.h", true);
         
         new GLBrebisCodeGenerator(prefix, srcPath, headerPath, includePrefix, parser.getResults())
     }

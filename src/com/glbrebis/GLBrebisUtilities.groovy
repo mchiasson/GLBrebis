@@ -33,27 +33,24 @@ import java.net.URLConnection
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import static java.nio.file.StandardCopyOption.*;
 import java.util.Map
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import java.util.zip.GZIPInputStream
-
 
 class GLBrebisUtilities
 {
     private static final int s_connectionTimeOutmS = 5000
     private static final int s_readTimeOutmS = 5000
 
-    public static String download(String url, String fileName, Boolean force)
+    public static String download(String uri, String fileName, Boolean force)
     {
         if (force || !Files.exists(Paths.get(fileName)))
         {
             try
             {
-                String title = "Downloading " + url + " ... "
-                System.out.print(title)
-
-                URLConnection uc = new URL(url).openConnection()
+                URLConnection uc = new URL(uri).openConnection()
 
                 if (s_readTimeOutmS > 0)
                 {
@@ -76,6 +73,7 @@ class GLBrebisUtilities
                 String line = ""
                 StringBuilder builder = new StringBuilder()
 
+                print("Downloading " + uri + " ... ")
                 for(;;)
                 {
                     line = reader.readLine()
@@ -89,16 +87,19 @@ class GLBrebisUtilities
                     }
                     builder.append(line)
                 }
-
                 println("Done!")
                 reader.close()
-
 
                 writeFile(fileName, builder.toString())
             }
             catch (IOException e)
             {
-                System.err.println("Error!\n\t" + e.getMessage())
+                // most likely a an extention file.
+                try {
+                    Files.copy(Paths.get(uri), Paths.get(fileName), REPLACE_EXISTING)
+                } catch (IOException e2) {
+                    e.printStackTrace(); // print the first stack trace instead.
+                }
             }
         }
         return readFile(fileName)
