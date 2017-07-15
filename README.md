@@ -65,26 +65,26 @@ Available options (use -h for help):
                             headers.
  -h,--help                  Usage Information
  -H,--headerPath <arg>      path to dump the generated headers into.
-                            Default : 'output/include'
+                            Default : 'output'
  -i,--includePrefix <arg>   prefix path for the generated source to
                             properly include the headers. Default : ''
  -p,--prefix <arg>          Project prefix to append to every generated
                             files and symbols
  -s,--srcPath <arg>         path to dump the generated source into.
-                            Default : 'output/src'
+                            Default : 'output'
 
 ```
-Example:
+Example for a fictional project called 'Mut' :
 ```
-./GLBrebis.sh --prefix Onut --srcPath ~/git/onut/src --headerPath ~/git/onut/include/onut --includePrefix onut
+./GLBrebis.sh --prefix Mut --srcPath ~/git/mut/src --headerPath ~/git/mut/include/mut --includePrefix mut
 ```
-* `-p,--prefix` is mandatory. If you do `--prefix Onut`, the script will generate `OnutGL.c`, `OnutGL.h` and `OnutGLExt.h`, and symbols will automatically be named after `Onut`.  For example, you will see `_ONUT_GL_H_` header guards, and utility functions will be named `onutGLInit()` and `onutGLShutdown()`, etc.
-*  `-s,--srcPath` is optional. This is where `OnutGL.c` will be dumped into. If not specified, it will be dumped in `output/src`
-*  `-H,--headerPath` is optional. This is where `OnutGL.h` and `OnutGLExt.h` will be dumped into. If not specified, it will be dumped in `output/include`
-* `-i,--includePrefix` is optional. It's mostly used by `OnutGL.c` to generate a proper `#include <onut/OnutGL.h>` line to help you match your application's source layout requirement.
-* `-f,--force` is optional. It simply forces a full re-download of Khronos GL header, ignoring the ones that were previously downloaded from the last run.
+* `-p,--prefix` is mandatory. If you do `--prefix Mut`, the script will generate `MutGL.c`, `MutGL.h` and `MutGLExt.h`, and symbols will automatically be named after `Mut`.  For example, you will see `_MUT_GL_H_` header guards, and utility functions will be named `mutGLInit()` and `mutGLShutdown()`, etc.
+*  `-s,--srcPath` is optional. This is where `MutGL.c` will be dumped into. If not specified, it will be dumped in a new `output` folder relative to where the script is launched from.
+*  `-H,--headerPath` is optional. This is where `MutGL.h` and `MutGLExt.h` will be dumped into. If not specified, it will be dumped in a new `output`  folder relative to where the script is launched from.
+* `-i,--includePrefix` is optional. It's mostly used by `MutGL.c` to generate a proper `#include <mut/MutGL.h>` line to help you match your application's source layout requirement.
+* `-f,--force` is optional. It simply forces a full re-download of every Khronos GL headers, overwriting the ones that were previously downloaded from the last run.
 
-And if everything goes well, you should have `output/src/<prefix>GL.c`, `output/include/<prefix>GL.h` and `output/include/<prefix>GLext.h` on your file system
+And if everything goes well, you should have `~/git/mut/src/MutGL.c`, `~/git/mut/include/mut/MutGL.h` and `~/git/mut/include/mut/MutGLext.h` on your file system
 
 # How to use the generated extention wrangler code in my project?
 
