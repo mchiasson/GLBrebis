@@ -76,6 +76,14 @@
     #include <dlfcn.h>
 #endif
 
+#ifndef <%=PREFIX%>_SSCANF
+    #if defined(_MSC_VER)
+        #define <%=PREFIX%>_SSCANF sscanf_s
+    #else
+        #define <%=PREFIX%>_SSCANF sscanf
+    #endif
+#endif
+
 static const char* const s_<%=prefix%>GLExtensionsStr[<%=result.getAllUniqueVersionGroups().size() + result.getAllUniqueExtensionGroups().size() + 1%>] = {
     "UNKNOWN"<%
     for (group in result.getAllUniqueVersionGroups()) {
@@ -185,10 +193,10 @@ bool <%=prefix%>GLInit() {
             return false;
         }
 
-        if ((sscanf(<%=prefix%>GLAPI.pVersion, "OpenGL ES %d.%d",    &<%=prefix%>GLAPI.nVersionMajor, &<%=prefix%>GLAPI.nVersionMinor) == 2) ||
-            (sscanf(<%=prefix%>GLAPI.pVersion, "OpenGL ES-CM %d.%d", &<%=prefix%>GLAPI.nVersionMajor, &<%=prefix%>GLAPI.nVersionMinor) == 2)) {
+        if ((<%=PREFIX%>_SSCANF(<%=prefix%>GLAPI.pVersion, "OpenGL ES %d.%d",    &<%=prefix%>GLAPI.nVersionMajor, &<%=prefix%>GLAPI.nVersionMinor) == 2) ||
+            (<%=PREFIX%>_SSCANF(<%=prefix%>GLAPI.pVersion, "OpenGL ES-CM %d.%d", &<%=prefix%>GLAPI.nVersionMajor, &<%=prefix%>GLAPI.nVersionMinor) == 2)) {
             <%=prefix%>GLAPI.bIsGLES = true;
-        } else if (sscanf(<%=prefix%>GLAPI.pVersion, "%d.%d", &<%=prefix%>GLAPI.nVersionMajor, &<%=prefix%>GLAPI.nVersionMinor) != 2) {
+        } else if (<%=PREFIX%>_SSCANF(<%=prefix%>GLAPI.pVersion, "%d.%d", &<%=prefix%>GLAPI.nVersionMajor, &<%=prefix%>GLAPI.nVersionMinor) != 2) {
             fprintf(stderr, "Could not determine OpenGL/OpenGLES version.\\n");
             return false;
         }
@@ -221,8 +229,8 @@ bool <%=prefix%>GLInit() {
         }
 
         <%=prefix%>GLAPI.pShadingLanguageVersion = (const char*)<%=prefix%>GLCheckErrorDebug(glGetString(GL_SHADING_LANGUAGE_VERSION));
-        if (sscanf(<%=prefix%>GLAPI.pShadingLanguageVersion, "%d.%d", &<%=prefix%>GLAPI.nShadingLanguageVersionMajor, &<%=prefix%>GLAPI.nShadingLanguageVersionMinor) == 0) {
-            sscanf(<%=prefix%>GLAPI.pShadingLanguageVersion, "OpenGL ES GLSL ES %d.%d", &<%=prefix%>GLAPI.nShadingLanguageVersionMajor, &<%=prefix%>GLAPI.nShadingLanguageVersionMinor);
+        if (<%=PREFIX%>_SSCANF(<%=prefix%>GLAPI.pShadingLanguageVersion, "%d.%d", &<%=prefix%>GLAPI.nShadingLanguageVersionMajor, &<%=prefix%>GLAPI.nShadingLanguageVersionMinor) == 0) {
+            <%=PREFIX%>_SSCANF(<%=prefix%>GLAPI.pShadingLanguageVersion, "OpenGL ES GLSL ES %d.%d", &<%=prefix%>GLAPI.nShadingLanguageVersionMajor, &<%=prefix%>GLAPI.nShadingLanguageVersionMinor);
         }
 
         if (<%=prefix%>GLAPI.nShadingLanguageVersionMinor == 0)
