@@ -50,7 +50,7 @@ import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTLinkageSpecification
 
 class GLBrebisASTParser
 {
-    private static final String s_includePath = "downloads/"
+    private static final String s_includePath = "include/"
 
     private GLBrebisParserResult m_result = new GLBrebisParserResult()
 
@@ -140,9 +140,9 @@ class GLBrebisASTParser
     }
 
 
-    public void parse(String url, String fileName, Boolean force)
+    public void parse(String url, String fileName)
     {
-        GLBrebisUtilities.download(url, s_includePath + fileName, force)
+        GLBrebisUtilities.download(url, s_includePath + fileName)
         parse(fileName)
     }
 

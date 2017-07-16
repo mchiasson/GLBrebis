@@ -33,8 +33,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef __glext_missing_h_
-#define __glext_missing_h_ 1
+#ifndef __glext_extra_h_
+#define __glext_extra_h_ 1
 
 #ifdef __cplusplus
 extern "C" {

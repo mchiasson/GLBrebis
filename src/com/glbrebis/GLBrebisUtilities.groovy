@@ -41,67 +41,13 @@ import java.util.zip.GZIPInputStream
 
 class GLBrebisUtilities
 {
-    private static final int s_connectionTimeOutmS = 5000
-    private static final int s_readTimeOutmS = 5000
-
-    public static String download(String uri, String fileName, Boolean force)
+    public static String download(String url, String fileName)
     {
-        if (force || !Files.exists(Paths.get(fileName)))
-        {
-            try
-            {
-                URLConnection uc = new URL(uri).openConnection()
-
-                if (s_readTimeOutmS > 0)
-                {
-                    uc.setReadTimeout(s_readTimeOutmS)
-                }
-
-                if (s_readTimeOutmS > 0)
-                {
-                    uc.setConnectTimeout(s_readTimeOutmS)
-                }
-
-                InputStream is = uc.getInputStream()
-
-                if ("gzip".equals(uc.getContentEncoding()))
-                {
-                    is = new GZIPInputStream(is)
-                }
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is))
-                String line = ""
-                StringBuilder builder = new StringBuilder()
-
-                print("Downloading " + uri + " ... ")
-                for(;;)
-                {
-                    line = reader.readLine()
-                    if (line == null)
-                    {
-                        break
-                    }
-                    if (builder.length() > 0)
-                    {
-                        builder.append('\n')
-                    }
-                    builder.append(line)
-                }
-                println("Done!")
-                reader.close()
-
-                writeFile(fileName, builder.toString())
-            }
-            catch (IOException e)
-            {
-                // most likely a an extention file.
-                try {
-                    Files.copy(Paths.get(uri), Paths.get(fileName), REPLACE_EXISTING)
-                } catch (IOException e2) {
-                    e.printStackTrace(); // print the first stack trace instead.
-                }
-            }
-        }
+        print("Downloading " + url + " ... ")
+        def out = new BufferedOutputStream(new FileOutputStream(fileName))
+        out << new URL(url).openStream()
+        out.close()
+        println("Done!")
         return readFile(fileName)
     }
 
