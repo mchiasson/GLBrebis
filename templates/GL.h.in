@@ -247,7 +247,7 @@ void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber);
     #define <%=prefix%>GLCheckError(x) x; _<%=prefix%>GLCheckError(__FILE__, __LINE__)
 #endif
 #if !defined(<%=prefix%>GLCheckErrorDebug)
-    #if defined(_DEBUG) || !defined(NDEBUG)
+    #if !defined(NDEBUG)
         #define <%=prefix%>GLCheckErrorDebug(x) x; _<%=prefix%>GLCheckError(__FILE__, __LINE__)
     #else
         #define <%=prefix%>GLCheckErrorDebug(x) x

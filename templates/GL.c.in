@@ -151,7 +151,7 @@ static void <%=prefix%>GLAddExtension(const char* const extensionStr, size_t ext
                 break;
             }<%}%>
         }
-#if defined(_DEBUG) || !defined(NDEBUG)
+#if !defined(NDEBUG)
         fprintf(stderr, "Found unwrangled extension: %.*s\\n", (int)extensionStrLength, extensionStr);
 #endif
         break;
