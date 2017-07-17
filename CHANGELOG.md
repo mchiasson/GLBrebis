@@ -1,3 +1,11 @@
+v1.0.3 / 2017-07-15
+===================
+  * Adapted to work with Emscripten without code change.
+  * Provided small sample example (MutCube)
+  * Only checking for !defined(NDEBUG) to determine if we're doing a production build
+  * using sscanf_s when on windows
+  * Removed unused headers, and fixed gl2ext.h
+
 v1.0.2 / 2017-07-15
 ===================
 
