@@ -66,6 +66,7 @@
 #if !defined(<%=PREFIX%>_GL_WRANGLER_ENABLED)
     #if __native_client__ || __EMSCRIPTEN__
         #include <GLES2/gl2.h>
+        #include <GLES2/gl2ext.h>
         #define <%=PREFIX%>_GL_WRANGLER_ENABLED 0
     #else
         #define <%=PREFIX%>_GL_WRANGLER_ENABLED 1
@@ -79,6 +80,14 @@
         #define <%=PREFIX%>_FORCE_INLINE __attribute__((always_inline)) static __inline__
     #else
         #define <%=PREFIX%>_FORCE_INLINE static inline
+    #endif
+#endif
+
+#ifndef <%=PREFIX%>_STD_CALL
+    #if defined(_WIN32)
+        #define <%=PREFIX%>_STD_CALL __stdcall
+    #else
+        #define <%=PREFIX%>_STD_CALL
     #endif
 #endif
 
@@ -158,6 +167,7 @@
     #define __gl_es20ext_h_ 1
     #define __gl_es30ext_h_ 1
     #define __gltypes_h_ 1
+#endif
 <%for (define in result.getAllUniqueDefines()) {%>
     #define <%=define.name + (define.value.length() > 0 ? (" " + define.value.toString()) : "")%><%}%>
 
@@ -168,17 +178,8 @@
 
     /* Extension IDs */<%
     for (ext in result.getAllUniqueExtensionGroups()) {%>
+    #undef <%=ext.name%>
     #define <%=ext.name + " " + (++ID).toString()%><%}%>
-
-#endif
-
-#ifndef <%=PREFIX%>_STD_CALL
-    #if defined(_WIN32)
-        #define <%=PREFIX%>_STD_CALL __stdcall
-    #else
-        #define <%=PREFIX%>_STD_CALL
-    #endif
-#endif
 
 #ifdef __cplusplus
 extern "C" {
