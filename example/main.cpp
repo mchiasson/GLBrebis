@@ -38,9 +38,13 @@ MutEngine *engine = NULL;
 
 /* Global */
 int last_mx = 0, last_my = 0, cur_mx = 0, cur_my = 0;
-int arcball_on = false;
-int screen_width = 1200;
-int screen_height = 900;
+int arcball_on = 0;
+int screen_width = 720;
+int screen_height = 720;
+float fovy = glm::radians(45.0f);
+float aspect = (float)screen_width / (float)screen_height;
+float zNear = 3.0;
+float zFar = 7.0;
 
 bool running;
 
@@ -53,6 +57,13 @@ int main(int argc, char *argv[])
                        "Unable to initialize SDL: %s\n", SDL_GetError());
         return 1;
     }
+
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     window = SDL_CreateWindow("GLBrebis Example",
                               SDL_WINDOWPOS_UNDEFINED,
@@ -91,6 +102,10 @@ int main(int argc, char *argv[])
 
     engine = new MutEngine();
 
+    engine->projection = glm::perspective(fovy, aspect, zNear, zFar);
+    engine->model = glm::translate(engine->model, glm::vec3(0.0f, 0.0f, -5.0f));
+
+
     running = true;
 
 #ifdef __EMSCRIPTEN__
@@ -119,9 +134,12 @@ int main(int argc, char *argv[])
 
 void onMouseDown(float x, float y)
 {
-    arcball_on = true;
-    last_mx = cur_mx = x;
-    last_my = cur_my = y;
+    if (arcball_on == 0)
+    {
+        last_mx = cur_mx = x;
+        last_my = cur_my = y;
+    }
+    ++arcball_on;
 }
 
 void onMouseMove(float x, float y)
@@ -134,7 +152,7 @@ void onMouseMove(float x, float y)
 
 void onMouseRelease(float x, float y)
 {
-    arcball_on = false;
+    --arcball_on;
 }
 
 glm::vec3 get_arcball_vector(int x, int y) {
@@ -169,10 +187,13 @@ void renderFrame()
             onMouseMove(e.button.x, e.button.y);
             break;
         case SDL_FINGERDOWN:
-            onMouseDown(e.button.x, e.button.y);
+            onMouseDown(e.tfinger.x*screen_width, e.tfinger.y*screen_height);
             break;
         case SDL_FINGERUP:
-            onMouseRelease(e.tfinger.x, e.tfinger.y);
+            onMouseRelease(e.tfinger.x*screen_width, e.tfinger.y*screen_height);
+            break;
+        case SDL_FINGERMOTION:
+            onMouseMove(e.tfinger.x*screen_width, e.tfinger.y*screen_height);
             break;
         case SDL_WINDOWEVENT:
             switch (e.window.event)

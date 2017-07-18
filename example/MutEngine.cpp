@@ -86,10 +86,6 @@ MutEngine::MutEngine()
         20, 20, 21, 22, 23
     };
 
-    const float fovy = glm::radians(45.0f), aspect = 1.333333333, zNear = 3.0, zFar = 7.0;
-    projection = glm::perspective(fovy, aspect, zNear, zFar);
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-
     program = MutShaderProgram::compileAndLink("assets/shader.vert", "assets/shader.frag");
 
     mutGLCheckErrorDebug ( glUseProgram(program) );
