@@ -1,0 +1,52 @@
+cmake_minimum_required(VERSION 3.7)
+
+include(cmake/HunterGate.cmake)
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.19.34.tar.gz"
+    SHA1 "9d0944566336eb6e4e26b4a709e1f17923a9aaa8"
+    LOCAL # <----- Use local config.cmake
+)
+
+project(GLBrebis)
+
+################################################################################
+# OpenSSL / Crypto Libraries
+################################################################################
+hunter_add_package(OpenSSL)
+find_package(OpenSSL REQUIRED)
+
+################################################################################
+# Poco C++ Libraries
+################################################################################
+hunter_add_package(PocoCpp)
+find_package(Poco REQUIRED Foundation JSON Net NetSSL Crypto Util Zip CONFIG)
+
+################################################################################
+# RapidXML
+################################################################################
+hunter_add_package(RapidXML)
+find_package(RapidXML REQUIRED CONFIG)
+
+################################################################################
+# GLBrebis Console App
+################################################################################
+
+configure_file(${GLBrebis_SOURCE_DIR}/template/GL.h.in ${GLBrebis_BINARY_DIR}/template/GL.h.in COPYONLY)
+
+add_executable(GLBrebis
+    src/GLBrebisApp.cpp
+    src/GLBrebisCodeGenerator.cpp
+    src/GLBrebisData.cpp
+    src/GLBrebisParser.cpp
+    src/GLBrebisUtilities.cpp
+    template/GL.h.in
+)
+
+target_link_libraries(GLBrebis
+    RapidXML::RapidXML
+    Poco::NetSSL
+    Poco::Net
+    Poco::Foundation
+    OpenSSL::SSL
+    OpenSSL::Crypto
+)
