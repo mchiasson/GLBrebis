@@ -11,11 +11,13 @@ class GLBrebisParser
 public:
     GLBrebisParser();
     void parse(const Poco::URI &uri);
+    void parse(const std::string &path);
 
     const std::string &getRawContent() const { return m_rawcontent; }
     const GLBrebisData &getResult() const { return m_result; }
 
 protected:
+    void parse();
     void parseEnums(GLBrebisData::Enums &enums, rapidxml::xml_node<> *pEnumsNode);
     void parseEnum(GLBrebisData::Enum &enum_, rapidxml::xml_node<> *pEnumNode);
     void parseCommands(GLBrebisData::Commands &commands, rapidxml::xml_node<> *pCommandsNode);

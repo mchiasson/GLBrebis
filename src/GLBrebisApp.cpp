@@ -46,7 +46,8 @@ void GLBrebisApp::defineOptions(Poco::Util::OptionSet &options)
 int GLBrebisApp::main(const std::vector<std::string>& args)
 {
     GLBrebisParser parser;
-    parser.parse(Poco::URI("https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml"));
+    //parser.parse(Poco::URI("https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml"));
+    parser.parse("gl.xml");
 
     GLBrebisCodeGenerator::generateGL(m_prefix, parser.getResult());
 

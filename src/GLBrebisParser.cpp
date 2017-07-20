@@ -35,6 +35,22 @@ void GLBrebisParser::parse(const Poco::URI &uri)
     m_rawcontent = GLBrebisUtilities::download(uri);
 
     logger.information("Parsing %s ... ", uri.getPath());
+    parse();
+}
+
+void GLBrebisParser::parse(const std::string &path)
+{
+    Poco::Logger &logger = Poco::Logger::get("GLBrebisParser");
+
+    logger.information("Loading %s ... ", path);
+    GLBrebisUtilities::readFile(path, m_rawcontent);
+
+    logger.information("Parsing %s ... ", path);
+    parse();
+}
+
+void GLBrebisParser::parse()
+{
     rapidxml::xml_document<> document;
     document.parse<0>(&m_rawcontent[0]);
 
