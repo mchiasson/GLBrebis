@@ -1,12 +1,15 @@
 #include "GLBrebisParser.h"
 
 #include <cstring>
+#include <sstream>
 #include <Poco/Logger.h>
 #include <Poco/String.h>
 
 
 #include "GLBrebisUtilities.h"
 
+static const char * types_node = "types";
+static const char * type_node = "type";
 static const char * enums_node = "enums";
 static const char * enum_node = "enum";
 static const char * commands_node = "commands";
@@ -58,6 +61,14 @@ void GLBrebisParser::parse()
 
     for (rapidxml::xml_node<> *pChildNode = pRegistry->first_node(); pChildNode; pChildNode = pChildNode->next_sibling())
     {
+        if (IS_NODE(pChildNode, types))
+        {
+            for(rapidxml::xml_node<> *pTypeNode = pChildNode->first_node(type_node); pTypeNode; pTypeNode = pTypeNode->next_sibling())
+            {
+                m_result.registry.types.resize(m_result.registry.types.size()+1);
+                parseType(m_result.registry.types.back(), pTypeNode);
+            }
+        }
         if (IS_NODE(pChildNode, enums))
         {
             m_result.registry.enums.resize(m_result.registry.enums.size()+1);
@@ -65,8 +76,11 @@ void GLBrebisParser::parse()
         }
         else if (IS_NODE(pChildNode, commands))
         {
-            m_result.registry.commands.resize(m_result.registry.commands.size()+1);
-            parseCommands(m_result.registry.commands.back(), pChildNode);
+            for(rapidxml::xml_node<> *pCommandNode = pChildNode->first_node(command_node); pCommandNode; pCommandNode = pCommandNode->next_sibling())
+            {
+                m_result.registry.commands.resize(m_result.registry.commands.size()+1);
+                parseCommand(m_result.registry.commands.back(), pCommandNode);
+            }
         }
         else if (IS_NODE(pChildNode, feature))
         {
@@ -83,6 +97,36 @@ void GLBrebisParser::parse()
         }
     }
 }
+
+void GLBrebisParser::parseType(GLBrebisData::Type &type, rapidxml::xml_node<> *pTypeNode)
+{
+    rapidxml::xml_attribute<> *pName = pTypeNode->first_attribute("name");
+    if (pName)
+    {
+        std::string nameAttr = VALUE_TO_STR(pName);
+        if (nameAttr == "stddef" || nameAttr == "khrplatform" || nameAttr == "inttypes") return; // not interested in those at all.
+    }
+
+    rapidxml::xml_attribute<> *pApi = pTypeNode->first_attribute("api");
+    if (pApi) { type.api = VALUE_TO_STR(pApi); }
+
+    std::stringstream signature;
+    for (rapidxml::xml_node<> *pChildNode = pTypeNode->first_node(); pChildNode; pChildNode = pChildNode->next_sibling())
+    {
+        signature << VALUE_TO_STR(pChildNode);
+    }
+    type.signature = signature.str();
+    Poco::replaceInPlace(type.signature, "khronos_", "");
+    Poco::replaceInPlace(type.signature, "float_t", "float");
+    Poco::replaceInPlace(type.signature, "ssize_t", "intptr_t");
+    Poco::replaceInPlace(type.signature, "ptrdiff_t", "intptr_t");
+    rapidxml::xml_node<> *pNameNode = pTypeNode->first_node(name_node);
+    if (pNameNode) {
+        type.name = VALUE_TO_STR(pNameNode);
+    }
+
+}
+
 
 void GLBrebisParser::parseEnums(GLBrebisData::Enums &enums, rapidxml::xml_node<> *pEnumsNode)
 {
@@ -123,23 +167,6 @@ void GLBrebisParser::parseEnum(GLBrebisData::Enum &enum_, rapidxml::xml_node<> *
     if (pAlias) enum_.alias = VALUE_TO_STR(pAlias);
 }
 
-void GLBrebisParser::parseCommands(GLBrebisData::Commands &commands, rapidxml::xml_node<> *pCommandsNode)
-{
-    // <commands namespace="GL">
-    rapidxml::xml_attribute<> *pNamespace = pCommandsNode->first_attribute("namespace");
-
-    if (pNamespace) commands.namespace_ = VALUE_TO_STR(pNamespace);
-
-    for (rapidxml::xml_node<> *pChildNode = pCommandsNode->first_node(); pChildNode; pChildNode = pChildNode->next_sibling())
-    {
-        if (IS_NODE(pChildNode, command))
-        {
-            commands.entries.resize(commands.entries.size()+1);
-            parseCommand(commands.entries.back(), pChildNode);
-        }
-    }
-}
-
 void GLBrebisParser::parseCommand(GLBrebisData::Command &command, rapidxml::xml_node<> *pCommandNode)
 {
     // <command>
@@ -171,12 +198,11 @@ void GLBrebisParser::parseProto(GLBrebisData::Proto &proto, rapidxml::xml_node<>
 
     rapidxml::xml_node<> *pPTypeNode = pProtoNode->first_node(ptype_node);
     if (pPTypeNode) {
-        proto.ptype = VALUE_TO_STR(pPTypeNode);
+        proto.ptype = VALUE_TO_STR(pPTypeNode) + " ";
     } else {
-        proto.ptype = Poco::trim(VALUE_TO_STR(pProtoNode));
+        proto.ptype = VALUE_TO_STR(pProtoNode);
     }
 
-    proto.ptype = pProtoNode->value();
     rapidxml::xml_node<> *pNameNode = pProtoNode->first_node(name_node);
     if (pNameNode) proto.name = pNameNode->value();
 }
@@ -194,12 +220,11 @@ void GLBrebisParser::parseParam(GLBrebisData::Param &param, rapidxml::xml_node<>
 
     rapidxml::xml_node<> *pPTypeNode = pParamNode->first_node(ptype_node);
     if (pPTypeNode) {
-        param.ptype = VALUE_TO_STR(pPTypeNode);
+        param.ptype = VALUE_TO_STR(pPTypeNode) + " ";
     } else {
-        param.ptype = Poco::trim(VALUE_TO_STR(pParamNode));
+        param.ptype = VALUE_TO_STR(pParamNode);
     }
 
-    param.ptype = pParamNode->value();
     rapidxml::xml_node<> *pNameNode = pParamNode->first_node(name_node);
     if (pNameNode) param.name = pNameNode->value();
 }

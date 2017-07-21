@@ -5,6 +5,14 @@
 #include <string>
 
 struct GLBrebisData {
+
+    struct Type
+    {
+        std::string api;
+        std::string name;
+        std::string signature;
+    };
+
     struct Enum
     {
         std::string value;
@@ -40,12 +48,7 @@ struct GLBrebisData {
     {
         Proto proto;
         std::vector<Param> params;
-    };
-
-    struct Commands
-    {
-        std::string namespace_;
-        std::vector<Command> entries;
+        bool operator< (const Command &other) { return proto.name.compare(other.proto.name) < 0; }
     };
 
     struct Feature
@@ -67,13 +70,17 @@ struct GLBrebisData {
 
     struct Registry
     {
+        std::vector<Type> types;
         std::vector<Enums> enums;
-        std::vector<Commands> commands;
+        std::vector<Command> commands;
         std::vector<Feature> features;
         std::vector<Extension> extensions;
     };
 
     std::vector<Enum> getAllUniqueDefines() const;
+    std::vector<Type> getAllUniqueTypes() const;
+    std::vector<Command> getAllUniqueFeatureCommands() const;
+    std::vector<Command> getAllUniqueExtensionCommands() const;
 
     Registry registry;
 };

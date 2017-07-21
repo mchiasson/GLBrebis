@@ -31,7 +31,9 @@ find_package(RapidXML REQUIRED CONFIG)
 # GLBrebis Console App
 ################################################################################
 
-file(DOWNLOAD https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml ${GLBrebis_BINARY_DIR}/gl.xml SHOW_PROGRESS)
+if (NOT EXISTS ${GLBrebis_BINARY_DIR}/gl.xml)
+    file(DOWNLOAD https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml ${GLBrebis_BINARY_DIR}/gl.xml SHOW_PROGRESS)
+endif()
 configure_file(${GLBrebis_SOURCE_DIR}/template/GL.h.in ${GLBrebis_BINARY_DIR}/template/GL.h.in COPYONLY)
 
 add_executable(GLBrebis

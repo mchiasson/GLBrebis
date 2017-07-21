@@ -18,9 +18,9 @@ public:
 
 protected:
     void parse();
+    void parseType(GLBrebisData::Type &enum_, rapidxml::xml_node<> *pEnumNode);
     void parseEnums(GLBrebisData::Enums &enums, rapidxml::xml_node<> *pEnumsNode);
     void parseEnum(GLBrebisData::Enum &enum_, rapidxml::xml_node<> *pEnumNode);
-    void parseCommands(GLBrebisData::Commands &commands, rapidxml::xml_node<> *pCommandsNode);
     void parseCommand(GLBrebisData::Command &command, rapidxml::xml_node<> *pCommandNode);
     void parseProto(GLBrebisData::Proto &proto, rapidxml::xml_node<> *pProtoNode);
     void parseParam(GLBrebisData::Param &param, rapidxml::xml_node<> *pParamNode);

@@ -221,14 +221,9 @@ void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber);
 
 
 #if <%=PREFIX%>_GL_WRANGLER_ENABLED
-/* Type definitions */<%for (typedef in result.getAllUniqueTypedefs()) {%>
-<%=typedef.signature%><%}%>
 
-/* Function pointer type definitions */<%for (funcPtr in result.getAllUniqueFuncPtrs()) {%>
-<%=funcPtr.signature%><%}%>
-
-/* Data structures */<%for (struct in result.getAllUniqueStructs()) {%>
-<%=struct.getSignature()%><%}%>
+/* Type definitions */
+<%=typeBlock%>
 #endif
 
 typedef struct <%=Prefix%>GLAPIConfig
@@ -239,20 +234,17 @@ typedef struct <%=Prefix%>GLAPIConfig
     const char* pVersion;
     int32_t     nVersionMajor;
     int32_t     nVersionMinor;
-    const char* extensions[<%=Math.max(result.getAllUniqueGLExtensionGroups().size(), result.getAllUniqueGLESExtensionGroups().size())%>];
+    const char* extensions[<%=extensionCount%>];
     size_t      extensionsCount;
     const char* pShadingLanguageVersion;
     int32_t     nShadingLanguageVersionMajor;
     int32_t     nShadingLanguageVersionMinor;
-    bool        supportedExtensions[<%=result.getAllUniqueVersionGroups().size() + result.getAllUniqueExtensionGroups().size() + 1%>];
+    bool        supportedExtensions[<%=IdCount%>];
 
-#if <%=PREFIX%>_GL_WRANGLER_ENABLED
-    /* GL function pointers */<%for (function in result.getAllUniqueVersionFunctions()) {%>
-    <%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%>(<%=PREFIX%>_STD_CALL *<%=prefix%><%=function.name.substring(2)%>)(<%=function.paramDeclaration%>);<%}%>
-
-    /* GL extension function pointers */<%for (function in result.getAllUniqueExtensionFunctions()) {%>
-    <%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%>(<%=PREFIX%>_STD_CALL *<%=prefix%><%=function.name.substring(2)%>)(<%=function.paramDeclaration%>);<%}%>
-#endif
+    /* GL Functions */
+<%=funcPtrBlock%>
+    /* GL Extension Functions */
+<%=extFuncPtrBlock%>
 } <%=Prefix%>GLAPIConfig;
 
 extern <%=Prefix%>GLAPIConfig <%=prefix%>GLAPI; // global instance.
@@ -261,12 +253,7 @@ extern <%=Prefix%>GLAPIConfig <%=prefix%>GLAPI; // global instance.
     return <%=prefix%>GLAPI.supportedExtensions[extensionID];
 }
 
-#if <%=PREFIX%>_GL_WRANGLER_ENABLED
-<%for (function in result.getAllUniqueFunctions()) {%>
-<%=PREFIX%>_FORCE_INLINE <%=function.returnParam + (function.returnParam.endsWith("*") ? "" : " ")%>_<%=prefix%><%=function.name.substring(2)%>(<%=function.paramDeclaration%>) {<%if (function.name.equals("glGetProgramPipelineivEXT") && function.paramDeclaration.matches(".*\\bpname\\b.*")) {%> if (<%=prefix%>GLSupport(GL_ES_VERSION_2_0) && (pname == GL_CURRENT_PROGRAM)) { pname = GL_ACTIVE_PROGRAM; } else if (<%=prefix%>GLSupport(GL_VERSION_1_0) && (pname == GL_ACTIVE_PROGRAM)) { pname = GL_CURRENT_PROGRAM; }<%}%> <%=function.returnParam.equalsIgnoreCase("void") ? "" : "return "%><%=prefix%>GLAPI.<%=prefix%><%=function.name.substring(2)%>(<%=function.paramCall%>); }<%}%>
-<%for (function in result.getAllUniqueFunctions()) {%>
-#define <%=function.name%> _<%=prefix%><%=function.name.substring(2)%><%}%>
-#endif /* <%=PREFIX%>_GL_WRANGLER_ENABLED */
+<%=funcImplBlock%>
 
 #ifdef __cplusplus
 } /* extern "C" */
