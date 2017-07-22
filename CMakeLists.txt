@@ -34,7 +34,8 @@ find_package(RapidXML REQUIRED CONFIG)
 if (NOT EXISTS ${GLBrebis_BINARY_DIR}/gl.xml)
     file(DOWNLOAD https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml ${GLBrebis_BINARY_DIR}/gl.xml SHOW_PROGRESS)
 endif()
-configure_file(${GLBrebis_SOURCE_DIR}/template/GL.h.in ${GLBrebis_BINARY_DIR}/template/GL.h.in COPYONLY)
+configure_file(${GLBrebis_SOURCE_DIR}/template/GL.h ${GLBrebis_BINARY_DIR}/template/GL.h COPYONLY)
+configure_file(${GLBrebis_SOURCE_DIR}/template/GL.c ${GLBrebis_BINARY_DIR}/template/GL.c COPYONLY)
 
 add_executable(GLBrebis
     src/GLBrebisApp.cpp
@@ -42,7 +43,6 @@ add_executable(GLBrebis
     src/GLBrebisData.cpp
     src/GLBrebisParser.cpp
     src/GLBrebisUtilities.cpp
-    template/GL.h.in
 )
 
 target_link_libraries(GLBrebis

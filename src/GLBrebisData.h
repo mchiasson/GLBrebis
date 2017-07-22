@@ -79,8 +79,13 @@ struct GLBrebisData {
 
     std::vector<Enum> getAllUniqueDefines() const;
     std::vector<Type> getAllUniqueTypes() const;
+    std::vector<Command> getAllUniqueCommands() const;
     std::vector<Command> getAllUniqueFeatureCommands() const;
     std::vector<Command> getAllUniqueExtensionCommands() const;
+    std::vector<std::string> getAllUniqueGLExtensions() const;
+    std::vector<std::string> getAllUniqueGLESExtensions() const;
+    std::vector<std::string> getAllUniqueFeatures() const;
+    std::vector<std::string> getAllUniqueExtensions() const;
 
     Registry registry;
 };

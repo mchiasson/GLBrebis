@@ -41,6 +41,12 @@ void GLBrebisApp::defineOptions(Poco::Util::OptionSet &options)
                 .argument("name")
                 .callback(Poco::Util::OptionCallback<GLBrebisApp>(this, &GLBrebisApp::handlePrefix)));
 
+    options.addOption(Poco::Util::Option("include", "i", "include path prefix to use in the generated GL.c")
+                .required(false)
+                .repeatable(false)
+                .argument("name")
+                .callback(Poco::Util::OptionCallback<GLBrebisApp>(this, &GLBrebisApp::handleInclude)));
+
 }
 
 int GLBrebisApp::main(const std::vector<std::string>& args)
@@ -49,7 +55,7 @@ int GLBrebisApp::main(const std::vector<std::string>& args)
     //parser.parse(Poco::URI("https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml"));
     parser.parse("gl.xml");
 
-    GLBrebisCodeGenerator::generateGL(m_prefix, parser.getResult());
+    GLBrebisCodeGenerator::generateGL(m_prefix, m_includePrefix, parser.getResult());
 
     return EXIT_OK;
 }
@@ -66,4 +72,9 @@ void GLBrebisApp::handleHelp(const std::string& name, const std::string& value)
 void GLBrebisApp::handlePrefix(const std::string& name, const std::string& value)
 {
     m_prefix = value;
+}
+
+void GLBrebisApp::handleInclude(const std::string& name, const std::string& value)
+{
+    m_includePrefix = value;
 }

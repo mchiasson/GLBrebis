@@ -16,8 +16,10 @@ protected:
 
     void handleHelp(const std::string& name, const std::string& value);
     void handlePrefix(const std::string& name, const std::string& value);
+    void handleInclude(const std::string& name, const std::string& value);
 
     std::string m_prefix;
+    std::string m_includePrefix;
 };
 
 POCO_APP_MAIN(GLBrebisApp)

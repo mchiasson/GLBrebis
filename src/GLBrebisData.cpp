@@ -74,6 +74,31 @@ std::vector<GLBrebisData::Type> GLBrebisData::getAllUniqueTypes() const
     return results;
 }
 
+std::vector<GLBrebisData::Command> GLBrebisData::getAllUniqueCommands() const
+{
+    std::vector<Command> results;
+
+    for(size_t i = 0; i < registry.commands.size(); ++i)
+    {
+        const Command &candidate = registry.commands[i];
+        size_t k;
+        for (k = 0; k < results.size(); ++k) {
+            if (candidate.proto.name == results[k].proto.name) {
+                break;
+            }
+        }
+
+        if (k == results.size()) {
+            results.push_back(candidate);
+        }
+    }
+
+    std::sort(results.begin(), results.end());
+
+    return results;
+
+}
+
 std::vector<GLBrebisData::Command> GLBrebisData::getAllUniqueFeatureCommands() const
 {
     std::vector<Command> results;
@@ -122,6 +147,112 @@ std::vector<GLBrebisData::Command> GLBrebisData::getAllUniqueExtensionCommands()
                     break;
                 }
             }
+        }
+    }
+
+    std::sort(results.begin(), results.end());
+
+    return results;
+}
+
+std::vector<std::string> GLBrebisData::getAllUniqueGLExtensions() const
+{
+    std::vector<std::string> results;
+
+    for(size_t i = 0; i < registry.extensions.size(); ++i)
+    {
+        const GLBrebisData::Extension &candidate = registry.extensions[i];
+        if (candidate.supported == "gl" ||
+            candidate.supported.compare(0, 3, "gl|") == 0)
+        {
+            size_t k;
+            for (k = 0; k < results.size(); ++k) {
+                if (candidate.name == results[k]) {
+                    break;
+                }
+            }
+
+            if (k == results.size()) {
+                results.push_back(candidate.name);
+            }
+        }
+    }
+
+    std::sort(results.begin(), results.end());
+
+    return results;
+
+}
+
+
+std::vector<std::string> GLBrebisData::getAllUniqueGLESExtensions() const
+{
+    std::vector<std::string> results;
+
+    for(size_t i = 0; i < registry.extensions.size(); ++i)
+    {
+        const GLBrebisData::Extension &candidate = registry.extensions[i];
+        if (candidate.supported.compare(0, 7, "gl|gles") == 0 ||
+            candidate.supported.compare(0, 4, "gles") == 0)
+        {
+            size_t k;
+            for (k = 0; k < results.size(); ++k) {
+                if (candidate.name == results[k]) {
+                    break;
+                }
+            }
+
+            if (k == results.size()) {
+                results.push_back(candidate.name);
+            }
+        }
+    }
+
+    std::sort(results.begin(), results.end());
+
+    return results;
+}
+
+std::vector<std::string> GLBrebisData::getAllUniqueFeatures() const
+{
+    std::vector<std::string> results;
+
+    for(size_t i = 0; i < registry.features.size(); ++i)
+    {
+        const GLBrebisData::Feature &candidate = registry.features[i];
+        size_t k;
+        for (k = 0; k < results.size(); ++k) {
+            if (candidate.name == results[k]) {
+                break;
+            }
+        }
+
+        if (k == results.size()) {
+            results.push_back(candidate.name);
+        }
+    }
+
+    std::sort(results.begin(), results.end());
+
+    return results;
+}
+
+std::vector<std::string> GLBrebisData::getAllUniqueExtensions() const
+{
+    std::vector<std::string> results;
+
+    for(size_t i = 0; i < registry.extensions.size(); ++i)
+    {
+        const GLBrebisData::Extension &candidate = registry.extensions[i];
+        size_t k;
+        for (k = 0; k < results.size(); ++k) {
+            if (candidate.name == results[k]) {
+                break;
+            }
+        }
+
+        if (k == results.size()) {
+            results.push_back(candidate.name);
         }
     }
 

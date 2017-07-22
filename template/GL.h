@@ -139,11 +139,11 @@
 
 #endif
 
-    /* GL and GL ES Definitions */
+/* GL and GL ES Definitions */
 <%=defineBlock%>
-    /* Version IDs */
+/* Version IDs */
 <%=versionBlock%>
-    /* Extension IDs */
+/* Extension IDs */
 <%=extensionBlock%>
 #ifdef __cplusplus
 extern "C" {
@@ -228,29 +228,15 @@ void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber);
 
 typedef struct <%=Prefix%>GLAPIConfig
 {
-    bool        bIsGLES;
-    const char* pRenderer;
-    const char* pVendor;
-    const char* pVersion;
-    int32_t     nVersionMajor;
-    int32_t     nVersionMinor;
-    const char* extensions[<%=extensionCount%>];
-    size_t      extensionsCount;
-    const char* pShadingLanguageVersion;
-    int32_t     nShadingLanguageVersionMajor;
-    int32_t     nShadingLanguageVersionMinor;
-    bool        supportedExtensions[<%=IdCount%>];
+    bool support[<%=IdCount%>];
 
-    /* GL Functions */
 <%=funcPtrBlock%>
-    /* GL Extension Functions */
-<%=extFuncPtrBlock%>
 } <%=Prefix%>GLAPIConfig;
 
 extern <%=Prefix%>GLAPIConfig <%=prefix%>GLAPI; // global instance.
 
-<%=PREFIX%>_FORCE_INLINE bool <%=prefix%>GLSupport(size_t extensionID) {
-    return <%=prefix%>GLAPI.supportedExtensions[extensionID];
+<%=PREFIX%>_FORCE_INLINE bool <%=prefix%>GLSupport(size_t id) {
+    return <%=prefix%>GLAPI.support[id];
 }
 
 <%=funcImplBlock%>

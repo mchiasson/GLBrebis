@@ -7,7 +7,7 @@ class GLBrebisCodeGenerator
 {
     GLBrebisCodeGenerator();
 public:
-    static void generateGL(const std::string &prefix, const GLBrebisData &result);
+    static void generateGL(const std::string &prefix, const std::string &includePrefix, const GLBrebisData &result);
 };
 
 #endif // GLBREBISCODEGENERATOR_H
