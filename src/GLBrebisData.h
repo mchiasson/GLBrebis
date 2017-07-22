@@ -34,13 +34,14 @@ struct GLBrebisData {
     {
         std::string group;
         std::string name;
-        std::string ptype;
+        std::string signature;
     };
 
     struct Param
     {
         std::string group;
-        std::string ptype;
+        std::string signature;
+        std::string signatureFull;
         std::string name;
     };
 

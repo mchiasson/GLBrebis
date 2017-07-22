@@ -1,1 +1,15 @@
-CMakeLists.txt.user
+# Garbage from IDE
+**/CMakeLists.txt.user
+**/CMakeLists.txt.autosave
+
+# generated/downloaded file
+gl.xml
+gl.xml.c
+gl.xml.h
+example/MutGL.c
+example/MutGL.h
+template/GL.c.template.c
+template/GL.c.template.h
+template/GL.h.template.c
+template/GL.h.template.h
+

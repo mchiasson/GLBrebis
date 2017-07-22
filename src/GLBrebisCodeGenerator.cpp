@@ -1,6 +1,9 @@
 #include "GLBrebisCodeGenerator.h"
 #include "GLBrebisUtilities.h"
 
+#include "template/GL.c.template.h"
+#include "template/GL.h.template.h"
+
 #include <string>
 #include <cctype>
 #include <cstdio>
@@ -11,6 +14,7 @@
 #include <Poco/DateTime.h>
 #include <Poco/DateTimeFormat.h>
 #include <Poco/DateTimeFormatter.h>
+
 
 template < typename T > std::string toString(const T& n)
 {
@@ -87,31 +91,31 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix, const std::s
 
         /////////////// funcPtrBlock ////////////////////
 
-        funcPtrBlock << "    " << command.proto.ptype << "(" << PREFIX << "_STD_CALL *" << prefix << &command.proto.name[2] << ")(";
+        funcPtrBlock << "    " << command.proto.signature << "(" << PREFIX << "_STD_CALL *" << prefix << &command.proto.name[2] << ")(";
         for (size_t j = 0; j < command.params.size(); ++j)
         {
             const GLBrebisData::Param &param = command.params[j];
             if (j > 0) funcPtrBlock << ", ";
-            funcPtrBlock << param.ptype << param.name;
+            funcPtrBlock << param.signature;
         }
         funcPtrBlock << ");" << std::endl;
 
         /////////////// funcImplBlock ////////////////////
 
         funcImplBlock << "#ifndef " << command.proto.name << std::endl;
-        funcImplBlock << PREFIX << "_FORCE_INLINE " << command.proto.ptype << " _" << prefix << &command.proto.name[2] << "(";
+        funcImplBlock << PREFIX << "_FORCE_INLINE " << command.proto.signature << " _" << prefix << &command.proto.name[2] << "(";
         for (size_t j = 0; j < command.params.size(); ++j)
         {
             const GLBrebisData::Param &param = command.params[j];
             if (j > 0) funcImplBlock << ", ";
-            funcImplBlock << param.ptype << param.name;
+            funcImplBlock << param.signatureFull;
         }
         funcImplBlock << ") { ";
         if (command.proto.name == "glGetProgramPipelineivEXT")
         {
             funcImplBlock << "if (" << prefix << "GLSupport(GL_ES_VERSION_2_0) && (pname == GL_CURRENT_PROGRAM)) { pname = GL_ACTIVE_PROGRAM; } else if (" << prefix << "GLSupport(GL_VERSION_1_0) && (pname == GL_ACTIVE_PROGRAM)) { pname = GL_CURRENT_PROGRAM; } ";
         }
-        if (command.proto.ptype.compare(0,6,"void *") == 0 || command.proto.ptype.compare(0,5,"void ") != 0)
+        if (command.proto.signature.compare(0,6,"void *") == 0 || command.proto.signature.compare(0,5,"void ") != 0)
         {
             funcImplBlock << "return ";
         }
@@ -124,7 +128,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix, const std::s
         }
         funcImplBlock << "); }" << std::endl;
         funcImplBlock << "#define " << command.proto.name << " _" << prefix << &command.proto.name[2] << std::endl;
-        funcImplBlock << "#endif " << command.proto.name << std::endl;
+        funcImplBlock << "#endif" << std::endl;
 
     }
 
@@ -135,7 +139,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix, const std::s
         const std::string &extension = uniqueGLESExtensions[i];
         glesAddExtensionBlock << "        ";
         if (i > 0) glesAddExtensionBlock << "else ";
-        glesAddExtensionBlock << "if (!" << prefix << "GLAPI.support[" << extension <<  "] && (extensionStrLength == " << extension.length() << ") && strncmp(extensionStr, \"" << extension <<  "\", extensionStrLength) == 0) { " << prefix << "GLAPI.support[" << extension <<  "] = true; break; }" << std::endl;
+        glesAddExtensionBlock << "if (!" << prefix << "GLAPI.support[" << extension <<  "] && (extensionStrLength == " << extension.length() << ") && strncmp(extensionStr, \"" << extension <<  "\", extensionStrLength) == 0) { " << prefix << "GLAPI.support[" << extension <<  "] = true; return; }" << std::endl;
     }
 
     std::stringstream glAddExtensionBlock;
@@ -145,19 +149,19 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix, const std::s
         const std::string &extension = uniqueGLExtensions[i];
         glAddExtensionBlock << "        ";
         if (i > 0) glAddExtensionBlock << "else ";
-        glAddExtensionBlock << "if (!" << prefix << "GLAPI.support[" << extension <<  "] && (extensionStrLength == " << extension.length() << ") && strncmp(extensionStr, \"" << extension <<  "\", extensionStrLength) == 0) { " << prefix << "GLAPI.support[" << extension <<  "] = true; break; }" << std::endl;
+        glAddExtensionBlock << "if (!" << prefix << "GLAPI.support[" << extension <<  "] && (extensionStrLength == " << extension.length() << ") && strncmp(extensionStr, \"" << extension <<  "\", extensionStrLength) == 0) { " << prefix << "GLAPI.support[" << extension <<  "] = true; return; }" << std::endl;
     }
 
     std::stringstream getProcBlock;
     for(size_t i = 0; i < uniqueCommands.size(); ++i)
     {
         const GLBrebisData::Command &command = uniqueCommands[i];
-        getProcBlock << "    " << prefix << "GLAPI." << prefix << &command.proto.name[2] << " = (" << command.proto.ptype << "(" << PREFIX << "_STD_CALL *)(";
+        getProcBlock << "    " << prefix << "GLAPI." << prefix << &command.proto.name[2] << " = (" << command.proto.signature << "(" << PREFIX << "_STD_CALL *)(";
         for (size_t j = 0; j < command.params.size(); ++j)
         {
             const GLBrebisData::Param &param = command.params[j];
             if (j > 0) getProcBlock << ", ";
-            getProcBlock << param.ptype << param.name;
+            getProcBlock << param.signature;
         }
         getProcBlock << "))" << prefix << "GLGetProcAddress(\"" << command.proto.name << "\");" << std::endl;
     }
@@ -173,48 +177,50 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix, const std::s
 
         if (feature.api == "gl")
         {
-            glSupportBlock << "        " << prefix << "GLAPI.support[" << feature.name << "] = ((" << prefix << "GLAPI.nVersionMajor > " << majorVersion << ") || ((" << prefix << "GLAPI.nVersionMajor == "<< majorVersion << ") && (" << prefix << "GLAPI.nVersionMinor >= " << minorVersion << ")));" << std::endl;
+            glSupportBlock << "        " << prefix << "GLAPI.support[" << feature.name << "] = ((versionMajor > " << majorVersion << ") || ((versionMajor == "<< majorVersion << ") && (versionMinor >= " << minorVersion << ")));" << std::endl;
         }
         else
         {
-            glesSupportBlock << "        " << prefix << "GLAPI.support[" << feature.name << "] = ((" << prefix << "GLAPI.nVersionMajor > " << majorVersion << ") || ((" << prefix << "GLAPI.nVersionMajor == "<< majorVersion << ") && (" << prefix << "GLAPI.nVersionMinor >= " << minorVersion << ")));" << std::endl;
+            glesSupportBlock << "        " << prefix << "GLAPI.support[" << feature.name << "] = ((versionMajor > " << majorVersion << ") || ((versionMajor == "<< majorVersion << ") && (versionMinor >= " << minorVersion << ")));" << std::endl;
         }
 
     }
 
     logger.information("Generating %sGL.h ...", inPrefix);
 
-    std::string header;
-    GLBrebisUtilities::readFile("template/GL.h", header);
-    Poco::replaceInPlace(header, "<%=now%>", nowStr.c_str());
-    Poco::replaceInPlace(header, "<%=year%>", year.c_str());
-    Poco::replaceInPlace(header, "<%=prefix%>", prefix.c_str());
-    Poco::replaceInPlace(header, "<%=Prefix%>", Prefix.c_str());
-    Poco::replaceInPlace(header, "<%=PREFIX%>", PREFIX.c_str());
-    Poco::replaceInPlace(header, "<%=defineBlock%>", defineBlock.str().c_str());
-    Poco::replaceInPlace(header, "<%=versionBlock%>", versionBlock.str().c_str());
-    Poco::replaceInPlace(header, "<%=extensionBlock%>", extensionBlock.str().c_str());
-    Poco::replaceInPlace(header, "<%=typeBlock%>", typeBlock.str().c_str());
-    Poco::replaceInPlace(header, "<%=extensionCount%>", toString(result.registry.extensions.size()).c_str());
-    Poco::replaceInPlace(header, "<%=IdCount%>", toString(IdCount).c_str());
-    Poco::replaceInPlace(header, "<%=funcPtrBlock%>", funcPtrBlock.str().c_str());
-    Poco::replaceInPlace(header, "<%=funcImplBlock%>", funcImplBlock.str().c_str());
-    GLBrebisUtilities::writeFile(inPrefix + "GL.h", header);
+    std::string content;
+    //GLBrebisUtilities::readFile("template/GL.h.template", header);
+    content = std::string((char*)GL_h_template, sizeof(GL_h_template));
+    Poco::replaceInPlace(content, "<%=now%>", nowStr.c_str());
+    Poco::replaceInPlace(content, "<%=year%>", year.c_str());
+    Poco::replaceInPlace(content, "<%=prefix%>", prefix.c_str());
+    Poco::replaceInPlace(content, "<%=Prefix%>", Prefix.c_str());
+    Poco::replaceInPlace(content, "<%=PREFIX%>", PREFIX.c_str());
+    Poco::replaceInPlace(content, "<%=defineBlock%>", defineBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=versionBlock%>", versionBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=extensionBlock%>", extensionBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=typeBlock%>", typeBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=extensionCount%>", toString(result.registry.extensions.size()).c_str());
+    Poco::replaceInPlace(content, "<%=IdCount%>", toString(IdCount).c_str());
+    Poco::replaceInPlace(content, "<%=funcPtrBlock%>", funcPtrBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=funcImplBlock%>", funcImplBlock.str().c_str());
+    GLBrebisUtilities::writeFile(inPrefix + "GL.h", content);
 
     logger.information("Generating %sGL.c ...", inPrefix);
-    GLBrebisUtilities::readFile("template/GL.c", header);
-    Poco::replaceInPlace(header, "<%=now%>", nowStr.c_str());
-    Poco::replaceInPlace(header, "<%=year%>", year.c_str());
-    Poco::replaceInPlace(header, "<%=prefix%>", prefix.c_str());
-    Poco::replaceInPlace(header, "<%=Prefix%>", Prefix.c_str());
-    Poco::replaceInPlace(header, "<%=PREFIX%>", PREFIX.c_str());
-    Poco::replaceInPlace(header, "<%=includePrefix%>", includePrefix.c_str());
-    Poco::replaceInPlace(header, "<%=glesAddExtensionBlock%>", glesAddExtensionBlock.str().c_str());
-    Poco::replaceInPlace(header, "<%=glAddExtensionBlock%>", glAddExtensionBlock.str().c_str());
-    Poco::replaceInPlace(header, "<%=getProcBlock%>", getProcBlock.str().c_str());
-    Poco::replaceInPlace(header, "<%=glSupportBlock%>", glSupportBlock.str().c_str());
-    Poco::replaceInPlace(header, "<%=glesSupportBlock%>", glesSupportBlock.str().c_str());
-    GLBrebisUtilities::writeFile(inPrefix + "GL.c", header);
+    //GLBrebisUtilities::readFile("template/GL.c.template", header);
+    content = std::string((char*)GL_c_template, sizeof(GL_c_template));
+    Poco::replaceInPlace(content, "<%=now%>", nowStr.c_str());
+    Poco::replaceInPlace(content, "<%=year%>", year.c_str());
+    Poco::replaceInPlace(content, "<%=prefix%>", prefix.c_str());
+    Poco::replaceInPlace(content, "<%=Prefix%>", Prefix.c_str());
+    Poco::replaceInPlace(content, "<%=PREFIX%>", PREFIX.c_str());
+    Poco::replaceInPlace(content, "<%=includePrefix%>", includePrefix.c_str());
+    Poco::replaceInPlace(content, "<%=glesAddExtensionBlock%>", glesAddExtensionBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=glAddExtensionBlock%>", glAddExtensionBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=getProcBlock%>", getProcBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=glSupportBlock%>", glSupportBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=glesSupportBlock%>", glesSupportBlock.str().c_str());
+    GLBrebisUtilities::writeFile(inPrefix + "GL.c", content);
 
     logger.information("Done!");
 }

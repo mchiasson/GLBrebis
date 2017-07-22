@@ -71,8 +71,8 @@ typedef void(<%=PREFIX%>_STD_CALL *<%=Prefix%>GLProc)();
     return proc;
 }
 
-static void <%=prefix%>GLAddExtension(const char* const extensionStr, size_t extensionStrLength) {
-    if(<%=prefix%>GLAPI.bIsGLES) {
+static void <%=prefix%>GLAddExtension(bool isGLES, const char* const extensionStr, size_t extensionStrLength) {
+    if(isGLES) {
 <%=glesAddExtensionBlock%>
         // Discovered a bug in Qualcomm Adreno 200 OpenGL ES driver, where
         // these three extensions are literally fused together.
@@ -85,7 +85,7 @@ static void <%=prefix%>GLAddExtension(const char* const extensionStr, size_t ext
 <%=glAddExtensionBlock%>
     }
 #if !defined(NDEBUG)
-    fprintf(stderr, "Found unwrangled extension: %.*s\\n", (int)extensionStrLength, extensionStr);
+    fprintf(stderr, "Found unwrangled extension: %.*s\n", (int)extensionStrLength, extensionStr);
 #endif
 }
 
@@ -143,14 +143,14 @@ bool <%=prefix%>GLInit() {
         while(i < nExtensionsCount)
         {
             const char* extensionStr = (const char*)<%=prefix%>GLCheckErrorDebug(glGetStringi(GL_EXTENSIONS, i++));
-            <%=prefix%>GLAddExtension(extensionStr, strlen(extensionStr));
+            <%=prefix%>GLAddExtension(isGLES, extensionStr, strlen(extensionStr));
         }
     } else {
         const char* extensionsStr = (const char*)<%=prefix%>GLCheckErrorDebug(glGetString(GL_EXTENSIONS));
         while (extensionsStr) {
             const char* spacerPos = strchr(extensionsStr, ' ');
             size_t extensionsStrLength = spacerPos ? (size_t)(spacerPos++ - extensionsStr) : strlen(extensionsStr);
-            <%=prefix%>GLAddExtension(extensionsStr, extensionsStrLength);
+            <%=prefix%>GLAddExtension(isGLES, extensionsStr, extensionsStrLength);
             extensionsStr = spacerPos;
         }
     }

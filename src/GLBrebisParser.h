@@ -12,6 +12,7 @@ public:
     GLBrebisParser();
     void parse(const Poco::URI &uri);
     void parse(const std::string &path);
+    void parse(const unsigned char *buffer, size_t bufferSize);
 
     const std::string &getRawContent() const { return m_rawcontent; }
     const GLBrebisData &getResult() const { return m_result; }

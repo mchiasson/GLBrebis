@@ -52,6 +52,12 @@ void GLBrebisParser::parse(const std::string &path)
     parse();
 }
 
+void GLBrebisParser::parse(const unsigned char *buffer, size_t bufferSize)
+{
+    m_rawcontent = std::string((char*)buffer, bufferSize);
+    parse();
+}
+
 void GLBrebisParser::parse()
 {
     rapidxml::xml_document<> document;
@@ -195,16 +201,18 @@ void GLBrebisParser::parseProto(GLBrebisData::Proto &proto, rapidxml::xml_node<>
     rapidxml::xml_attribute<> *pGroup = pProtoNode->first_attribute("group");
     if (pGroup) proto.group  = VALUE_TO_STR(pGroup);
 
-
-    rapidxml::xml_node<> *pPTypeNode = pProtoNode->first_node(ptype_node);
-    if (pPTypeNode) {
-        proto.ptype = VALUE_TO_STR(pPTypeNode) + " ";
-    } else {
-        proto.ptype = VALUE_TO_STR(pProtoNode);
-    }
-
     rapidxml::xml_node<> *pNameNode = pProtoNode->first_node(name_node);
     if (pNameNode) proto.name = pNameNode->value();
+
+    std::stringstream signature;
+    for (rapidxml::xml_node<> *pChildNode = pProtoNode->first_node(); pChildNode; pChildNode = pChildNode->next_sibling())
+    {
+        if (!IS_NODE(pChildNode, name))
+        {
+            signature << VALUE_TO_STR(pChildNode);
+        }
+    }
+    proto.signature = signature.str();
 }
 
 void GLBrebisParser::parseParam(GLBrebisData::Param &param, rapidxml::xml_node<> *pParamNode)
@@ -217,16 +225,25 @@ void GLBrebisParser::parseParam(GLBrebisData::Param &param, rapidxml::xml_node<>
     rapidxml::xml_attribute<> *pGroup = pParamNode->first_attribute("group");
     if (pGroup) param.group  = VALUE_TO_STR(pGroup);
 
-
-    rapidxml::xml_node<> *pPTypeNode = pParamNode->first_node(ptype_node);
-    if (pPTypeNode) {
-        param.ptype = VALUE_TO_STR(pPTypeNode) + " ";
-    } else {
-        param.ptype = VALUE_TO_STR(pParamNode);
-    }
-
     rapidxml::xml_node<> *pNameNode = pParamNode->first_node(name_node);
     if (pNameNode) param.name = pNameNode->value();
+
+    std::stringstream signature;
+    std::stringstream signatureFull;
+    for (rapidxml::xml_node<> *pChildNode = pParamNode->first_node(); pChildNode; pChildNode = pChildNode->next_sibling())
+    {
+        if (IS_NODE(pChildNode, name))
+        {
+            signatureFull << " " << VALUE_TO_STR(pChildNode);
+        }
+        else
+        {
+            signature << VALUE_TO_STR(pChildNode);
+            signatureFull << VALUE_TO_STR(pChildNode);
+        }
+    }
+    param.signature = signature.str();
+    param.signatureFull = signatureFull.str();
 }
 
 void GLBrebisParser::parseFeature(GLBrebisData::Feature &feature, rapidxml::xml_node<> *pFeatureNode)

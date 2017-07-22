@@ -10,6 +10,8 @@
 #include "GLBrebisParser.h"
 #include "GLBrebisCodeGenerator.h"
 
+#include "gl.xml.h"
+
 void GLBrebisApp::initialize(Application& self)
 {
     loadConfiguration(); // load default configuration files
@@ -53,7 +55,8 @@ int GLBrebisApp::main(const std::vector<std::string>& args)
 {
     GLBrebisParser parser;
     //parser.parse(Poco::URI("https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml"));
-    parser.parse("gl.xml");
+    //parser.parse("gl.xml");
+    parser.parse(gl_xml, sizeof(gl_xml));
 
     GLBrebisCodeGenerator::generateGL(m_prefix, m_includePrefix, parser.getResult());
 
