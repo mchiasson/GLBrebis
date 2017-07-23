@@ -3,6 +3,12 @@ A simple GL extension wrangler drop-in generator for OpenGL and OpenGL ES apps.
 
 this program will generate a set of highly portable C99 compliant OpenGL and OpenGL ES function wrangler code with any *prefix* customization that you want. Just generate your wrangler code, drop the two files into your project and start coding! It's as simple as that.
 
+Now available as a web service:
+
+http://35.186.184.156:3772/?prefix=Mut&include=mut
+
+('Mut' is just a fictional example)
+
 This project replaces the need of using a 3rdparty library to wrangle your GL function pointers (e.g. GLEW). Works pretty much the same way than GLEW, but also adds GLES support, and to some useful utilities, such as `<prefix>GLSupport`:
 
 ```C++

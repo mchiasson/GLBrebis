@@ -1,3 +1,9 @@
+v1.0.1
+======
+* GLBrebis now available as a stand-alone web service
+* Updated documentation for the new -z,--zip command line flag.
+* Auto-archive generated code into a zip file via -z,--zip command line flag
+
 v1.0.0
 ======
 
