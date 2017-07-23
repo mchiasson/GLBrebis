@@ -19,7 +19,7 @@ protected:
     void handleInclude(const std::string& name, const std::string& value);
 
     std::string m_prefix;
-    std::string m_includePrefix;
+    std::string m_includePath;
 };
 
 POCO_APP_MAIN(GLBrebisApp)

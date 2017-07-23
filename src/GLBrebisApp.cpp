@@ -12,9 +12,14 @@
 
 #include "xml/gl.xml.h"
 
+#define PARSE_METHOD_DOWNLOAD 1
+#define PARSE_METHOD_FILE 2
+#define PARSE_METHOD_EMBEDDED 3
+
+#define PARSE_METHOD PARSE_METHOD_EMBEDDED
+
 void GLBrebisApp::initialize(Application& self)
 {
-    loadConfiguration(); // load default configuration files
     Application::initialize(self);
 }
 
@@ -30,7 +35,7 @@ void GLBrebisApp::uninitialize()
 
 void GLBrebisApp::defineOptions(Poco::Util::OptionSet &options)
 {
-    Poco::Util::Application::defineOptions(options);
+    Application::defineOptions(options);
 
     options.addOption(Poco::Util::Option("help", "h", "Usage Information")
                 .required(false)
@@ -40,13 +45,13 @@ void GLBrebisApp::defineOptions(Poco::Util::OptionSet &options)
     options.addOption(Poco::Util::Option("prefix", "p", "Project prefix to append to every generated files and symbols")
                 .required(true)
                 .repeatable(false)
-                .argument("name")
+                .argument("<prefix>")
                 .callback(Poco::Util::OptionCallback<GLBrebisApp>(this, &GLBrebisApp::handlePrefix)));
 
     options.addOption(Poco::Util::Option("include", "i", "include path prefix to use in the generated GL.c")
                 .required(false)
                 .repeatable(false)
-                .argument("name")
+                .argument("<includepath>")
                 .callback(Poco::Util::OptionCallback<GLBrebisApp>(this, &GLBrebisApp::handleInclude)));
 
 }
@@ -54,11 +59,22 @@ void GLBrebisApp::defineOptions(Poco::Util::OptionSet &options)
 int GLBrebisApp::main(const std::vector<std::string>& args)
 {
     GLBrebisParser parser;
-    //parser.parse(Poco::URI("https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml"));
-    //parser.parse("gl.xml");
+
+#if PARSE_METHOD == PARSE_METHOD_DOWNLOAD
+
+    parser.parse(Poco::URI("https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml"));
+
+#elif PARSE_METHOD == PARSE_METHOD_FILE
+
+    parser.parse("xml/gl.xml");
+
+#elif PARSE_METHOD == PARSE_METHOD_EMBEDDED
+
     parser.parse(gl_xml, sizeof(gl_xml));
 
-    GLBrebisCodeGenerator::generateGL(m_prefix, m_includePrefix, parser.getResult());
+#endif
+
+    GLBrebisCodeGenerator::generateGL(m_prefix, m_includePath, parser.getResult());
 
     return EXIT_OK;
 }
@@ -67,9 +83,10 @@ void GLBrebisApp::handleHelp(const std::string& name, const std::string& value)
 {
     Poco::Util::HelpFormatter helpFormatter(options());
     helpFormatter.setCommand(commandName());
-    helpFormatter.setUsage("OPTIONS");
+    helpFormatter.setUsage("-p <prefix> [-i includepath]");
     helpFormatter.format(std::cout);
     stopOptionsProcessing();
+    exit(EXIT_USAGE);
 }
 
 void GLBrebisApp::handlePrefix(const std::string& name, const std::string& value)
@@ -79,5 +96,17 @@ void GLBrebisApp::handlePrefix(const std::string& name, const std::string& value
 
 void GLBrebisApp::handleInclude(const std::string& name, const std::string& value)
 {
-    m_includePrefix = value;
+    m_includePath = value;
+    if (m_includePath.length() > 0)
+    {
+        size_t lastCharPos = m_includePath.length()-1;
+        if (m_includePath[lastCharPos] == '\\')
+        {
+            m_includePath[lastCharPos] = '/';
+        }
+        else if(m_includePath[lastCharPos] != '/')
+        {
+            m_includePath += '/';
+        }
+    }
 }
