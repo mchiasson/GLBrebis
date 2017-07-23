@@ -1,4 +1,7 @@
 ################################################################################
+# Author: Mathieu-André Chiasson
+# Date: 2017-07-21
+#
 # This is free and unencumbered software released into the public domain.
 #
 # Anyone is free to copy, modify, publish, use, compile, sell, or distribute
@@ -21,6 +24,7 @@
 #
 # For more information, please refer to <http://unlicense.org/>
 ################################################################################
+
 cmake_minimum_required(VERSION 3.0)
 
 include(ExternalProject)

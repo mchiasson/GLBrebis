@@ -1,0 +1,5 @@
+texture.png was taken from https://wiki.blender.org/index.php/User:Koilz/13.03.15_wiki_-_2.6_Texture_a_Dice
+
+The credit for texture.png goes to user 'Koilz' hoping that they are the original author of this texture, and hoping that they don't mind that I am borrowing their dice texture for my example, as I was unable to figure out how to reach user 'Koilz' to ask for their permission to use their artwork. 
+
+If you have a problem having me use this texture for my example, please let me know and I will take it down right away.
