@@ -45,6 +45,7 @@
 #include "GLBrebisCodeGenerator.h"
 
 #include "xml/gl.xml.h"
+#include "xml/extra.xml.h"
 #include "KHR/khrplatform.h.h"
 
 #define PARSE_METHOD_DOWNLOAD 1
@@ -108,14 +109,17 @@ int GLBrebisApp::main(const std::vector<std::string>& args)
 #if PARSE_METHOD == PARSE_METHOD_DOWNLOAD
 
     parser.parse(Poco::URI("https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml"));
+    parser.parse("xml/extra.xml");
 
 #elif PARSE_METHOD == PARSE_METHOD_FILE
 
     parser.parse("xml/gl.xml");
+    parser.parse("xml/extra.xml");
 
 #elif PARSE_METHOD == PARSE_METHOD_EMBEDDED
 
     parser.parse(gl_xml, sizeof(gl_xml));
+    parser.parse(extra_xml, sizeof(extra_xml));
 
 #endif
     Poco::Logger &logger = Poco::Logger::get("GLBrebisApp");

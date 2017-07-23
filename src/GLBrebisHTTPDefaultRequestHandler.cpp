@@ -42,6 +42,7 @@
 #include "GLBrebisParser.h"
 #include "GLBrebisCodeGenerator.h"
 #include "xml/gl.xml.h"
+#include "xml/extra.xml.h"
 #include "KHR/khrplatform.h.h"
 
 void GLBrebisHTTPDefaultRequestHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Poco::Net::HTTPServerResponse& response)
@@ -79,6 +80,7 @@ void GLBrebisHTTPDefaultRequestHandler::handleRequest(Poco::Net::HTTPServerReque
 
     GLBrebisParser parser;
     parser.parse(gl_xml, sizeof(gl_xml));
+    parser.parse(extra_xml, sizeof(extra_xml));
 
     GLBrebisCodeGenerator::generateGL(prefix, include, true, parser.getResult(), sourceSteram, headerStream);
 

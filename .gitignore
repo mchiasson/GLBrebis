@@ -18,4 +18,7 @@ template/GL.h.template.h
 xml/gl.xml
 xml/gl.xml.c
 xml/gl.xml.h
+xml/extra.xml.c
+xml/extra.xml.h
+
 

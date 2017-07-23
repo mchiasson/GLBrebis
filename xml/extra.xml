@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<registry>
+    <comment>
+Collection of GL extension that are unavailable in neither GLES2/gl2ext.h nor
+GL/glext.h.
+
+They usually appear in the log terminal like this
+
+mutGLInit() : Found unwrangled extension: GL_EXT_Cg_shader
+mutGLInit() : Found unwrangled extension: GL_EXTX_framebuffer_mixed_formats
+mutGLInit() : Found unwrangled extension: GL_EXT_texture_compression_dxt1
+mutGLInit() : Found unwrangled extension: GL_EXT_texture_edge_clamp
+mutGLInit() : Found unwrangled extension: GL_EXT_texture_lod
+mutGLInit() : Found unwrangled extension: GL_EXT_texture_storage
+mutGLInit() : Found unwrangled extension: GL_EXT_import_sync_object
+mutGLInit() : Found unwrangled extension: GL_KTX_buffer_region
+mutGLInit() : Found unwrangled extension: GL_NV_ES1_1_compatibility
+
+I manually gather these missing extensions in this file to the best of my
+knowledge, but these extensions are most likely untested and might not even
+work. Use at your own risk!
+
+https://github.com/mchiasson/GLBrebis
+
+--------------------------------------------------------------------------------
+GLBrebis License (MIT)
+--------------------------------------------------------------------------------
+Copyright (c) 2015-2017 Mathieu-André Chiasson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+    </comment>
+
+    <!-- SECTION: GL enumerant (token) definitions. -->
+
+    <enums namespace="GL" group="GL_EXT_Cg_shader">
+        <enum value="0x890E" name="GL_CG_VERTEX_SHADER_EXT"/>
+        <enum value="0x890F" name="GL_CG_FRAGMENT_SHADER_EXT"/>
+    </enums>
+
+    <enums namespace="GL" group="GL_EXT_texture_edge_clamp">
+        <enum value="0x812F" name="GL_CLAMP_TO_EDGE_EXT"/>
+    </enums>
+
+    <enums namespace="GL" group="GL_KTX_buffer_region">
+        <enum value="0x0" name="GL_KTX_FRONT_REGION"/>
+        <enum value="0x1" name="GL_KTX_BACK_REGION"/>
+        <enum value="0x2" name="GL_KTX_Z_REGION"/>
+        <enum value="0x3" name="GL_KTX_STENCIL_REGION"/>
+    </enums>
+
+    <!-- SECTION: GL command definitions. -->
+
+    <commands namespace="GL">
+        <command group="GL_KTX_buffer_region">
+            <proto><ptype>GLuint</ptype> <name>glBufferRegionEnabled</name></proto>
+        </command>
+        <command group="GL_KTX_buffer_region">
+            <proto><ptype>GLuint</ptype> <name>glNewBufferRegion</name></proto>
+            <param><ptype>GLenum</ptype> <name>region</name></param>
+        </command>
+        <command group="GL_KTX_buffer_region">
+            <proto>void <name>glDeleteBufferRegion</name></proto>
+            <param><ptype>GLenum</ptype> <name>region</name></param>
+        </command>
+        <command group="GL_KTX_buffer_region">
+            <proto>void <name>glReadBufferRegion</name></proto>
+            <param><ptype>GLuint</ptype> <name>region</name></param>
+            <param><ptype>GLint</ptype> <name>x</name></param>
+            <param><ptype>GLint</ptype> <name>y</name></param>
+            <param><ptype>GLsizei</ptype> <name>width</name></param>
+            <param><ptype>GLsizei</ptype> <name>height</name></param>
+        </command>
+        <command group="GL_KTX_buffer_region">
+            <proto>void <name>glDrawBufferRegion</name></proto>
+            <param><ptype>GLuint</ptype> <name>region</name></param>
+            <param><ptype>GLint</ptype> <name>x</name></param>
+            <param><ptype>GLint</ptype> <name>y</name></param>
+            <param><ptype>GLsizei</ptype> <name>width</name></param>
+            <param><ptype>GLsizei</ptype> <name>height</name></param>
+            <param><ptype>GLint</ptype> <name>xDest</name></param>
+            <param><ptype>GLint</ptype> <name>yDest</name></param>
+        </command>
+    </commands>
+
+    <!-- SECTION: OpenGL / OpenGL ES extension interface definitions -->
+
+    <extensions>
+
+        <!-- https://github.com/nigels-com/glew/blob/master/auto/core/gl/GL_EXT_Cg_shader -->
+        <extension name="GL_EXT_Cg_shader" supported="gl">
+            <require>
+                <enum name="GL_CG_VERTEX_SHADER_EXT"/>
+                <enum name="GL_CG_FRAGMENT_SHADER_EXT"/>
+            </require>
+        </extension>
+
+        <!-- ??? -->
+        <!-- https://www.opengl.org/discussion_boards/showthread.php/156754-OpenGL-extension-rumor?p=1122374&viewfull=1#post1122374 -->
+        <extension name="GL_EXTX_framebuffer_mixed_formats" supported="gl"/>
+
+        <!-- defined from GLES2/gl2ext.h, but seems available on desktop too -->
+        <extension name="GL_EXT_texture_compression_dxt1" supported="gl"/>
+
+        <!-- https://github.com/nigels-com/glew/blob/master/auto/core/gl/GL_EXT_texture_edge_clamp -->
+        <extension name="GL_EXT_texture_edge_clamp" supported="gl">
+            <require>
+                <enum name="GL_CLAMP_TO_EDGE_EXT"/>
+            </require>
+        </extension>
+
+        <!-- defined from GLES2/gl2ext.h, but seems available on desktop too -->
+        <extension name="GL_EXT_texture_storage" supported="gl"/>
+
+        <!-- http://developer.download.nvidia.com/opengl/specs/GL_EXT_import_sync_object.txt -->
+        <extension name="GL_EXT_import_sync_object" supported="gl"/>
+
+        <!-- https://github.com/nigels-com/glew/blob/master/auto/core/gl/GL_KTX_buffer_region -->
+        <extension name="GL_KTX_buffer_region" supported="gl">
+            <require>
+                <enum name="GL_KTX_FRONT_REGION"/>
+                <enum name="GL_KTX_BACK_REGION"/>
+                <enum name="GL_KTX_Z_REGION"/>
+                <enum name="GL_KTX_STENCIL_REGION"/>
+                <command name="glBufferRegionEnabled"/>
+                <command name="glNewBufferRegion"/>
+                <command name="glDeleteBufferRegion"/>
+                <command name="glReadBufferRegion"/>
+                <command name="glDrawBufferRegion"/>
+            </require>
+        </extension>
+
+        <!-- ??? -->
+        <extension name="GL_NV_ES1_1_compatibility" supported="gl"/>
+
+        <!-- ??? -->
+        <extension name="GL_EXT_texture_lod" supported="gl"/>
+
+    </extensions>
+
+</registry>

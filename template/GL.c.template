@@ -168,7 +168,7 @@ bool <%=prefix%>GLInit() {
         }
     }
 
-if !defined(NDEBUG)
+#if !defined(NDEBUG)
     clock_t end = clock();
     double elapsed_time = (end-start)/(double)CLOCKS_PER_SEC*1000.0;
     fprintf(stderr, "<%=prefix%>GLInit() : elapsed time: %.2fms\n", elapsed_time );
