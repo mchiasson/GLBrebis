@@ -110,6 +110,7 @@ if(NOT EMSCRIPTEN)
         RapidXML::RapidXML
         Poco::NetSSL
         Poco::Net
+        Poco::Zip
         Poco::Foundation
         OpenSSL::SSL
         OpenSSL::Crypto

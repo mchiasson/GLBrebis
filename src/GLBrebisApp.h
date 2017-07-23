@@ -34,6 +34,9 @@
 
 class GLBrebisApp : public Poco::Util::Application
 {
+public:
+    GLBrebisApp();
+
 protected:
     void initialize(Application& self);
     void reinitialize();
@@ -44,9 +47,11 @@ protected:
     void handleHelp(const std::string& name, const std::string& value);
     void handlePrefix(const std::string& name, const std::string& value);
     void handleInclude(const std::string& name, const std::string& value);
+    void handleZip(const std::string& name, const std::string& value);
 
     std::string m_prefix;
     std::string m_includePath;
+    bool m_zip;
 };
 
 POCO_APP_MAIN(GLBrebisApp)

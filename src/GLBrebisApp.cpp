@@ -45,6 +45,11 @@
 
 #define PARSE_METHOD PARSE_METHOD_EMBEDDED
 
+GLBrebisApp::GLBrebisApp() :
+    m_zip(false)
+{
+}
+
 void GLBrebisApp::initialize(Application& self)
 {
     Application::initialize(self);
@@ -81,6 +86,11 @@ void GLBrebisApp::defineOptions(Poco::Util::OptionSet &options)
                 .argument("<includepath>")
                 .callback(Poco::Util::OptionCallback<GLBrebisApp>(this, &GLBrebisApp::handleInclude)));
 
+    options.addOption(Poco::Util::Option("zip", "z", "Create a zip archive containing all of the generated content.")
+                .required(false)
+                .repeatable(false)
+                .callback(Poco::Util::OptionCallback<GLBrebisApp>(this, &GLBrebisApp::handleZip)));
+
 }
 
 int GLBrebisApp::main(const std::vector<std::string>& args)
@@ -101,7 +111,7 @@ int GLBrebisApp::main(const std::vector<std::string>& args)
 
 #endif
 
-    GLBrebisCodeGenerator::generateGL(m_prefix, m_includePath, parser.getResult());
+    GLBrebisCodeGenerator::generateGL(m_prefix, m_includePath, m_zip, parser.getResult());
 
     return EXIT_OK;
 }
@@ -136,4 +146,9 @@ void GLBrebisApp::handleInclude(const std::string& name, const std::string& valu
             m_includePath += '/';
         }
     }
+}
+
+void GLBrebisApp::handleZip(const std::string& name, const std::string& value)
+{
+    m_zip = true;
 }
