@@ -63,9 +63,7 @@
 
 <%=Prefix%>GLConfig <%=prefix%>GL = {0};
 
-typedef void(<%=PREFIX%>_STD_CALL *<%=Prefix%>GLProc)();
-
-<%=PREFIX%>_FORCE_INLINE <%=Prefix%>GLProc <%=prefix%>GLGetProcAddress(const char *procName)
+static <%=Prefix%>GLProc <%=prefix%>GLGetProcAddressDefaultImpl(const char *procName)
 {
     <%=Prefix%>GLProc proc;
 #if __EMSCRIPTEN__
@@ -82,6 +80,8 @@ typedef void(<%=PREFIX%>_STD_CALL *<%=Prefix%>GLProc)();
     return proc;
 }
 
+<%=Prefix%>GLGetProcAddressFunc <%=prefix%>GLGetProcAddress = <%=prefix%>GLGetProcAddressDefaultImpl;
+
 static void <%=prefix%>GLAddExtension(bool isGLES, const char* const extensionStr, size_t extensionStrLength) {
     if(isGLES) {
 <%=glesAddExtensionBlock%>
@@ -96,7 +96,7 @@ static void <%=prefix%>GLAddExtension(bool isGLES, const char* const extensionSt
 <%=glAddExtensionBlock%>
     }
 #if !defined(NDEBUG)
-    fprintf(stderr, "Found unwrangled extension: %.*s\n", (int)extensionStrLength, extensionStr);
+    fprintf(stderr, "<%=prefix%>GLInit() : Found unwrangled extension: %.*s\n", (int)extensionStrLength, extensionStr);
 #endif
 }
 
@@ -131,7 +131,7 @@ bool <%=prefix%>GLInit() {
     version  = (const char*)<%=prefix%>GL.GetString(GL_VERSION);
 
     if(!version) {
-        fprintf(stderr, "Missing GL context. Make sure your context is created and made current prior to calling <%=prefix%>GLInit.\n");
+        fprintf(stderr, "<%=prefix%>GLInit() : Missing GL context. Make sure your context is created and made current prior to calling <%=prefix%>GLInit.\n");
         return false;
     }
 
@@ -139,7 +139,7 @@ bool <%=prefix%>GLInit() {
         (<%=PREFIX%>_SSCANF(version, "OpenGL ES-CM %d.%d", &versionMajor, &versionMinor) == 2)) {
         isGLES = true;
     } else if (<%=PREFIX%>_SSCANF(version, "%d.%d", &versionMajor, &versionMinor) != 2) {
-        fprintf(stderr, "Could not determine OpenGL/OpenGLES version.\n");
+        fprintf(stderr, "<%=prefix%>GLInit() : Could not determine OpenGL/OpenGLES version.\n");
         return false;
     }
 
@@ -168,12 +168,11 @@ bool <%=prefix%>GLInit() {
         }
     }
 
-#if !defined(NDEBUG)
+if !defined(NDEBUG)
     clock_t end = clock();
     double elapsed_time = (end-start)/(double)CLOCKS_PER_SEC*1000.0;
-    fprintf(stderr, "<%=prefix%>GLInit() elapsed time: %.2fms\n", elapsed_time );
+    fprintf(stderr, "<%=prefix%>GLInit() : elapsed time: %.2fms\n", elapsed_time );
 #endif
-
 
     return true;
 }
@@ -207,9 +206,9 @@ void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber) {
 
             size_t uErrorIndex = eErrorID - GL_INVALID_ENUM;
             if (uErrorIndex > sizeof(errMsg)) {
-                fprintf(stderr, "file %s, line %d : Unknown error 0x%X\n", fileName, lineNumber, eErrorID);
+                fprintf(stderr, "<%=prefix%>GLCheckError : file %s, line %d : Unknown error 0x%X\n", fileName, lineNumber, eErrorID);
             } else {
-                fprintf(stderr, "file %s, line %d : %s\n", fileName, lineNumber, errMsg[uErrorIndex]);
+                fprintf(stderr, "<%=prefix%>GLCheckError : file %s, line %d : %s\n", fileName, lineNumber, errMsg[uErrorIndex]);
             }
         } while((eErrorID = <%=prefix%>GL.GetError()) != GL_NO_ERROR);
     }

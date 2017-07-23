@@ -145,6 +145,25 @@ extern "C" {
 #endif
 
 /*!
+ * generic <%=Prefix%>GL Procedure signature
+ */
+typedef void(<%=PREFIX%>_STD_CALL *<%=Prefix%>GLProc)();
+
+/*!
+ * <%=Prefix%>GetProcAddress signature.
+ */
+typedef <%=Prefix%>GLProc (*<%=Prefix%>GLGetProcAddressFunc)(const char *);
+
+/*!
+ * <%=Prefix%>GetProcAddress function pointer used to wrangle all the GL and
+ * GLES functions and extensions. Automatically points the a default
+ * implementation, and can be overriden by the user if they need something
+ * specific. Make sure that it is set before calling <%=prefix%>GLInit()
+ */
+extern <%=Prefix%>GLGetProcAddressFunc <%=prefix%>GLGetProcAddress;
+
+
+/*!
  * User is required to call this function as soon as the GL context has been created.
  * Failing to calling this function will result in a crash.
  */
