@@ -24,7 +24,7 @@ template < typename T > std::string toString(const T& n)
     return ss.str();
 }
 
-void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix, const std::string &includePrefix, const GLBrebisData &result)
+void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix, const std::string &includePath, const GLBrebisData &result)
 {
     Poco::Logger &logger = Poco::Logger::get("GLBrebisCodeGenerator");
 
@@ -186,12 +186,12 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix, const std::s
         {
             glesSupportBlock << "        " << prefix << "GL.support[" << feature.name << "] = ((versionMajor > " << majorVersion << ") || ((versionMajor == "<< majorVersion << ") && (versionMinor >= " << minorVersion << ")));" << std::endl;
         }
-
     }
 
-    logger.information("Generating %sGL.h ...", inPrefix);
-
     std::string content;
+
+    logger.information("Generating %s%sGL.h ...", includePath, inPrefix);
+    if (includePath.length() > 0) {Poco::File(includePath).createDirectories();}
     //GLBrebisUtilities::readFile("template/GL.h.template", header);
     content = std::string((char*)GL_h_template, sizeof(GL_h_template));
     Poco::replaceInPlace(content, "<%=now%>", nowStr.c_str());
@@ -208,7 +208,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix, const std::s
     Poco::replaceInPlace(content, "<%=funcPtrBlock%>", funcPtrBlock.str().c_str());
     Poco::replaceInPlace(content, "<%=funcImplBlock%>", funcImplBlock.str().c_str());
     Poco::replaceInPlace(content, "<%=funcDefineBlock%>", funcDefineBlock.str().c_str());
-    GLBrebisUtilities::writeFile(inPrefix + "GL.h", content);
+    GLBrebisUtilities::writeFile(includePath + inPrefix + "GL.h", content);
 
     logger.information("Generating %sGL.c ...", inPrefix);
     //GLBrebisUtilities::readFile("template/GL.c.template", header);
@@ -218,7 +218,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix, const std::s
     Poco::replaceInPlace(content, "<%=prefix%>", prefix.c_str());
     Poco::replaceInPlace(content, "<%=Prefix%>", Prefix.c_str());
     Poco::replaceInPlace(content, "<%=PREFIX%>", PREFIX.c_str());
-    Poco::replaceInPlace(content, "<%=includePrefix%>", includePrefix.c_str());
+    Poco::replaceInPlace(content, "<%=includePrefix%>", includePath.c_str());
     Poco::replaceInPlace(content, "<%=glesAddExtensionBlock%>", glesAddExtensionBlock.str().c_str());
     Poco::replaceInPlace(content, "<%=glAddExtensionBlock%>", glAddExtensionBlock.str().c_str());
     Poco::replaceInPlace(content, "<%=getProcBlock%>", getProcBlock.str().c_str());
