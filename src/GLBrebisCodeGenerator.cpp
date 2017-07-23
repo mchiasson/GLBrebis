@@ -30,7 +30,6 @@
 
 #include "template/GL.c.template.h"
 #include "template/GL.h.template.h"
-#include "KHR/khrplatform.h.h"
 
 #include <string>
 #include <cctype>
@@ -43,30 +42,21 @@
 #include <Poco/DateTime.h>
 #include <Poco/DateTimeFormat.h>
 #include <Poco/DateTimeFormatter.h>
-#include <Poco/File.h>
-#include <Poco/Zip/Compress.h>
-
-template < typename T > std::string toString(const T& n)
-{
-    std::stringstream ss;
-    ss << n ;
-    return ss.str();
-}
 
 void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
                                        const std::string &includePath,
                                        bool zip,
-                                       const GLBrebisData &result)
+                                       const GLBrebisData &result,
+                                       std::ostream &sourceOut,
+                                       std::ostream &headerOut)
 {
-    Poco::Logger &logger = Poco::Logger::get("GLBrebisCodeGenerator");
-
     std::string Prefix = inPrefix; std::toupper(Prefix[0]);
     std::string prefix = Poco::toLower(inPrefix);
     std::string PREFIX = Poco::toUpper(inPrefix);
 
     Poco::DateTime now;
     std::string nowStr = Poco::DateTimeFormatter::format(now, Poco::DateTimeFormat::RFC1123_FORMAT);
-    std::string year = "2017"; if (now.year() > 2017) { year += "-" + toString(now.year());}
+    std::string year = "2017"; if (now.year() > 2017) { year += "-" + std::to_string(now.year());}
 
     std::vector<GLBrebisData::Enum> uniqueDefines = result.getAllUniqueDefines();
     std::stringstream defineBlock;
@@ -222,27 +212,6 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
 
     std::string content;
 
-    logger.information("Generating %s%sGL.h ...", includePath, inPrefix);
-    if (includePath.length() > 0) {Poco::File(includePath).createDirectories();}
-    //GLBrebisUtilities::readFile("template/GL.h.template", header);
-    content = std::string((char*)GL_h_template, sizeof(GL_h_template));
-    Poco::replaceInPlace(content, "<%=now%>", nowStr.c_str());
-    Poco::replaceInPlace(content, "<%=year%>", year.c_str());
-    Poco::replaceInPlace(content, "<%=prefix%>", prefix.c_str());
-    Poco::replaceInPlace(content, "<%=Prefix%>", Prefix.c_str());
-    Poco::replaceInPlace(content, "<%=PREFIX%>", PREFIX.c_str());
-    Poco::replaceInPlace(content, "<%=defineBlock%>", defineBlock.str().c_str());
-    Poco::replaceInPlace(content, "<%=versionBlock%>", versionBlock.str().c_str());
-    Poco::replaceInPlace(content, "<%=extensionBlock%>", extensionBlock.str().c_str());
-    Poco::replaceInPlace(content, "<%=typeBlock%>", typeBlock.str().c_str());
-    Poco::replaceInPlace(content, "<%=extensionCount%>", toString(result.registry.extensions.size()).c_str());
-    Poco::replaceInPlace(content, "<%=IdCount%>", toString(IdCount).c_str());
-    Poco::replaceInPlace(content, "<%=funcPtrBlock%>", funcPtrBlock.str().c_str());
-    Poco::replaceInPlace(content, "<%=funcImplBlock%>", funcImplBlock.str().c_str());
-    Poco::replaceInPlace(content, "<%=funcDefineBlock%>", funcDefineBlock.str().c_str());
-    GLBrebisUtilities::writeFile(includePath + inPrefix + "GL.h", content);
-
-    logger.information("Generating %sGL.c ...", inPrefix);
     //GLBrebisUtilities::readFile("template/GL.c.template", header);
     content = std::string((char*)GL_c_template, sizeof(GL_c_template));
     Poco::replaceInPlace(content, "<%=now%>", nowStr.c_str());
@@ -256,39 +225,23 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
     Poco::replaceInPlace(content, "<%=getProcBlock%>", getProcBlock.str().c_str());
     Poco::replaceInPlace(content, "<%=glSupportBlock%>", glSupportBlock.str().c_str());
     Poco::replaceInPlace(content, "<%=glesSupportBlock%>", glesSupportBlock.str().c_str());
-    GLBrebisUtilities::writeFile(inPrefix + "GL.c", content);
+    sourceOut << content;
 
-    logger.information("Generating KHR/khrplatform.h ...");
-    content = std::string((char*)khrplatform_h, sizeof(khrplatform_h));
-    Poco::File("KHR").createDirectories();
-    GLBrebisUtilities::writeFile("KHR/khrplatform.h", content);
+    //GLBrebisUtilities::readFile("template/GL.h.template", header);
+    content = std::string((char*)GL_h_template, sizeof(GL_h_template));
+    Poco::replaceInPlace(content, "<%=now%>", nowStr.c_str());
+    Poco::replaceInPlace(content, "<%=year%>", year.c_str());
+    Poco::replaceInPlace(content, "<%=prefix%>", prefix.c_str());
+    Poco::replaceInPlace(content, "<%=Prefix%>", Prefix.c_str());
+    Poco::replaceInPlace(content, "<%=PREFIX%>", PREFIX.c_str());
+    Poco::replaceInPlace(content, "<%=defineBlock%>", defineBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=versionBlock%>", versionBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=extensionBlock%>", extensionBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=typeBlock%>", typeBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=IdCount%>", std::to_string(IdCount).c_str());
+    Poco::replaceInPlace(content, "<%=funcPtrBlock%>", funcPtrBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=funcImplBlock%>", funcImplBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=funcDefineBlock%>", funcDefineBlock.str().c_str());
+    headerOut << content;
 
-    if (zip)
-    {
-        logger.information("Archiving into %sGL.zip ...", Prefix);
-        std::ofstream out((Prefix + "GL.zip").c_str(), std::ios::binary);
-        Poco::Zip::Compress zipFile(out, true);
-
-        Poco::Path header(includePath + Prefix + "GL.h");
-        Poco::Path source(Prefix + "GL.c");
-        Poco::Path khronos("KHR/khrplatform.h");
-
-        zipFile.addFile(header, header);
-        zipFile.addFile(source, source);
-        zipFile.addFile(khronos, khronos);
-
-        std::stringstream comment;
-        comment << "This archive was generated by GLBrebis on " << nowStr << std::endl;
-        comment << "https://github.com/mchiasson/GLBrebis" << std::endl;
-        comment << "Copyright (c) " << year << " Mathieu-André Chiasson" << std::endl;
-        comment << "All rights reserved." << std::endl;
-        zipFile.setZipComment(comment.str());
-
-        zipFile.close();
-        out.close();
-
-        fflush(NULL);
-    }
-
-    logger.information("Done!");
 }

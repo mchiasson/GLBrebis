@@ -25,21 +25,19 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef GLBREBISCODEGENERATOR_H
-#define GLBREBISCODEGENERATOR_H
+#ifndef GLBREBISAPP_H
+#define GLBREBISAPP_H
 
-#include "GLBrebisData.h"
+#include <Poco/Util/ServerApplication.h>
+#include <iostream>
 
-class GLBrebisCodeGenerator
+class GLBrebisService : public Poco::Util::ServerApplication
 {
-    GLBrebisCodeGenerator();
-public:
-    static void generateGL(const std::string &prefix,
-                           const std::string &includePath,
-                           bool zip,
-                           const GLBrebisData &result,
-                           std::ostream &sourceOut,
-                           std::ostream &headerOut);
+protected:
+    int main(const std::vector<std::string> &args);
 };
 
-#endif // GLBREBISCODEGENERATOR_H
+POCO_SERVER_MAIN(GLBrebisService)
+
+
+#endif // GLBREBISAPP_H

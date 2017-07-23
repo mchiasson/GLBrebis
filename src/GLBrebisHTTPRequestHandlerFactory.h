@@ -25,21 +25,15 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef GLBREBISCODEGENERATOR_H
-#define GLBREBISCODEGENERATOR_H
+#ifndef GLBREBISHTTPREQUESTHANDLERFACTORY_H
+#define GLBREBISHTTPREQUESTHANDLERFACTORY_H
 
-#include "GLBrebisData.h"
+#include <Poco/Net/HTTPRequestHandlerFactory.h>
 
-class GLBrebisCodeGenerator
+class GLBrebisHTTPRequestHandlerFactory : public Poco::Net::HTTPRequestHandlerFactory
 {
-    GLBrebisCodeGenerator();
 public:
-    static void generateGL(const std::string &prefix,
-                           const std::string &includePath,
-                           bool zip,
-                           const GLBrebisData &result,
-                           std::ostream &sourceOut,
-                           std::ostream &headerOut);
+    virtual Poco::Net::HTTPRequestHandler * createRequestHandler(const Poco::Net::HTTPServerRequest &request);
 };
 
-#endif // GLBREBISCODEGENERATOR_H
+#endif // GLBREBISHTTPREQUESTHANDLERFACTORY_H

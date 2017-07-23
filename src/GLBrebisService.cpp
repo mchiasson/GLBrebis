@@ -25,21 +25,48 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef GLBREBISCODEGENERATOR_H
-#define GLBREBISCODEGENERATOR_H
+#include "GLBrebisService.h"
 
-#include "GLBrebisData.h"
+#include <Poco/Net/ServerSocket.h>
+#include <Poco/Net/HTTPServer.h>
+#include <Poco/LogStream.h>
 
-class GLBrebisCodeGenerator
+#include <iostream>
+#include <string>
+
+#include "GLBrebisHTTPRequestHandlerFactory.h"
+
+
+int GLBrebisService::main(const std::vector<std::string>& args)
 {
-    GLBrebisCodeGenerator();
-public:
-    static void generateGL(const std::string &prefix,
-                           const std::string &includePath,
-                           bool zip,
-                           const GLBrebisData &result,
-                           std::ostream &sourceOut,
-                           std::ostream &headerOut);
-};
+    Poco::LogStream log(Poco::Logger::get("GLBrebisService"));
 
-#endif // GLBREBISCODEGENERATOR_H
+    Poco::UInt16 port = 3772;
+    if (args.size() > 0)
+    {
+        port = std::stoi(args[0]);
+    }
+
+    Poco::Net::ServerSocket socket(port);
+
+    Poco::Net::HTTPServerParams *pParams = new Poco::Net::HTTPServerParams();
+    pParams->setMaxQueued(100);
+    pParams->setMaxThreads(16);
+
+    Poco::Net::HTTPServer server(new GLBrebisHTTPRequestHandlerFactory(), socket, pParams);
+
+    log.notice() << "Starting GLBrebisService on port " << port << std::endl;
+    server.start();
+
+    waitForTerminationRequest();
+
+    log.notice() << "Shutting down server" << std::endl;
+
+    server.stop();
+
+    log.notice() << "Good bye!" << std::endl;
+
+    return EXIT_OK;
+}
+
+
