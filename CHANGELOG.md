@@ -1,5 +1,14 @@
+v1.0.2
+======
+
+* Added mechanism to allow us to enter missing extension manually in xml/extra.xml
+* resolves https://github.com/mchiasson/GLBrebis/issues/1 User can now override their generated getProcAddress with something else
+* mutGLInit() Time calculation in Debug
+* standardized types to khronos type as much as possible
+
 v1.0.1
 ======
+
 * GLBrebis now available as a stand-alone web service
 * Updated documentation for the new -z,--zip command line flag.
 * Auto-archive generated code into a zip file via -z,--zip command line flag
