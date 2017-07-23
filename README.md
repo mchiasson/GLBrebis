@@ -35,14 +35,14 @@ And also comes with this very handy debugging tool that you can wrap around evey
 # How to generate my project's drop-in extention wrangler header and source?
 
 ```
-GLBrebis -p <prefix> [-i includePrefix]
-
-Available options (use -h for help):
--h, --help              Usage Information
--pname, --prefix=name   Project prefix to append to every generated files and
-                        symbols
--iname, --include=name  include path prefix to use in the generated GL.c
-
+usage: GLBrebis -p <prefix> [-i includepath] [-z]
+-h, --help                                Usage Information
+-p<prefix>, --prefix=<prefix>             Project prefix to append to every
+                                          generated files and symbols
+-i<includepath>, --include=<includepath>  include path prefix to use in the
+                                          generated GL.c
+-z, --zip                                 Create a zip archive containing all
+                                          of the generated content.
 ```
 
 Example for a fictional project called 'Mut' :

@@ -120,7 +120,7 @@ void GLBrebisApp::handleHelp(const std::string& name, const std::string& value)
 {
     Poco::Util::HelpFormatter helpFormatter(options());
     helpFormatter.setCommand(commandName());
-    helpFormatter.setUsage("-p <prefix> [-i includepath]");
+    helpFormatter.setUsage("-p <prefix> [-i includepath] [-z]");
     helpFormatter.format(std::cout);
     stopOptionsProcessing();
     exit(EXIT_USAGE);
