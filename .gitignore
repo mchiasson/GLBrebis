@@ -1,15 +1,21 @@
 # Garbage from IDE
 **/CMakeLists.txt.user
 **/CMakeLists.txt.autosave
+.vscode/
 
 # generated/downloaded file
-gl.xml
-gl.xml.c
-gl.xml.h
+example/glm/
 example/MutGL.c
 example/MutGL.h
+example/KHR/khrplatform.h
+KHR/khrplatform.h
+KHR/khrplatform.h.c
+KHR/khrplatform.h.h
 template/GL.c.template.c
 template/GL.c.template.h
 template/GL.h.template.c
 template/GL.h.template.h
+xml/gl.xml
+xml/gl.xml.c
+xml/gl.xml.h
 

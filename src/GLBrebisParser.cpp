@@ -5,7 +5,6 @@
 #include <Poco/Logger.h>
 #include <Poco/String.h>
 
-
 #include "GLBrebisUtilities.h"
 
 static const char * types_node = "types";
@@ -122,10 +121,6 @@ void GLBrebisParser::parseType(GLBrebisData::Type &type, rapidxml::xml_node<> *p
         signature << VALUE_TO_STR(pChildNode);
     }
     type.signature = signature.str();
-    Poco::replaceInPlace(type.signature, "khronos_", "");
-    Poco::replaceInPlace(type.signature, "float_t", "float");
-    Poco::replaceInPlace(type.signature, "ssize_t", "intptr_t");
-    Poco::replaceInPlace(type.signature, "ptrdiff_t", "intptr_t");
     rapidxml::xml_node<> *pNameNode = pTypeNode->first_node(name_node);
     if (pNameNode) {
         type.name = VALUE_TO_STR(pNameNode);
@@ -140,7 +135,7 @@ void GLBrebisParser::parseEnums(GLBrebisData::Enums &enums, rapidxml::xml_node<>
 
     rapidxml::xml_attribute<> *pNamespace = pEnumsNode->first_attribute("namespace");
     rapidxml::xml_attribute<> *pGroup = pEnumsNode->first_attribute("group");
-    rapidxml::xml_attribute<> *pType = pEnumsNode->first_attribute("namespace");
+    rapidxml::xml_attribute<> *pType = pEnumsNode->first_attribute("type");
 
     if (pNamespace) enums.namespace_  = VALUE_TO_STR(pNamespace);
     if (pGroup) enums.group  = VALUE_TO_STR(pGroup);
@@ -166,11 +161,15 @@ void GLBrebisParser::parseEnum(GLBrebisData::Enum &enum_, rapidxml::xml_node<> *
     rapidxml::xml_attribute<> *pName = pEnumNode->first_attribute("name");
     rapidxml::xml_attribute<> *pApi = pEnumNode->first_attribute("api");
     rapidxml::xml_attribute<> *pAlias = pEnumNode->first_attribute("alias");
+    rapidxml::xml_attribute<> *pType = pEnumNode->first_attribute("type");
+
 
     if (pValue) enum_.value = VALUE_TO_STR(pValue);
     if (pName) enum_.name = VALUE_TO_STR(pName);
     if (pApi) enum_.api = VALUE_TO_STR(pApi);
     if (pAlias) enum_.alias = VALUE_TO_STR(pAlias);
+    if (pType) enum_.value += VALUE_TO_STR(pType);
+
 }
 
 void GLBrebisParser::parseCommand(GLBrebisData::Command &command, rapidxml::xml_node<> *pCommandNode)

@@ -21,30 +21,26 @@
 #
 # For more information, please refer to <http://unlicense.org/>
 ################################################################################
+cmake_minimum_required(VERSION 3.0)
 
 include(ExternalProject)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+project(MutCube)
 
-if(NOT EMSCRIPTEN)
-    include("cmake/HunterGate.cmake")
-    HunterGate(
-        URL "https://github.com/ruslo/hunter/archive/v0.19.26.tar.gz"
-        SHA1 "362b3c2fd8f0f50fc03cec5105be8fd4376ea886"
-    )
-endif()
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(EMSCRIPTEN)
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
-    set(CMAKE_C_FLAGS   "-s USE_SDL=2 -s TOTAL_MEMORY=134217728 ${CMAKE_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "-s USE_SDL=2 -s TOTAL_MEMORY=134217728 ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_C_FLAGS   "-s USE_SDL=2 -s TOTAL_MEMORY=134217728 -s ASSERTIONS=1 ${CMAKE_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-s USE_SDL=2 -s TOTAL_MEMORY=134217728 -s ASSERTIONS=1 ${CMAKE_CXX_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s USE_SDL=2 -s TOTAL_MEMORY=134217728 --preload-file assets")
 
     include(ExternalProject)
     ExternalProject_Add(
         glm
-        PREFIX ${CMAKE_BINARY_DIR}/glm
-        GIT_REPOSITORY https://github.com/g-truc/glm.git
+        PREFIX ${MutCube_SOURCE_DIR}/glm
+        URL https://github.com/g-truc/glm/archive/0.9.8.4.tar.gz
+        URL_HASH SHA1=5b9d3bbdc2ec29c7339f34b701d53e1b625a7712
         GIT_TAG 0.9.8.4
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
@@ -52,12 +48,31 @@ if(EMSCRIPTEN)
         LOG_DOWNLOAD ON)
     ExternalProject_Get_Property(glm source_dir)
     include_directories(${source_dir})
-
 else()
+    include("cmake/HunterGate.cmake")
+    HunterGate(
+        URL "https://github.com/ruslo/hunter/archive/v0.19.26.tar.gz"
+        SHA1 "362b3c2fd8f0f50fc03cec5105be8fd4376ea886"
+    )
     hunter_add_package(SDL2)
     hunter_add_package(glm)
     find_package(SDL2 CONFIG REQUIRED)
     find_package(glm CONFIG REQUIRED)
+
+    add_custom_command(
+        OUTPUT
+            ${MutCube_SOURCE_DIR}/MutGL.c
+            ${MutCube_SOURCE_DIR}/MutGL.h
+        COMMAND
+            GLBrebis -p Mut
+        WORKING_DIRECTORY
+            ${MutCube_SOURCE_DIR}
+        DEPENDS
+            GLBrebis
+    )
+    set_source_files_properties(${MutCube_SOURCE_DIR}/MutGL.c PROPERTIES GENERATED TRUE)
+    set_source_files_properties(${MutCube_SOURCE_DIR}/MutGL.h PROPERTIES GENERATED TRUE)
+
 endif()
 
 
@@ -67,22 +82,6 @@ add_executable(MutCube
     MutShaderProgram.cpp
     main.cpp
 )
-
-add_custom_command(
-    OUTPUT
-        ${CMAKE_CURRENT_SOURCE_DIR}/MutGL.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/MutGL.h
-    COMMAND
-        GLBrebis -p Mut
-    WORKING_DIRECTORY
-        ${CMAKE_CURRENT_SOURCE_DIR}
-    DEPENDS
-        GLBrebis
-)
-
-set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/MutGL.c PROPERTIES GENERATED TRUE)
-set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/MutGL.h PROPERTIES GENERATED TRUE)
-
 
 add_dependencies(MutCube glm)
 

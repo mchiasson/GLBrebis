@@ -25,13 +25,16 @@
  * SOFTWARE.
  ******************************************************************************/
 
+#define <%=PREFIX%>_PROTO_IMPL 0
 #include <<%=includePrefix%><%=Prefix%>GL.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#if defined(_WIN32) && !defined(__CYGWIN__)
+#if __EMSCRIPTEN__
+    extern void* emscripten_GetProcAddress(const char *name_);
+#elif defined(_WIN32) && !defined(__CYGWIN__)
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN 1
     #endif
@@ -52,14 +55,16 @@
     #endif
 #endif
 
-<%=Prefix%>GLAPIConfig <%=prefix%>GLAPI = {0};
+<%=Prefix%>GLConfig <%=prefix%>GL = {0};
 
 typedef void(<%=PREFIX%>_STD_CALL *<%=Prefix%>GLProc)();
 
 <%=PREFIX%>_FORCE_INLINE <%=Prefix%>GLProc <%=prefix%>GLGetProcAddress(const char *procName)
 {
     <%=Prefix%>GLProc proc;
-#if defined(_WIN32)
+#if __EMSCRIPTEN__
+    proc = (<%=Prefix%>GLProc)emscripten_GetProcAddress(procName);
+#elif defined(_WIN32)
     proc = (<%=Prefix%>GLProc)wglGetProcAddress(procName);
     if (!proc)
     {
@@ -77,9 +82,9 @@ static void <%=prefix%>GLAddExtension(bool isGLES, const char* const extensionSt
         // Discovered a bug in Qualcomm Adreno 200 OpenGL ES driver, where
         // these three extensions are literally fused together.
         else if ((extensionStrLength == 54) && strncmp(extensionStr, "GL_EXT_debug_labelGL_EXT_debug_markerGL_EXT_robustness", extensionStrLength) == 0) {
-                <%=prefix%>GLAPI.support[GL_EXT_debug_label] = true;
-                <%=prefix%>GLAPI.support[GL_EXT_debug_marker] = true;
-                <%=prefix%>GLAPI.support[GL_EXT_robustness] = true;
+                <%=prefix%>GL.support[GL_EXT_debug_label] = true;
+                <%=prefix%>GL.support[GL_EXT_debug_marker] = true;
+                <%=prefix%>GL.support[GL_EXT_robustness] = true;
         }
     } else {
 <%=glAddExtensionBlock%>
@@ -90,7 +95,6 @@ static void <%=prefix%>GLAddExtension(bool isGLES, const char* const extensionSt
 }
 
 bool <%=prefix%>GLInit() {
-#if <%=PREFIX%>_GL_WRANGLER_ENABLED
     bool        isGLES = false;
     const char* version = NULL;
     int32_t     versionMajor = -1;
@@ -104,21 +108,20 @@ bool <%=prefix%>GLInit() {
 #endif
 
 <%=getProcBlock%>
-    if (!<%=prefix%>GLAPI.<%=prefix%>GetError) {
-        fprintf(stderr, "Could not find 'glGetError'\\n");
+    if (!<%=prefix%>GL.GetError) {
+        fprintf(stderr, "Could not find 'glGetError'\n");
         return false;
     }
 
-    if (!<%=prefix%>GLAPI.<%=prefix%>GetString) {
-        fprintf(stderr, "Could not find 'glGetString'\\n");
+    if (!<%=prefix%>GL.GetString) {
+        fprintf(stderr, "Could not find 'glGetString'\n");
         return false;
     }
-#endif
 
-    version  = (const char*)<%=prefix%>GLCheckError(glGetString(GL_VERSION));
+    version  = (const char*)<%=prefix%>GL.GetString(GL_VERSION);
 
     if(!version) {
-        fprintf(stderr, "Missing GL context. Make sure your context is created and made current prior to calling <%=prefix%>GLInit.\\n");
+        fprintf(stderr, "Missing GL context. Make sure your context is created and made current prior to calling <%=prefix%>GLInit.\n");
         return false;
     }
 
@@ -126,7 +129,7 @@ bool <%=prefix%>GLInit() {
         (<%=PREFIX%>_SSCANF(version, "OpenGL ES-CM %d.%d", &versionMajor, &versionMinor) == 2)) {
         isGLES = true;
     } else if (<%=PREFIX%>_SSCANF(version, "%d.%d", &versionMajor, &versionMinor) != 2) {
-        fprintf(stderr, "Could not determine OpenGL/OpenGLES version.\\n");
+        fprintf(stderr, "Could not determine OpenGL/OpenGLES version.\n");
         return false;
     }
 
@@ -136,17 +139,17 @@ bool <%=prefix%>GLInit() {
 <%=glSupportBlock%>
     }
 
-    if (<%=prefix%>GLAPI.support[GL_VERSION_3_0] || <%=prefix%>GLAPI.support[GL_ES_VERSION_3_0]) {
+    if (<%=prefix%>GL.support[GL_VERSION_3_0] || <%=prefix%>GL.support[GL_ES_VERSION_3_0]) {
         int32_t i = 0;
         int32_t nExtensionsCount = 0;
-        <%=prefix%>GLCheckErrorDebug(glGetIntegerv(GL_NUM_EXTENSIONS, &nExtensionsCount));
+        <%=prefix%>GL.GetIntegerv(GL_NUM_EXTENSIONS, &nExtensionsCount);
         while(i < nExtensionsCount)
         {
-            const char* extensionStr = (const char*)<%=prefix%>GLCheckErrorDebug(glGetStringi(GL_EXTENSIONS, i++));
+            const char* extensionStr = (const char*)<%=prefix%>GL.GetStringi(GL_EXTENSIONS, i++);
             <%=prefix%>GLAddExtension(isGLES, extensionStr, strlen(extensionStr));
         }
     } else {
-        const char* extensionsStr = (const char*)<%=prefix%>GLCheckErrorDebug(glGetString(GL_EXTENSIONS));
+        const char* extensionsStr = (const char*)<%=prefix%>GL.GetString(GL_EXTENSIONS);
         while (extensionsStr) {
             const char* spacerPos = strchr(extensionsStr, ' ');
             size_t extensionsStrLength = spacerPos ? (size_t)(spacerPos++ - extensionsStr) : strlen(extensionsStr);
@@ -159,7 +162,7 @@ bool <%=prefix%>GLInit() {
 }
 
 void <%=prefix%>GLShutdown() {
-    memset(&<%=prefix%>GLAPI, 0, sizeof(<%=Prefix%>GLAPIConfig));
+    memset(&<%=prefix%>GL, 0, sizeof(<%=Prefix%>GLConfig));
 
 #if defined(_WIN32)
     if (s_<%=prefix%>GLLib)
@@ -171,7 +174,7 @@ void <%=prefix%>GLShutdown() {
 }
 
 void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber) {
-    GLenum eErrorID = glGetError();
+    GLenum eErrorID = <%=prefix%>GL.GetError();
     if (eErrorID != GL_NO_ERROR) {
         do {
             static const char* errMsg[] = {
@@ -187,10 +190,10 @@ void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber) {
 
             size_t uErrorIndex = eErrorID - GL_INVALID_ENUM;
             if (uErrorIndex > sizeof(errMsg)) {
-                fprintf(stderr, "file %s, line %d : Unknown error 0x%X\\n", fileName, lineNumber, eErrorID);
+                fprintf(stderr, "file %s, line %d : Unknown error 0x%X\n", fileName, lineNumber, eErrorID);
             } else {
-                fprintf(stderr, "file %s, line %d : %s\\n", fileName, lineNumber, errMsg[uErrorIndex]);
+                fprintf(stderr, "file %s, line %d : %s\n", fileName, lineNumber, errMsg[uErrorIndex]);
             }
-        } while((eErrorID = glGetError()) != GL_NO_ERROR);
+        } while((eErrorID = <%=prefix%>GL.GetError()) != GL_NO_ERROR);
     }
 }

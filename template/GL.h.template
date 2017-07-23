@@ -28,18 +28,88 @@
 #ifndef _<%=PREFIX%>_GL_H_
 #define _<%=PREFIX%>_GL_H_ 1
 
-#include <stdbool.h>
+#include <KHR/khrplatform.h>
 #include <stddef.h>
-#include <stdint.h>
+#include <stdbool.h>
 
-#if !defined(<%=PREFIX%>_GL_WRANGLER_ENABLED)
-    #if __native_client__ || __EMSCRIPTEN__
-        #include <GLES2/gl2.h>
-        #include <GLES2/gl2ext.h>
-        #define <%=PREFIX%>_GL_WRANGLER_ENABLED 0
-    #else
-        #define <%=PREFIX%>_GL_WRANGLER_ENABLED 1
-    #endif
+#if defined(__glu_h__)
+#error "GL/glu.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gl_h_)
+#error "GL/gl.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gl2_h_)
+#error "GL/gl2.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__glcorearb_h_)
+#error "GL/glcorearb.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gl20_h_)
+#error "GLES2/gl2.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gl_es20_h_)
+#error "OpenGLES/ES2/gl.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gl30_h_)
+#error "GLES3/gl3.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gl_es30_h_)
+#error "OpenGLES/ES3/gl.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gl31_h_)
+#error "GLES3/gl31.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gl32_h_)
+#error "GLES3/gl32.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__glext_h_)
+#error "GL/glext.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gl2ext_h_)
+#error "GL/glext.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gl_es20ext_h_)
+#error "OpenGLES/ES2/glext.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gl_es30ext_h_)
+#error "OpenGLES/ES3/glext.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#if defined(__gltypes_h_)
+#error "gltypes.h cannot be included before <%=Prefix%>GL.h"
+#endif
+
+#define __glu_h__ 1
+#define __gl_h_ 1
+#define __gl2_h_ 1
+#define __glcorearb_h_ 1
+#define __gl20_h_ 1
+#define __gl_es20_h_ 1
+#define __gl30_h_ 1
+#define __gl_es30_h_ 1
+#define __gl31_h_ 1
+#define __gl32_h_ 1
+#define __glext_h_ 1
+#define __gl2ext_h_ 1
+#define __gl_es20ext_h_ 1
+#define __gl_es30ext_h_ 1
+#define __gltypes_h_ 1
+
+#if !defined(<%=PREFIX%>_PROTO_IMPL)
+    #define <%=PREFIX%>_PROTO_IMPL 1
 #endif
 
 #if !defined(<%=PREFIX%>_FORCE_INLINE)
@@ -60,84 +130,6 @@
     #endif
 #endif
 
-#if <%=PREFIX%>_GL_WRANGLER_ENABLED
-    #if defined(__glu_h__)
-        #error "GL/glu.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gl_h_)
-        #error "GL/gl.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gl2_h_)
-        #error "GL/gl2.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__glcorearb_h_)
-        #error "GL/glcorearb.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gl20_h_)
-        #error "GLES2/gl2.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gl_es20_h_)
-        #error "OpenGLES/ES2/gl.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gl30_h_)
-        #error "GLES3/gl3.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gl_es30_h_)
-        #error "OpenGLES/ES3/gl.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gl31_h_)
-        #error "GLES3/gl31.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gl32_h_)
-        #error "GLES3/gl32.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__glext_h_)
-        #error "GL/glext.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gl2ext_h_)
-        #error "GL/glext.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gl_es20ext_h_)
-        #error "OpenGLES/ES2/glext.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gl_es30ext_h_)
-        #error "OpenGLES/ES3/glext.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #if defined(__gltypes_h_)
-        #error "gltypes.h cannot be included before <%=Prefix%>GL.h"
-    #endif
-
-    #define __glu_h__ 1
-    #define __gl_h_ 1
-    #define __gl2_h_ 1
-    #define __glcorearb_h_ 1
-    #define __gl20_h_ 1
-    #define __gl_es20_h_ 1
-    #define __gl30_h_ 1
-    #define __gl_es30_h_ 1
-    #define __gl31_h_ 1
-    #define __gl32_h_ 1
-    #define __glext_h_ 1
-    #define __gl2ext_h_ 1
-    #define __gl_es20ext_h_ 1
-    #define __gl_es30ext_h_ 1
-    #define __gltypes_h_ 1
-
-#endif
 
 /* GL and GL ES Definitions */
 <%=defineBlock%>
@@ -167,7 +159,7 @@ void <%=prefix%>GLShutdown();
 
      Usage example:
 
-     \\code
+     \code
      if(<%=prefix%>GLSupport(GL_VERSION_3_0) || <%=prefix%>GLSupport(GL_ES_VERSION_3_0))
      {
          void *pMapped = glMapBufferRange(target, 0, buffer.size(), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
@@ -184,7 +176,7 @@ void <%=prefix%>GLShutdown();
      {
          glBufferData(target, buffer.size(), reinterpret_cast<const GLvoid *>(&buffer[0]), usage);
      }
-     \\endcode
+     \endcode
  */
 <%=PREFIX%>_FORCE_INLINE bool <%=prefix%>GLSupport(size_t extensionID);
 
@@ -193,16 +185,16 @@ void <%=prefix%>GLShutdown();
 
      Usage example:
 
-     \\code
+     \code
          // Only checks if compiled in debug.
          <%=prefix%>GLCheckErrorDebug(glBindBuffer(handle));
 
          // checks for both debug and release.
          <%=prefix%>GLCheckError(glBufferData(target, bufferSize, (const GLvoid *)pBuffer, GL_STATIC_DRAW));
-     \\endcode
+     \endcode
 
-     \\note <%=prefix%>GLCheckErrorDebug is disabled when the application is compiled for a release build.
-     \\warning calling glGetError can affect your rendering performance. We recommend
+     \note <%=prefix%>GLCheckErrorDebug is disabled when the application is compiled for a release build.
+     \warning calling glGetError can affect your rendering performance. We recommend
      using <%=prefix%>GLCheckErrorDebug instead of <%=prefix%>GLCheckError so that the production
      build won't be impacted. If you want to use <%=prefix%>GLCheckError, make sure it is not called
      during time critical code path.
@@ -219,27 +211,29 @@ void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber);
     #endif
 #endif
 
-
-#if <%=PREFIX%>_GL_WRANGLER_ENABLED
-
 /* Type definitions */
 <%=typeBlock%>
-#endif
 
-typedef struct <%=Prefix%>GLAPIConfig
+typedef struct <%=Prefix%>GLConfig
 {
     bool support[<%=IdCount%>];
 
 <%=funcPtrBlock%>
-} <%=Prefix%>GLAPIConfig;
+} <%=Prefix%>GLConfig;
 
-extern <%=Prefix%>GLAPIConfig <%=prefix%>GLAPI; // global instance.
+extern <%=Prefix%>GLConfig <%=prefix%>GL; // global instance.
 
 <%=PREFIX%>_FORCE_INLINE bool <%=prefix%>GLSupport(size_t id) {
-    return <%=prefix%>GLAPI.support[id];
+    return <%=prefix%>GL.support[id];
 }
 
+#if <%=PREFIX%>_PROTO_IMPL
+
 <%=funcImplBlock%>
+
+<%=funcDefineBlock%>
+
+#endif
 
 #ifdef __cplusplus
 } /* extern "C" */

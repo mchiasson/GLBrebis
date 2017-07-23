@@ -10,7 +10,7 @@
 #include "GLBrebisParser.h"
 #include "GLBrebisCodeGenerator.h"
 
-#include "gl.xml.h"
+#include "xml/gl.xml.h"
 
 void GLBrebisApp::initialize(Application& self)
 {
