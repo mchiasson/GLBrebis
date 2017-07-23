@@ -48,6 +48,7 @@ static const char * feature_node = "feature";
 static const char * require_node = "require";
 static const char * extensions_node = "extensions";
 static const char * extension_node = "extension";
+static const char * apientry_node = "apientry";
 
 #define IS_NODE(pNode, type) strncmp(pNode->name(), type##_node, strlen(type##_node)) == 0
 #define VALUE_TO_STR(pNode) std::string(pNode->value(), pNode->value_size())
@@ -148,6 +149,12 @@ void GLBrebisParser::parseType(GLBrebisData::Type &type, rapidxml::xml_node<> *p
         signature << VALUE_TO_STR(pChildNode);
     }
     type.signature = signature.str();
+    Poco::replaceInPlace(type.signature, " unsigned int ", " khronos_uint32_t ");
+    Poco::replaceInPlace(type.signature, " unsigned short ", " khronos_uint16_t ");
+    Poco::replaceInPlace(type.signature, " unsigned char ", " khronos_uint8_t ");
+    Poco::replaceInPlace(type.signature, " int ", " khronos_int32_t ");
+    Poco::replaceInPlace(type.signature, " short ", " khronos_int16_t ");
+
     rapidxml::xml_node<> *pNameNode = pTypeNode->first_node(name_node);
     if (pNameNode) {
         type.name = VALUE_TO_STR(pNameNode);
