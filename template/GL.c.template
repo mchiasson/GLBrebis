@@ -34,6 +34,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#if !defined(NDEBUG)
+#include <time.h>
+#endif
 
 #if __EMSCRIPTEN__
     extern void* emscripten_GetProcAddress(const char *name_);
@@ -103,6 +106,10 @@ bool <%=prefix%>GLInit() {
     int32_t     versionMajor = -1;
     int32_t     versionMinor = -1;
 
+#if !defined(NDEBUG)
+    clock_t start = clock();
+#endif
+
 #if defined(_WIN32)
     if (s_<%=prefix%>GLLib == NULL)
     {
@@ -160,6 +167,13 @@ bool <%=prefix%>GLInit() {
             extensionsStr = spacerPos;
         }
     }
+
+#if !defined(NDEBUG)
+    clock_t end = clock();
+    double elapsed_time = (end-start)/(double)CLOCKS_PER_SEC*1000.0;
+    fprintf(stderr, "<%=prefix%>GLInit() elapsed time: %.2fms\n", elapsed_time );
+#endif
+
 
     return true;
 }
