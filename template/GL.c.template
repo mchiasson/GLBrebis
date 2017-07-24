@@ -101,10 +101,10 @@ static void <%=prefix%>GLAddExtension(bool isGLES, const char* const extensionSt
 }
 
 bool <%=prefix%>GLInit() {
-    bool        isGLES = false;
-    const char* version = NULL;
-    int32_t     versionMajor = -1;
-    int32_t     versionMinor = -1;
+    bool            isGLES = false;
+    const char*     version = NULL;
+    khronos_int32_t versionMajor = -1;
+    khronos_int32_t versionMinor = -1;
 
 #if !defined(NDEBUG)
     clock_t start = clock();
@@ -150,8 +150,8 @@ bool <%=prefix%>GLInit() {
     }
 
     if (<%=prefix%>GL.support[GL_VERSION_3_0] || <%=prefix%>GL.support[GL_ES_VERSION_3_0]) {
-        int32_t i = 0;
-        int32_t nExtensionsCount = 0;
+        khronos_int32_t i = 0;
+        khronos_int32_t nExtensionsCount = 0;
         <%=prefix%>GL.GetIntegerv(GL_NUM_EXTENSIONS, &nExtensionsCount);
         while(i < nExtensionsCount)
         {

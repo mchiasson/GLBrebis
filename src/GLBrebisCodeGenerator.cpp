@@ -162,9 +162,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
     for (size_t i = 0; i < uniqueGLESExtensions.size(); ++i)
     {
         const std::string &extension = uniqueGLESExtensions[i];
-        glesAddExtensionBlock << "        ";
-        if (i > 0) glesAddExtensionBlock << "else ";
-        glesAddExtensionBlock << "if (!" << prefix << "GL.support[" << extension <<  "] && (extensionStrLength == " << extension.length() << ") && strncmp(extensionStr, \"" << extension <<  "\", extensionStrLength) == 0) { " << prefix << "GL.support[" << extension <<  "] = true; return; }" << std::endl;
+        glesAddExtensionBlock << "        if (!" << prefix << "GL.support[" << extension <<  "] && (extensionStrLength == " << extension.length() << ") && strncmp(extensionStr, \"" << extension <<  "\", extensionStrLength) == 0) { " << prefix << "GL.support[" << extension <<  "] = true; return; }" << std::endl;
     }
 
     std::stringstream glAddExtensionBlock;
@@ -172,9 +170,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
     for (size_t i = 0; i < uniqueGLExtensions.size(); ++i)
     {
         const std::string &extension = uniqueGLExtensions[i];
-        glAddExtensionBlock << "        ";
-        if (i > 0) glAddExtensionBlock << "else ";
-        glAddExtensionBlock << "if (!" << prefix << "GL.support[" << extension <<  "] && (extensionStrLength == " << extension.length() << ") && strncmp(extensionStr, \"" << extension <<  "\", extensionStrLength) == 0) { " << prefix << "GL.support[" << extension <<  "] = true; return; }" << std::endl;
+        glAddExtensionBlock << "        if (!" << prefix << "GL.support[" << extension <<  "] && (extensionStrLength == " << extension.length() << ") && strncmp(extensionStr, \"" << extension <<  "\", extensionStrLength) == 0) { " << prefix << "GL.support[" << extension <<  "] = true; return; }" << std::endl;
     }
 
     std::stringstream getProcBlock;
