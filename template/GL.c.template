@@ -87,10 +87,13 @@ static void <%=prefix%>GLAddExtension(bool isGLES, const char* const extensionSt
 <%=glesAddExtensionBlock%>
         // Discovered a bug in Qualcomm Adreno 200 OpenGL ES driver, where
         // these three extensions are literally fused together.
-        else if ((extensionStrLength == 54) && strncmp(extensionStr, "GL_EXT_debug_labelGL_EXT_debug_markerGL_EXT_robustness", extensionStrLength) == 0) {
-                <%=prefix%>GL.support[GL_EXT_debug_label] = true;
-                <%=prefix%>GL.support[GL_EXT_debug_marker] = true;
-                <%=prefix%>GL.support[GL_EXT_robustness] = true;
+        if (!(mutGL.support[GL_EXT_debug_label] && mutGL.support[GL_EXT_debug_marker] && mutGL.support[GL_EXT_robustness]) &&
+            (extensionStrLength == 54) && strncmp(extensionStr, "GL_EXT_debug_labelGL_EXT_debug_markerGL_EXT_robustness", extensionStrLength) == 0)
+        {
+            <%=prefix%>GL.support[GL_EXT_debug_label] = true;
+            <%=prefix%>GL.support[GL_EXT_debug_marker] = true;
+            <%=prefix%>GL.support[GL_EXT_robustness] = true;
+            return;
         }
     } else {
 <%=glAddExtensionBlock%>
