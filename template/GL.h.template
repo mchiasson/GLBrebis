@@ -125,15 +125,6 @@
     #endif
 #endif
 
-#ifndef <%=PREFIX%>_STD_CALL
-    #if defined(_WIN32)
-        #define <%=PREFIX%>_STD_CALL __stdcall
-    #else
-        #define <%=PREFIX%>_STD_CALL
-    #endif
-#endif
-
-
 /* GL and GL ES Definitions */
 <%=defineBlock%>
 /* Version IDs */
@@ -147,7 +138,7 @@ extern "C" {
 /*!
  * generic <%=Prefix%>GL Procedure signature
  */
-typedef void(<%=PREFIX%>_STD_CALL *<%=Prefix%>GLProc)();
+typedef void(KHRONOS_APIENTRY*<%=Prefix%>GLProc)();
 
 /*!
  * <%=Prefix%>GetProcAddress signature.

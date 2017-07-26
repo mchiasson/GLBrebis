@@ -146,7 +146,14 @@ void GLBrebisParser::parseType(GLBrebisData::Type &type, rapidxml::xml_node<> *p
     std::stringstream signature;
     for (rapidxml::xml_node<> *pChildNode = pTypeNode->first_node(); pChildNode; pChildNode = pChildNode->next_sibling())
     {
-        signature << VALUE_TO_STR(pChildNode);
+        if (IS_NODE(pChildNode, apientry))
+        {
+            signature << "KHRONOS_APIENTRY";
+        }
+        else
+        {
+            signature << VALUE_TO_STR(pChildNode);
+        }
     }
     type.signature = signature.str();
     Poco::replaceInPlace(type.signature, " unsigned int ", " khronos_uint32_t ");
