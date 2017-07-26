@@ -1,3 +1,9 @@
+v1.0.3
+======
+
+* fixed Qualcomm Adreno 200 bug where it will print an unwrangled error while already being wrangled
+* Fix for 'C1026: parser stack overflow, program too complex' error in VS2015
+
 v1.0.2
 ======
 
