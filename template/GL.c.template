@@ -82,17 +82,19 @@ static <%=Prefix%>GLProc <%=prefix%>GLGetProcAddressDefaultImpl(const char *proc
 
 <%=Prefix%>GLGetProcAddressFunc <%=prefix%>GLGetProcAddress = <%=prefix%>GLGetProcAddressDefaultImpl;
 
-static void <%=prefix%>GLAddExtension(bool isGLES, const char* const extensionStr, size_t extensionStrLength) {
+static void <%=prefix%>GLAddExtension(khronos_int8_t isGLES, const char* const extensionStr, size_t extensionStrLength) {
     if(isGLES) {
 <%=glesAddExtensionBlock%>
-        // Discovered a bug in Qualcomm Adreno 200 OpenGL ES driver, where
-        // these three extensions are literally fused together.
+        /*
+         * Discovered a bug in Qualcomm Adreno 200 OpenGL ES driver, where
+         * these three extensions are literally fused together.
+         */
         if (!(mutGL.support[GL_EXT_debug_label] && mutGL.support[GL_EXT_debug_marker] && mutGL.support[GL_EXT_robustness]) &&
             (extensionStrLength == 54) && strncmp(extensionStr, "GL_EXT_debug_labelGL_EXT_debug_markerGL_EXT_robustness", extensionStrLength) == 0)
         {
-            <%=prefix%>GL.support[GL_EXT_debug_label] = true;
-            <%=prefix%>GL.support[GL_EXT_debug_marker] = true;
-            <%=prefix%>GL.support[GL_EXT_robustness] = true;
+            <%=prefix%>GL.support[GL_EXT_debug_label] = KHRONOS_TRUE;
+            <%=prefix%>GL.support[GL_EXT_debug_marker] = KHRONOS_TRUE;
+            <%=prefix%>GL.support[GL_EXT_robustness] = KHRONOS_TRUE;
             return;
         }
     } else {
@@ -103,8 +105,8 @@ static void <%=prefix%>GLAddExtension(bool isGLES, const char* const extensionSt
 #endif
 }
 
-bool <%=prefix%>GLInit() {
-    bool            isGLES = false;
+khronos_int8_t <%=prefix%>GLInit() {
+    khronos_int8_t  isGLES = KHRONOS_FALSE;
     const char*     version = NULL;
     khronos_int32_t versionMajor = -1;
     khronos_int32_t versionMinor = -1;
@@ -123,27 +125,27 @@ bool <%=prefix%>GLInit() {
 <%=getProcBlock%>
     if (!<%=prefix%>GL.GetError) {
         fprintf(stderr, "Could not find 'glGetError'\n");
-        return false;
+        return KHRONOS_FALSE;
     }
 
     if (!<%=prefix%>GL.GetString) {
         fprintf(stderr, "Could not find 'glGetString'\n");
-        return false;
+        return KHRONOS_FALSE;
     }
 
     version  = (const char*)<%=prefix%>GL.GetString(GL_VERSION);
 
     if(!version) {
         fprintf(stderr, "<%=prefix%>GLInit() : Missing GL context. Make sure your context is created and made current prior to calling <%=prefix%>GLInit.\n");
-        return false;
+        return KHRONOS_FALSE;
     }
 
     if ((<%=PREFIX%>_SSCANF(version, "OpenGL ES %d.%d",    &versionMajor, &versionMinor) == 2) ||
         (<%=PREFIX%>_SSCANF(version, "OpenGL ES-CM %d.%d", &versionMajor, &versionMinor) == 2)) {
-        isGLES = true;
+        isGLES = KHRONOS_TRUE;
     } else if (<%=PREFIX%>_SSCANF(version, "%d.%d", &versionMajor, &versionMinor) != 2) {
         fprintf(stderr, "<%=prefix%>GLInit() : Could not determine OpenGL/OpenGLES version.\n");
-        return false;
+        return KHRONOS_FALSE;
     }
 
     if(isGLES) {
@@ -177,7 +179,7 @@ bool <%=prefix%>GLInit() {
     fprintf(stderr, "<%=prefix%>GLInit() : elapsed time: %.2fms\n", elapsed_time );
 #endif
 
-    return true;
+    return KHRONOS_TRUE;
 }
 
 void <%=prefix%>GLShutdown() {

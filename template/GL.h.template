@@ -33,7 +33,6 @@
 
 #include <KHR/khrplatform.h>
 #include <stddef.h>
-#include <stdbool.h>
 
 #if defined(__glu_h__)
 #error "GL/glu.h cannot be included before <%=Prefix%>GL.h"
@@ -157,8 +156,10 @@ extern <%=Prefix%>GLGetProcAddressFunc <%=prefix%>GLGetProcAddress;
 /*!
  * User is required to call this function as soon as the GL context has been created.
  * Failing to calling this function will result in a crash.
+ *
+ * \return returns KHRONOS_TRUE if successful, KHRONOS_FALSE otherwise.
  */
-bool <%=prefix%>GLInit();
+khronos_int8_t <%=prefix%>GLInit();
 
 /*!
  * User should call this function as soon as the GL context is destroyed. It is not
@@ -168,30 +169,32 @@ bool <%=prefix%>GLInit();
 void <%=prefix%>GLShutdown();
 
 /*!
-     Utility to check if a specific OpenGL or OpenGL ES function or extension is supported and available.
-
-     Usage example:
-
-     \code
-     if(<%=prefix%>GLSupport(GL_VERSION_3_0) || <%=prefix%>GLSupport(GL_ES_VERSION_3_0))
-     {
-         void *pMapped = glMapBufferRange(target, 0, buffer.size(), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
-         std::copy(buffer.begin(), buffer.end(), pMapped);
-         glUnmapBuffer(target);
-     }
-     else if (<%=prefix%>GLSupport(GL_EXT_map_buffer_range) && <%=prefix%>GLSupport(GL_OES_mapbuffer)
-     {
-         void *pMapped = glMapBufferRangeEXT(target, 0, buffer.size(), GL_MAP_WRITE_BIT_EXT | GL_MAP_INVALIDATE_BUFFER_BIT_EXT);
-         std::copy(buffer.begin(), buffer.end(), pMapped);
-         glUnmapBufferOES(target);
-     }
-     else
-     {
-         glBufferData(target, buffer.size(), reinterpret_cast<const GLvoid *>(&buffer[0]), usage);
-     }
-     \endcode
+ * Utility to check if a specific OpenGL or OpenGL ES function or extension is supported and available.
+ *
+ * Usage example:
+ *
+ * \code
+ * if(<%=prefix%>GLSupport(GL_VERSION_3_0) || <%=prefix%>GLSupport(GL_ES_VERSION_3_0))
+ * {
+ *     void *pMapped = glMapBufferRange(target, 0, buffer.size(), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+ *     std::copy(buffer.begin(), buffer.end(), pMapped);
+ *        glUnmapBuffer(target);
+ * }
+ * else if (<%=prefix%>GLSupport(GL_EXT_map_buffer_range) && <%=prefix%>GLSupport(GL_OES_mapbuffer)
+ * {
+ *     void *pMapped = glMapBufferRangeEXT(target, 0, buffer.size(), GL_MAP_WRITE_BIT_EXT | GL_MAP_INVALIDATE_BUFFER_BIT_EXT);
+ *     std::copy(buffer.begin(), buffer.end(), pMapped);
+ *     glUnmapBufferOES(target);
+ * }
+ * else
+ * {
+ *     glBufferData(target, buffer.size(), reinterpret_cast<const GLvoid *>(&buffer[0]), usage);
+ * }
+ * \endcode
+ *
+ * \return returns KHRONOS_TRUE if successful, KHRONOS_FALSE otherwise.
  */
-<%=PREFIX%>_FORCE_INLINE bool <%=prefix%>GLSupport(size_t extensionID);
+<%=PREFIX%>_FORCE_INLINE khronos_int8_t <%=prefix%>GLSupport(size_t extensionID);
 
 /*!
      Checks if a specific OpenGL or OpenGL ES command triggered an error.
@@ -229,14 +232,14 @@ void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber);
 
 typedef struct <%=Prefix%>GLConfig
 {
-    bool support[<%=IdCount%>];
+    khronos_int8_t support[<%=IdCount%>];
 
 <%=funcPtrBlock%>
 } <%=Prefix%>GLConfig;
 
-extern <%=Prefix%>GLConfig <%=prefix%>GL; // global instance.
+extern <%=Prefix%>GLConfig <%=prefix%>GL; /* global instance. */
 
-<%=PREFIX%>_FORCE_INLINE bool <%=prefix%>GLSupport(size_t id) {
+<%=PREFIX%>_FORCE_INLINE khronos_int8_t <%=prefix%>GLSupport(size_t id) {
     return <%=prefix%>GL.support[id];
 }
 
