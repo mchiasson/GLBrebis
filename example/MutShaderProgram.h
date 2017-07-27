@@ -28,6 +28,7 @@
 #define MUTSHADERPROGRAM_H
 
 #include <MutGL.h>
+#include <cstddef>
 
 class MutShaderProgram
 {

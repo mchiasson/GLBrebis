@@ -116,22 +116,36 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
         /////////////// funcPtrBlock ////////////////////
 
         funcPtrBlock << "    " << command.proto.signature << "(KHRONOS_APIENTRY *" << &command.proto.name[2] << ")(";
-        for (size_t j = 0; j < command.params.size(); ++j)
+        if (command.params.size() == 0)
         {
-            const GLBrebisData::Param &param = command.params[j];
-            if (j > 0) funcPtrBlock << ", ";
-            funcPtrBlock << param.signature;
+            funcPtrBlock << "void"; // for strict ANSI-C compliance
+        }
+        else
+        {
+            for (size_t j = 0; j < command.params.size(); ++j)
+            {
+                const GLBrebisData::Param &param = command.params[j];
+                if (j > 0) funcPtrBlock << ", ";
+                funcPtrBlock << param.signature;
+            }
         }
         funcPtrBlock << ");" << std::endl;
 
         /////////////// funcImplBlock ////////////////////
 
         funcImplBlock << PREFIX << "_FORCE_INLINE " << command.proto.signature << " " << prefix << &command.proto.name[2] << "(";
-        for (size_t j = 0; j < command.params.size(); ++j)
+        if (command.params.size() == 0)
         {
-            const GLBrebisData::Param &param = command.params[j];
-            if (j > 0) funcImplBlock << ", ";
-            funcImplBlock << param.signatureFull;
+            funcImplBlock << "void"; // for strict ANSI-C compliance
+        }
+        else
+        {
+            for (size_t j = 0; j < command.params.size(); ++j)
+            {
+                const GLBrebisData::Param &param = command.params[j];
+                if (j > 0) funcImplBlock << ", ";
+                funcImplBlock << param.signatureFull;
+            }
         }
         funcImplBlock << ") { ";
         if (command.proto.name == "glGetProgramPipelineivEXT")
@@ -178,11 +192,18 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
     {
         const GLBrebisData::Command &command = uniqueCommands[i];
         getProcBlock << "    " << prefix << "GL." << &command.proto.name[2] << " = (" << command.proto.signature << "(KHRONOS_APIENTRY *)(";
-        for (size_t j = 0; j < command.params.size(); ++j)
+        if (command.params.size() == 0)
         {
-            const GLBrebisData::Param &param = command.params[j];
-            if (j > 0) getProcBlock << ", ";
-            getProcBlock << param.signature;
+            getProcBlock << "void"; // for strict ANSI-C compliance
+        }
+        else
+        {
+            for (size_t j = 0; j < command.params.size(); ++j)
+            {
+                const GLBrebisData::Param &param = command.params[j];
+                if (j > 0) getProcBlock << ", ";
+                getProcBlock << param.signature;
+            }
         }
         getProcBlock << "))" << prefix << "GLGetProcAddress(\"" << command.proto.name << "\");" << std::endl;
     }

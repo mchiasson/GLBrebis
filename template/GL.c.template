@@ -82,7 +82,7 @@ static <%=Prefix%>GLProc <%=prefix%>GLGetProcAddressDefaultImpl(const char *proc
 
 <%=Prefix%>GLGetProcAddressFunc <%=prefix%>GLGetProcAddress = <%=prefix%>GLGetProcAddressDefaultImpl;
 
-static void <%=prefix%>GLAddExtension(khronos_int8_t isGLES, const char* const extensionStr, size_t extensionStrLength) {
+static void <%=prefix%>GLAddExtension(khronos_int8_t isGLES, const char* const extensionStr, khronos_usize_t extensionStrLength) {
     if(isGLES) {
 <%=glesAddExtensionBlock%>
         /*
@@ -105,7 +105,7 @@ static void <%=prefix%>GLAddExtension(khronos_int8_t isGLES, const char* const e
 #endif
 }
 
-khronos_int8_t <%=prefix%>GLInit() {
+khronos_int8_t <%=prefix%>GLInit(void) {
     khronos_int8_t  isGLES = KHRONOS_FALSE;
     const char*     version = NULL;
     khronos_int32_t versionMajor = -1;
@@ -167,7 +167,7 @@ khronos_int8_t <%=prefix%>GLInit() {
         const char* extensionsStr = (const char*)<%=prefix%>GL.GetString(GL_EXTENSIONS);
         while (extensionsStr) {
             const char* spacerPos = strchr(extensionsStr, ' ');
-            size_t extensionsStrLength = spacerPos ? (size_t)(spacerPos++ - extensionsStr) : strlen(extensionsStr);
+            khronos_usize_t extensionsStrLength = spacerPos ? (khronos_usize_t)(spacerPos++ - extensionsStr) : strlen(extensionsStr);
             <%=prefix%>GLAddExtension(isGLES, extensionsStr, extensionsStrLength);
             extensionsStr = spacerPos;
         }
@@ -182,7 +182,7 @@ khronos_int8_t <%=prefix%>GLInit() {
     return KHRONOS_TRUE;
 }
 
-void <%=prefix%>GLShutdown() {
+void <%=prefix%>GLShutdown(void) {
     memset(&<%=prefix%>GL, 0, sizeof(<%=Prefix%>GLConfig));
 
 #if defined(_WIN32)
@@ -209,11 +209,11 @@ void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber) {
                 "GL_CONTEXT_LOST: The context has been lost, due to a graphics card reset."
             };
 
-            size_t uErrorIndex = eErrorID - GL_INVALID_ENUM;
-            if (uErrorIndex > sizeof(errMsg)) {
+            khronos_usize_t errorIndex = eErrorID - GL_INVALID_ENUM;
+            if (errorIndex > sizeof(errMsg)) {
                 fprintf(stderr, "<%=prefix%>GLCheckError : file %s, line %d : Unknown error 0x%X\n", fileName, lineNumber, eErrorID);
             } else {
-                fprintf(stderr, "<%=prefix%>GLCheckError : file %s, line %d : %s\n", fileName, lineNumber, errMsg[uErrorIndex]);
+                fprintf(stderr, "<%=prefix%>GLCheckError : file %s, line %d : %s\n", fileName, lineNumber, errMsg[errorIndex]);
             }
         } while((eErrorID = <%=prefix%>GL.GetError()) != GL_NO_ERROR);
     }

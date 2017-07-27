@@ -32,7 +32,6 @@
 #define _<%=PREFIX%>_GL_H_ 1
 
 #include <KHR/khrplatform.h>
-#include <stddef.h>
 
 #if defined(__glu_h__)
 #error "GL/glu.h cannot be included before <%=Prefix%>GL.h"
@@ -137,7 +136,7 @@ extern "C" {
 /*!
  * generic <%=Prefix%>GL Procedure signature
  */
-typedef void(KHRONOS_APIENTRY*<%=Prefix%>GLProc)();
+typedef void(KHRONOS_APIENTRY*<%=Prefix%>GLProc)(void);
 
 /*!
  * <%=Prefix%>GetProcAddress signature.
@@ -159,14 +158,14 @@ extern <%=Prefix%>GLGetProcAddressFunc <%=prefix%>GLGetProcAddress;
  *
  * \return returns KHRONOS_TRUE if successful, KHRONOS_FALSE otherwise.
  */
-khronos_int8_t <%=prefix%>GLInit();
+khronos_int8_t <%=prefix%>GLInit(void);
 
 /*!
  * User should call this function as soon as the GL context is destroyed. It is not
  * mandatory, but is highly recommended. User can also opt to create anew GL context
  * and call <%=prefix%>GLInit() instead.
  */
-void <%=prefix%>GLShutdown();
+void <%=prefix%>GLShutdown(void);
 
 /*!
  * Utility to check if a specific OpenGL or OpenGL ES function or extension is supported and available.
@@ -194,7 +193,7 @@ void <%=prefix%>GLShutdown();
  *
  * \return returns KHRONOS_TRUE if successful, KHRONOS_FALSE otherwise.
  */
-<%=PREFIX%>_FORCE_INLINE khronos_int8_t <%=prefix%>GLSupport(size_t extensionID);
+<%=PREFIX%>_FORCE_INLINE khronos_int8_t <%=prefix%>GLSupport(khronos_usize_t extensionID);
 
 /*!
      Checks if a specific OpenGL or OpenGL ES command triggered an error.
@@ -239,7 +238,7 @@ typedef struct <%=Prefix%>GLConfig
 
 extern <%=Prefix%>GLConfig <%=prefix%>GL; /* global instance. */
 
-<%=PREFIX%>_FORCE_INLINE khronos_int8_t <%=prefix%>GLSupport(size_t id) {
+<%=PREFIX%>_FORCE_INLINE khronos_int8_t <%=prefix%>GLSupport(khronos_usize_t id) {
     return <%=prefix%>GL.support[id];
 }
 

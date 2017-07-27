@@ -159,8 +159,12 @@ void GLBrebisParser::parseType(GLBrebisData::Type &type, rapidxml::xml_node<> *p
     Poco::replaceInPlace(type.signature, " unsigned int ", " khronos_uint32_t ");
     Poco::replaceInPlace(type.signature, " unsigned short ", " khronos_uint16_t ");
     Poco::replaceInPlace(type.signature, " unsigned char ", " khronos_uint8_t ");
+    Poco::replaceInPlace(type.signature, " signed int ", " khronos_int32_t ");
+    Poco::replaceInPlace(type.signature, " signed short ", " khronos_int16_t ");
+    Poco::replaceInPlace(type.signature, " signed char ", " khronos_int8_t ");
     Poco::replaceInPlace(type.signature, " int ", " khronos_int32_t ");
     Poco::replaceInPlace(type.signature, " short ", " khronos_int16_t ");
+    Poco::replaceInPlace(type.signature, " ptrdiff_t ", " khronos_intptr_t ");
 
     rapidxml::xml_node<> *pNameNode = pTypeNode->first_node(name_node);
     if (pNameNode) {

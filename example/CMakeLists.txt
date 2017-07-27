@@ -31,6 +31,17 @@ include(ExternalProject)
 
 project(MutCube)
 
+
+##
+# This instructs the C to be strict when compiling our generated MutGL.c. This
+# is completely optional and not required to do in real life. This is just to
+# prove to you that the generated code from GLBrebis is 100% ANSI-C compliant.
+##
+if (${CMAKE_C_COMPILER_ID} STREQUAL Clang OR ${CMAKE_C_COMPILER_ID} STREQUAL AppleClang OR ${CMAKE_C_COMPILER_ID} STREQUAL GNU)
+    message(WARNING "Configuring our C compiler to strict ANSI C standard")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -ansi -pedantic -Wmissing-prototypes -Wstrict-prototypes -Wold-style-definition")
+endif()
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(EMSCRIPTEN)
