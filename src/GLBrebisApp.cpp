@@ -125,7 +125,7 @@ int GLBrebisApp::main(const std::vector<std::string>& args)
     Poco::Logger &logger = Poco::Logger::get("GLBrebisApp");
 
     {
-        logger.information("Generating %sGL.c and %s%sGL.h ...", m_prefix, m_includePath + m_prefix);
+        logger.information("Generating %sGL.c and %sGL.h ...", m_prefix, m_includePath + m_prefix);
         std::ofstream source(m_prefix + "GL.c");
         std::ofstream header(m_includePath + m_prefix + "GL.h");
         GLBrebisCodeGenerator::generateGL(m_prefix, m_includePath, m_zip, parser.getResult(), source, header);
