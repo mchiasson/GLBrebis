@@ -89,7 +89,7 @@ static void <%=prefix%>GLAddExtension(khronos_int8_t isGLES, const char* const e
          * Discovered a bug in Qualcomm Adreno 200 OpenGL ES driver, where
          * these three extensions are literally fused together.
          */
-        if (!(mutGL.support[GL_EXT_debug_label] && mutGL.support[GL_EXT_debug_marker] && mutGL.support[GL_EXT_robustness]) &&
+        if (!(<%=prefix%>GL.support[GL_EXT_debug_label] && <%=prefix%>GL.support[GL_EXT_debug_marker] && <%=prefix%>GL.support[GL_EXT_robustness]) &&
             (extensionStrLength == 54) && strncmp(extensionStr, "GL_EXT_debug_labelGL_EXT_debug_markerGL_EXT_robustness", extensionStrLength) == 0)
         {
             <%=prefix%>GL.support[GL_EXT_debug_label] = KHRONOS_TRUE;
