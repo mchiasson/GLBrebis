@@ -46,7 +46,12 @@ struct GLBrebisData {
         std::string name;
         std::string api;
         std::string alias;
-        bool operator< (const Enum &other) { return name.compare(other.name) < 0; }
+        bool operator< (const Enum &other) {
+            int result = value.compare(other.value);
+            if (result == 0) { return name.compare(other.name) < 0; }
+            else if (result < 0) { return true; }
+            return false;
+        }
     };
 
     struct Enums
