@@ -61,7 +61,7 @@
     #endif
 #endif
 
-<%=Prefix%>GLConfig <%=prefix%>GL = {0};
+<%=Prefix%>GLConfig <%=prefix%>GL;
 
 static <%=Prefix%>GLProc <%=prefix%>GLGetProcAddressDefaultImpl(const char *procName)
 {
@@ -121,6 +121,8 @@ khronos_int8_t <%=prefix%>GLInit(void) {
         s_<%=prefix%>GLLib = LoadLibraryA(TEXT(<%=PREFIX%>_GL_LIBRARY));
     }
 #endif
+
+    memset(&<%=prefix%>GL, 0, sizeof(<%=Prefix%>GLConfig));
 
 <%=getProcBlock%>
     if (!<%=prefix%>GL.GetError) {
