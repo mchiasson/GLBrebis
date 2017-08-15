@@ -112,7 +112,6 @@ int main(int argc, char *argv[])
     int fps = 0;
     int simulate_infinite_loop = 1;
     emscripten_set_main_loop(renderFrame, fps, simulate_infinite_loop);
-    emscripten_set_main_loop(renderFrame, 0, 1);
 #else
     while(running)
     {
