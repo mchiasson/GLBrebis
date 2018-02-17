@@ -149,6 +149,9 @@ SOFTWARE.
         <extension name="GL_NV_ES1_1_compatibility" supported="gl"/>
 
         <!-- ??? -->
+        <extension name="GL_NV_ES3_1_compatibility" supported="gl"/>
+
+        <!-- ??? -->
         <extension name="GL_EXT_texture_lod" supported="gl"/>
 
     </extensions>
