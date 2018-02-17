@@ -32,8 +32,8 @@ set(CMAKE_CXX_STANDARD 11)
 if(NOT EMSCRIPTEN)
     include(cmake/HunterGate.cmake)
     HunterGate(
-        URL "https://github.com/ruslo/hunter/archive/v0.19.34.tar.gz"
-        SHA1 "9d0944566336eb6e4e26b4a709e1f17923a9aaa8"
+        URL "https://github.com/ruslo/hunter/archive/v0.20.9.tar.gz"
+        SHA1 "8f7cf6d719d05c49224a4ebeba90c6bb90b90f4a"
         LOCAL # <----- Use local config.cmake
     )
 

@@ -64,11 +64,6 @@ if(EMSCRIPTEN)
     ExternalProject_Get_Property(glm source_dir)
     include_directories(${source_dir})
 else()
-    include("cmake/HunterGate.cmake")
-    HunterGate(
-        URL "https://github.com/ruslo/hunter/archive/v0.19.26.tar.gz"
-        SHA1 "362b3c2fd8f0f50fc03cec5105be8fd4376ea886"
-    )
     hunter_add_package(SDL2)
     hunter_add_package(glm)
     find_package(SDL2 CONFIG REQUIRED)
