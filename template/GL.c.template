@@ -38,7 +38,7 @@
 #include <time.h>
 #endif
 
-#if __EMSCRIPTEN__
+#if defined(__EMSCRIPTEN__)
     extern void* emscripten_GetProcAddress(const char *name_);
 #elif defined(_WIN32) && !defined(__CYGWIN__)
     #ifndef WIN32_LEAN_AND_MEAN
@@ -64,7 +64,7 @@
 static <%=Prefix%>GLProc <%=prefix%>GLGetProcAddressDefaultImpl(const char *procName)
 {
     <%=Prefix%>GLProc proc;
-#if __EMSCRIPTEN__
+#if defined(__EMSCRIPTEN__)
     proc = (<%=Prefix%>GLProc)emscripten_GetProcAddress(procName);
 #elif defined(_WIN32)
     proc = (<%=Prefix%>GLProc)wglGetProcAddress(procName);
