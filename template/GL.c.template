@@ -113,6 +113,7 @@ khronos_int8_t <%=prefix%>GLInit(void) {
     clock_t start = clock();
 #endif
 
+#if !defined(__EMSCRIPTEN__)
     if (s_<%=prefix%>GLLib == NULL)
     {
 #if defined(_WIN32)
@@ -124,6 +125,7 @@ khronos_int8_t <%=prefix%>GLInit(void) {
         if (s_<%=prefix%>GLLib == NULL) s_<%=prefix%>GLLib = dlopen(0, RTLD_LAZY | RTLD_GLOBAL);
 #endif
     }
+#endif
 
     memset(&<%=prefix%>GL, 0, sizeof(<%=Prefix%>GLConfig));
 
@@ -192,6 +194,7 @@ khronos_int8_t <%=prefix%>GLInit(void) {
 void <%=prefix%>GLShutdown(void) {
     memset(&<%=prefix%>GL, 0, sizeof(<%=Prefix%>GLConfig));
 
+#if !defined(__EMSCRIPTEN__)
     if (s_<%=prefix%>GLLib)
     {
 #if defined(_WIN32)
@@ -201,6 +204,7 @@ void <%=prefix%>GLShutdown(void) {
 #endif
         s_<%=prefix%>GLLib = NULL;
     }
+#endif
 
 }
 
