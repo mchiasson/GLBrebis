@@ -74,7 +74,7 @@ else()
             ${MutCube_SOURCE_DIR}/MutGL.c
             ${MutCube_SOURCE_DIR}/MutGL.h
         COMMAND
-            GLBrebis -p Mut
+            GLBrebis --prefix Mut
         WORKING_DIRECTORY
             ${MutCube_SOURCE_DIR}
         DEPENDS
@@ -105,7 +105,9 @@ configure_file(${MutCube_SOURCE_DIR}/assets/shader.frag
                ${MutCube_BINARY_DIR}/assets/shader.frag COPYONLY)
 
 if(NOT EMSCRIPTEN)
+    find_package(OpenGL REQUIRED)
+
     target_link_libraries(MutCube
-        SDL2::SDL2 glm
+        SDL2::SDL2 SDL2::SDL2main glm ${OPENGL_gl_LIBRARY}
     )
 endif()

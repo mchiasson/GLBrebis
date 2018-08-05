@@ -1,7 +1,7 @@
 /*******************************************************************************
  * MIT License
  *
- * Copyright (c) 2017 Mathieu-André Chiasson
+ * Copyright (c) 2017-2018 Mathieu-André Chiasson
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -115,7 +115,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
 
         /////////////// funcPtrBlock ////////////////////
 
-        funcPtrBlock << "    " << command.proto.signature << "(KHRONOS_APIENTRY *" << &command.proto.name[2] << ")(";
+        funcPtrBlock << "    " << command.proto.signature << "(KHRONOS_APIENTRY * _" << &command.proto.name[2] << ")(";
         if (command.params.size() == 0)
         {
             funcPtrBlock << "void"; // for strict ANSI-C compliance
@@ -156,7 +156,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
         {
             funcImplBlock << "return ";
         }
-        funcImplBlock << prefix << "GL." << &command.proto.name[2] << "(";
+        funcImplBlock << prefix << "GL._" << &command.proto.name[2] << "(";
         for (size_t j = 0; j < command.params.size(); ++j)
         {
             const GLBrebisData::Param &param = command.params[j];
@@ -191,7 +191,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
     for(size_t i = 0; i < uniqueCommands.size(); ++i)
     {
         const GLBrebisData::Command &command = uniqueCommands[i];
-        getProcBlock << "    " << prefix << "GL." << &command.proto.name[2] << " = (" << command.proto.signature << "(KHRONOS_APIENTRY *)(";
+        getProcBlock << "    " << prefix << "GL._" << &command.proto.name[2] << " = (" << command.proto.signature << "(KHRONOS_APIENTRY *)(";
         if (command.params.size() == 0)
         {
             getProcBlock << "void"; // for strict ANSI-C compliance

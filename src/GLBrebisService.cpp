@@ -1,7 +1,7 @@
 /*******************************************************************************
  * MIT License
  *
- * Copyright (c) 2017 Mathieu-André Chiasson
+ * Copyright (c) 2017-2018 Mathieu-André Chiasson
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy

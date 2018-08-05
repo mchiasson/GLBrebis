@@ -32,6 +32,17 @@ And also comes with this very handy debugging tool that you can wrap around evey
 
 `<prefix>GLCheckErrorDebug` checks the result of `glGetError` for you, parses the result and prints the error in `stderr` should an error be found. `glGetError` check is automatically removed when compiling in release.
 
+# How to build GLBrebis
+
+First of all, you need to install `perl` version 5.24 or better on your system.
+
+GLBrebis uses cmake build system and will automatically download and build software dependencies for you. For windows users, the project can be generated like so:
+
+```
+cd desired/project/path
+cmake C:/git/GLBrebis -G "Visual Studio 15 2017 Win64"
+```
+
 # How to generate my project's drop-in extention wrangler header and source?
 
 ```

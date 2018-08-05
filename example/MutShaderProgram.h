@@ -29,6 +29,7 @@
 
 #include <MutGL.h>
 #include <cstddef>
+#include <cinttypes>
 
 class MutShaderProgram
 {

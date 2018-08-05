@@ -1,7 +1,7 @@
 ################################################################################
 # MIT License
 #
-# Copyright (c) 2017 Mathieu-André Chiasson
+# Copyright (c) 2017-2018 Mathieu-André Chiasson
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,9 +32,9 @@ set(CMAKE_CXX_STANDARD 11)
 if(NOT EMSCRIPTEN)
     include(cmake/HunterGate.cmake)
     HunterGate(
-        URL "https://github.com/ruslo/hunter/archive/v0.20.9.tar.gz"
-        SHA1 "8f7cf6d719d05c49224a4ebeba90c6bb90b90f4a"
-        LOCAL # <----- Use local config.cmake
+        URL "https://github.com/ruslo/hunter/archive/v0.23.11.tar.gz"
+        SHA1 "b732407d782459f89950ab52bc0ff9612f3e4be2"
+        LOCAL # <----- Use cmake/Hunter/config.cmake
     )
 
     project(GLBrebis)
