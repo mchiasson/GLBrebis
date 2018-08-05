@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     engine = new MutEngine();
 
     engine->projection = glm::perspective(fovy, aspect, zNear, zFar);
-    engine->model = glm::translate(engine->model, glm::vec3(0.0f, 0.0f, -5.0f));
+    engine->model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f));
 
 
     running = true;
