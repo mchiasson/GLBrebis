@@ -46,7 +46,6 @@
 
 #include "xml/gl.xml.h"
 #include "xml/extra.xml.h"
-#include "KHR/khrplatform.h.h"
 
 #define PARSE_METHOD_DOWNLOAD 1
 #define PARSE_METHOD_FILE 2
@@ -125,13 +124,6 @@ int GLBrebisApp::main(const std::vector<std::string>& args)
         GLBrebisCodeGenerator::generateGL(m_prefix, m_zip, parser.getResult(), header);
     }
 
-    {
-        logger.information("Generating KHR/khrplatform.h ...");
-        Poco::File("KHR").createDirectories();
-        std::ofstream khrHeader("KHR/khrplatform.h");
-        khrHeader << std::string((char*)khrplatform_h, sizeof(khrplatform_h));
-    }
-
     if (m_zip)
     {
         logger.information("Archiving into %sGL.zip ...", m_prefix);
@@ -139,10 +131,8 @@ int GLBrebisApp::main(const std::vector<std::string>& args)
         Poco::Zip::Compress zipFile(out, true);
 
         Poco::Path header(m_prefix + "GL.h");
-        Poco::Path khronos("KHR/khrplatform.h");
 
         zipFile.addFile(header, header);
-        zipFile.addFile(khronos, khronos);
 
         std::stringstream comment;
         Poco::DateTime now;

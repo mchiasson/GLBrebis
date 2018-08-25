@@ -29,6 +29,7 @@
 #include "GLBrebisUtilities.h"
 
 #include "template/GL.h.template.h"
+#include "KHR/khrplatform.h.h"
 
 #include <string>
 #include <cctype>
@@ -220,6 +221,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
     Poco::replaceInPlace(content, "<%=prefix%>", prefix.c_str());
     Poco::replaceInPlace(content, "<%=Prefix%>", Prefix.c_str());
     Poco::replaceInPlace(content, "<%=PREFIX%>", PREFIX.c_str());
+    Poco::replaceInPlace(content, "#include <KHR/khrplatform.h>", (const char*)(khrplatform_h));
     Poco::replaceInPlace(content, "<%=defineBlock%>", defineBlock.str().c_str());
     Poco::replaceInPlace(content, "<%=versionBlock%>", versionBlock.str().c_str());
     Poco::replaceInPlace(content, "<%=extensionBlock%>", extensionBlock.str().c_str());

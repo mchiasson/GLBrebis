@@ -60,7 +60,7 @@ GLBrebis -p Mut
 ```
 * `-p` is mandatory. If you do `-p Mut`, the script will generate `MutGL.h`, including symbols that will automatically be named after `Mut`.  For example, you will see `_MUT_GL_H_` header guards, and utility functions will be named `mutGLInit()` and `mutGLShutdown()`, etc.
 
-And if everything goes well, you should have `MutGL.h`, and `KHR/khrplatform.h` on your file system.
+And if everything goes well, you should have `MutGL.h` on your file system.
 
 # How to use the generated extention wrangler code in my project?
 
