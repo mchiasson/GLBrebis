@@ -43,12 +43,12 @@
 #include <Poco/DateTimeFormat.h>
 #include <Poco/DateTimeFormatter.h>
 
-void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
-                                       bool zip,
+void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
                                        const GLBrebisData &result,
                                        std::ostream &headerOut)
 {
-    std::string Prefix = inPrefix; std::toupper(Prefix[0]);
+    std::string Prefix = inPrefix;
+    Prefix[0] = std::toupper(Prefix[0]);
     std::string prefix = Poco::toLower(inPrefix);
     std::string PREFIX = Poco::toUpper(inPrefix);
 

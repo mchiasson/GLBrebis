@@ -27,7 +27,7 @@
 #ifndef GEOMETRYENGINE_H
 #define GEOMETRYENGINE_H
 
-#include <MutGL.h>
+#include <stb_gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
@@ -40,9 +40,9 @@ public:
     void drawCube();
 
     GLuint program;
-    GLuint positionLoc;
-    GLuint texCoordLoc;
-    GLuint texture0Loc;
+    GLint positionLoc;
+    GLint texCoordLoc;
+    GLint texture0Loc;
     GLuint mvpLoc;
 
     GLuint cubeBufferId[2];

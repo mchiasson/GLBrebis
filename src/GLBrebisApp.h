@@ -46,10 +46,8 @@ protected:
 
     void handleHelp(const std::string& name, const std::string& value);
     void handlePrefix(const std::string& name, const std::string& value);
-    void handleZip(const std::string& name, const std::string& value);
 
     std::string m_prefix;
-    bool m_zip;
 };
 
 POCO_APP_MAIN(GLBrebisApp)

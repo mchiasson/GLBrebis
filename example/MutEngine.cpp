@@ -25,9 +25,6 @@
  * For more information, please refer to <http://unlicense.org/>
  ******************************************************************************/
 
-#define MUTGL_IMPLEMENTATION 1
-#include <MutGL.h>
-
 #include <MutEngine.h>
 #include <MutShaderProgram.h>
 
@@ -92,50 +89,50 @@ MutEngine::MutEngine()
 
     program = MutShaderProgram::compileAndLink("assets/shader.vert", "assets/shader.frag");
 
-    mutGLCheckErrorDebug ( glUseProgram(program) );
+    stbGLCheckErrorDebug ( glUseProgram(program) );
 
-    positionLoc = mutGLCheckErrorDebug(glGetAttribLocation(program, "a_position"));
-    texCoordLoc = mutGLCheckErrorDebug(glGetAttribLocation(program, "a_texcoord"));
-    mvpLoc = mutGLCheckErrorDebug(glGetUniformLocation(program, "u_mvp"));
-    texture0Loc = mutGLCheckErrorDebug(glGetUniformLocation(program, "u_texture0"));
+    positionLoc = stbGLCheckErrorDebug(glGetAttribLocation(program, "a_position"));
+    texCoordLoc = stbGLCheckErrorDebug(glGetAttribLocation(program, "a_texcoord"));
+    mvpLoc = stbGLCheckErrorDebug(glGetUniformLocation(program, "u_mvp"));
+    texture0Loc = stbGLCheckErrorDebug(glGetUniformLocation(program, "u_texture0"));
     cubeIndexCount = sizeof(indices);
     cubeBufferId[MUT_ARRAY_BUFFER] = 0;
     cubeBufferId[MUT_ELEMENT_ARRAY_BUFFER] = 0;
-    mutGLCheckErrorDebug ( glGenBuffers(2, cubeBufferId) );
+    stbGLCheckErrorDebug ( glGenBuffers(2, cubeBufferId) );
 
-    mutGLCheckErrorDebug ( glBindBuffer(GL_ARRAY_BUFFER, cubeBufferId[MUT_ARRAY_BUFFER]) );
-    mutGLCheckErrorDebug ( glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW) );
+    stbGLCheckErrorDebug ( glBindBuffer(GL_ARRAY_BUFFER, cubeBufferId[MUT_ARRAY_BUFFER]) );
+    stbGLCheckErrorDebug ( glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW) );
 
-    mutGLCheckErrorDebug ( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeBufferId[MUT_ELEMENT_ARRAY_BUFFER]) );
-    mutGLCheckErrorDebug ( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW) );
+    stbGLCheckErrorDebug ( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeBufferId[MUT_ELEMENT_ARRAY_BUFFER]) );
+    stbGLCheckErrorDebug ( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW) );
 
     int w;
     int h;
     int comp;
     unsigned char* pixels = stbi_load("assets/texture.png", &w, &h, &comp, STBI_rgb);
-    mutGLCheckErrorDebug ( glGenTextures(1, &textureId) );
-    mutGLCheckErrorDebug ( glActiveTexture(GL_TEXTURE0) );
-    mutGLCheckErrorDebug ( glBindTexture(GL_TEXTURE_2D, textureId) );
-    mutGLCheckErrorDebug ( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR) );
-    mutGLCheckErrorDebug ( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR) );
-    mutGLCheckErrorDebug ( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE) );
-    mutGLCheckErrorDebug ( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE) );
-    mutGLCheckErrorDebug ( glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels) );
+    stbGLCheckErrorDebug ( glGenTextures(1, &textureId) );
+    stbGLCheckErrorDebug ( glActiveTexture(GL_TEXTURE0) );
+    stbGLCheckErrorDebug ( glBindTexture(GL_TEXTURE_2D, textureId) );
+    stbGLCheckErrorDebug ( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR) );
+    stbGLCheckErrorDebug ( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR) );
+    stbGLCheckErrorDebug ( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE) );
+    stbGLCheckErrorDebug ( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE) );
+    stbGLCheckErrorDebug ( glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels) );
     stbi_image_free(pixels);
 
-    mutGLCheckErrorDebug ( glEnable(GL_DEPTH_TEST) );
-    mutGLCheckErrorDebug ( glEnable(GL_CULL_FACE) );
+    stbGLCheckErrorDebug ( glEnable(GL_DEPTH_TEST) );
+    stbGLCheckErrorDebug ( glEnable(GL_CULL_FACE) );
 
-    mutGLCheckErrorDebug ( glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void *)0) );
-    mutGLCheckErrorDebug ( glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void *)sizeof(glm::vec3)) );
-    mutGLCheckErrorDebug ( glEnableVertexAttribArray(positionLoc) );
-    mutGLCheckErrorDebug ( glEnableVertexAttribArray(texCoordLoc) );
-    mutGLCheckErrorDebug ( glUniform1i(texture0Loc, 0) );
+    stbGLCheckErrorDebug ( glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void *)0) );
+    stbGLCheckErrorDebug ( glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void *)sizeof(glm::vec3)) );
+    stbGLCheckErrorDebug ( glEnableVertexAttribArray(positionLoc) );
+    stbGLCheckErrorDebug ( glEnableVertexAttribArray(texCoordLoc) );
+    stbGLCheckErrorDebug ( glUniform1i(texture0Loc, 0) );
 }
 
 MutEngine::~MutEngine()
 {
-    mutGLCheckErrorDebug(glDeleteProgram(program));
+    stbGLCheckErrorDebug(glDeleteProgram(program));
     program = 0;
     positionLoc = 0;
     texCoordLoc = 0;
@@ -148,6 +145,6 @@ MutEngine::~MutEngine()
 void MutEngine::drawCube()
 {
     glm::mat4 mvp = projection * model;
-    mutGLCheckErrorDebug ( glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp)) );
+    stbGLCheckErrorDebug ( glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp)) );
     glDrawElements(GL_TRIANGLE_STRIP, cubeIndexCount, GL_UNSIGNED_BYTE, 0);
 }

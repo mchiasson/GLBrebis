@@ -1,3 +1,15 @@
+v1.0.8
+=======
+ * changed license and docs for preparation for stb
+ * embedded KHR header into generated header.
+ * Removed the generated .c file in favor of STB-style
+ * Fixed build issue in linux, and removed the unecessary macros
+ * windows.h->Windows.h case warning fix
+
+v1.0.7
+======
+ * Fixed black screen in the sample
+
 v1.0.6
 ======
 * Fixed Windows build

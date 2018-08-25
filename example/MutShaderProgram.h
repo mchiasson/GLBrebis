@@ -27,7 +27,7 @@
 #ifndef MUTSHADERPROGRAM_H
 #define MUTSHADERPROGRAM_H
 
-#include <MutGL.h>
+#include <stb_gl.h>
 #include <cstddef>
 #include <cinttypes>
 

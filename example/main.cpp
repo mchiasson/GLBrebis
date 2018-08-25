@@ -28,29 +28,29 @@
 #include <MutEngine.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-#if __EMSCRIPTEN__
+#ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
 
 
-SDL_Window *window = NULL;
-MutEngine *engine = NULL;
+static SDL_Window *window = nullptr;
+static MutEngine *engine = nullptr;
 
 /* Global */
-int last_mx = 0, last_my = 0, cur_mx = 0, cur_my = 0;
-int arcball_on = 0;
-int screen_width = 720;
-int screen_height = 720;
-float fovy = glm::radians(45.0f);
-float aspect = (float)screen_width / (float)screen_height;
-float zNear = 3.0;
-float zFar = 7.0;
+static int last_mx = 0, last_my = 0, cur_mx = 0, cur_my = 0;
+static int arcball_on = 0;
+static int screen_width = 720;
+static int screen_height = 720;
+static float fovy = glm::radians(45.0f);
+static float aspect = static_cast<float>(screen_width) / static_cast<float>(screen_height);
+static float zNear = 3.0;
+static float zFar = 7.0;
 
-bool running;
+static bool running;
 
 void renderFrame();
 
-int main(int argc, char *argv[])
+int main(int, char *[])
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR,
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 
     // Now that our GL context is created, we need to initialize our generated
     // GL wranger. Make sure it returns true!
-    if (!mutGLInit())
+    if (stbGLInit() != KHRONOS_TRUE)
     {
         SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR,
                        "Unable to initialize GLBrebis Wranger.\n");
@@ -120,10 +120,10 @@ int main(int argc, char *argv[])
 #endif
 
     delete engine;
-    engine = NULL;
+    engine = nullptr;
 
     // Don't forget to call this when you're done.
-    mutGLShutdown();
+    stbGLShutdown();
 
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void onMouseDown(float x, float y)
+void onMouseDown(int x, int y)
 {
     if (arcball_on == 0)
     {
@@ -141,7 +141,7 @@ void onMouseDown(float x, float y)
     ++arcball_on;
 }
 
-void onMouseMove(float x, float y)
+void onMouseMove(int x, int y)
 {
     if (arcball_on) {
         cur_mx = x;
@@ -149,7 +149,7 @@ void onMouseMove(float x, float y)
     }
 }
 
-void onMouseRelease(float x, float y)
+void onMouseRelease(int, int)
 {
     --arcball_on;
 }
@@ -186,13 +186,16 @@ void renderFrame()
             onMouseMove(e.button.x, e.button.y);
             break;
         case SDL_FINGERDOWN:
-            onMouseDown(e.tfinger.x*screen_width, e.tfinger.y*screen_height);
+            onMouseDown(static_cast<int>(e.tfinger.x*screen_width),
+                        static_cast<int>(e.tfinger.y*screen_height));
             break;
         case SDL_FINGERUP:
-            onMouseRelease(e.tfinger.x*screen_width, e.tfinger.y*screen_height);
+            onMouseRelease(static_cast<int>(e.tfinger.x*screen_width),
+                           static_cast<int>(e.tfinger.y*screen_height));
             break;
         case SDL_FINGERMOTION:
-            onMouseMove(e.tfinger.x*screen_width, e.tfinger.y*screen_height);
+            onMouseMove(static_cast<int>(e.tfinger.x*screen_width),
+                        static_cast<int>(e.tfinger.y*screen_height));
             break;
         case SDL_WINDOWEVENT:
             switch (e.window.event)

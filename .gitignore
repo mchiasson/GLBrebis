@@ -1,13 +1,10 @@
 # Garbage from IDE
 **/CMakeLists.txt.user
-**/CMakeLists.txt.autosave
+**/*.autosave
 .vscode/
 
 # generated/downloaded file
-example/glm/
-example/MutGL.c
-example/MutGL.h
-example/KHR/khrplatform.h
+example/stb_gl.h
 KHR/khrplatform.h
 KHR/khrplatform.h.c
 KHR/khrplatform.h.h
