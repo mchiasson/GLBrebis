@@ -109,10 +109,6 @@
 #define __gl_es30ext_h_ 1
 #define __gltypes_h_ 1
 
-#if !defined(<%=PREFIX%>_PROTO_IMPL)
-    #define <%=PREFIX%>_PROTO_IMPL 1
-#endif
-
 #if !defined(<%=PREFIX%>_FORCE_INLINE)
     #if defined(_MSC_VER)
         #define <%=PREFIX%>_FORCE_INLINE __forceinline
@@ -242,16 +238,210 @@ extern <%=Prefix%>GLConfig <%=prefix%>GL; /* global instance. */
     return <%=prefix%>GL.support[id];
 }
 
-#if <%=PREFIX%>_PROTO_IMPL
-
 <%=funcImplBlock%>
-
-<%=funcDefineBlock%>
-
-#endif
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+#ifdef <%=PREFIX%>GL_IMPLEMENTATION
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#if defined(_WIN32) && !defined(__CYGWIN__)
+#ifndef WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN 1
+#endif
+#include <Windows.h>
+#elif !defined(__EMSCRIPTEN__)
+#include <dlfcn.h>
+#endif
+
+#ifndef <%=PREFIX%>_SSCANF
+    #if defined(_MSC_VER)
+        #define <%=PREFIX%>_SSCANF sscanf_s
+    #else
+        #define <%=PREFIX%>_SSCANF sscanf
+    #endif
+#endif
+
+#ifdef __cplusplus
+extern "C"  {
+#endif
+
+#if defined(__EMSCRIPTEN__)
+    extern void* emscripten_GetProcAddress(const char *name_);
+#elif defined(_WIN32) && !defined(__CYGWIN__)
+    static HMODULE s_<%=prefix%>GLLib = NULL;
+#else
+    static void *s_<%=prefix%>GLLib = NULL;
+#endif
+
+<%=Prefix%>GLConfig <%=prefix%>GL;
+
+static <%=Prefix%>GLProc <%=prefix%>GLGetProcAddressDefaultImpl(const char *procName)
+{
+    <%=Prefix%>GLProc proc;
+#if defined(__EMSCRIPTEN__)
+    proc = (<%=Prefix%>GLProc)emscripten_GetProcAddress(procName);
+#elif defined(_WIN32)
+    proc = (<%=Prefix%>GLProc)GetProcAddress(s_<%=prefix%>GLLib, procName);
+    if (!proc)
+    {
+        proc = (<%=Prefix%>GLProc)wglGetProcAddress(procName);
+    }
+#else
+    *(void **)(&proc) = dlsym(s_<%=prefix%>GLLib, procName);
+#endif
+    return proc;
+}
+
+<%=Prefix%>GLGetProcAddressFunc <%=prefix%>GLGetProcAddress = <%=prefix%>GLGetProcAddressDefaultImpl;
+
+static void <%=prefix%>GLAddExtension(khronos_int8_t isGLES, const char* const extensionStr, khronos_usize_t extensionStrLength) {
+    if(isGLES) {
+<%=glesAddExtensionBlock%>
+        /*
+         * Discovered a bug in Qualcomm Adreno 200 OpenGL ES driver, where
+         * these three extensions are literally fused together.
+         */
+        if (!(<%=prefix%>GL.support[GL_EXT_debug_label] && <%=prefix%>GL.support[GL_EXT_debug_marker] && <%=prefix%>GL.support[GL_EXT_robustness]) &&
+            (extensionStrLength == 54) && strncmp(extensionStr, "GL_EXT_debug_labelGL_EXT_debug_markerGL_EXT_robustness", extensionStrLength) == 0)
+        {
+            <%=prefix%>GL.support[GL_EXT_debug_label] = KHRONOS_TRUE;
+            <%=prefix%>GL.support[GL_EXT_debug_marker] = KHRONOS_TRUE;
+            <%=prefix%>GL.support[GL_EXT_robustness] = KHRONOS_TRUE;
+            return;
+        }
+    } else {
+<%=glAddExtensionBlock%>
+    }
+}
+
+khronos_int8_t <%=prefix%>GLInit(void) {
+    khronos_int8_t  isGLES = KHRONOS_FALSE;
+    const char*     version = NULL;
+    khronos_int32_t versionMajor = -1;
+    khronos_int32_t versionMinor = -1;
+
+#if !defined(__EMSCRIPTEN__)
+    if (s_<%=prefix%>GLLib == NULL)
+    {
+#if defined(_WIN32)
+        s_<%=prefix%>GLLib = LoadLibraryA(TEXT("opengl32.dll"));
+#else
+        s_<%=prefix%>GLLib = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
+        if (s_<%=prefix%>GLLib == NULL) s_<%=prefix%>GLLib = dlopen("libGLESv3.so", RTLD_LAZY | RTLD_GLOBAL);
+        if (s_<%=prefix%>GLLib == NULL) s_<%=prefix%>GLLib = dlopen("libGLESv2.so", RTLD_LAZY | RTLD_GLOBAL);
+        if (s_<%=prefix%>GLLib == NULL) s_<%=prefix%>GLLib = dlopen(0, RTLD_LAZY | RTLD_GLOBAL);
+#endif
+    }
+#endif
+
+    memset(&<%=prefix%>GL, 0, sizeof(<%=Prefix%>GLConfig));
+
+<%=getProcBlock%>
+    if (!<%=prefix%>GL.<%=prefix%>GetError) {
+        fprintf(stderr, "Could not find 'glGetError'\n");
+        return KHRONOS_FALSE;
+    }
+
+    if (!<%=prefix%>GL.<%=prefix%>GetString) {
+        fprintf(stderr, "Could not find 'glGetString'\n");
+        return KHRONOS_FALSE;
+    }
+
+    version  = (const char*)<%=prefix%>GL.<%=prefix%>GetString(GL_VERSION);
+
+    if(!version) {
+        fprintf(stderr, "<%=prefix%>GLInit() : Missing GL context. Make sure your context is created and made current prior to calling <%=prefix%>GLInit.\n");
+        return KHRONOS_FALSE;
+    }
+
+    if ((<%=PREFIX%>_SSCANF(version, "OpenGL ES %d.%d",    &versionMajor, &versionMinor) == 2) ||
+        (<%=PREFIX%>_SSCANF(version, "OpenGL ES-CM %d.%d", &versionMajor, &versionMinor) == 2)) {
+        isGLES = KHRONOS_TRUE;
+    } else if (<%=PREFIX%>_SSCANF(version, "%d.%d", &versionMajor, &versionMinor) != 2) {
+        fprintf(stderr, "<%=prefix%>GLInit() : Could not determine OpenGL/OpenGLES version.\n");
+        return KHRONOS_FALSE;
+    }
+
+    if(isGLES) {
+<%=glesSupportBlock%>
+    } else {
+<%=glSupportBlock%>
+    }
+
+    if (<%=prefix%>GL.support[GL_VERSION_3_0] || <%=prefix%>GL.support[GL_ES_VERSION_3_0]) {
+        khronos_int32_t i = 0;
+        khronos_int32_t nExtensionsCount = 0;
+        <%=prefix%>GL.<%=prefix%>GetIntegerv(GL_NUM_EXTENSIONS, &nExtensionsCount);
+        while(i < nExtensionsCount)
+        {
+            const char* extensionStr = (const char*)<%=prefix%>GL.<%=prefix%>GetStringi(GL_EXTENSIONS, i++);
+            <%=prefix%>GLAddExtension(isGLES, extensionStr, strlen(extensionStr));
+        }
+    } else {
+        const char* extensionsStr = (const char*)<%=prefix%>GL.<%=prefix%>GetString(GL_EXTENSIONS);
+        while (extensionsStr) {
+            const char* spacerPos = strchr(extensionsStr, ' ');
+            khronos_usize_t extensionsStrLength = spacerPos ? (khronos_usize_t)(spacerPos++ - extensionsStr) : strlen(extensionsStr);
+            <%=prefix%>GLAddExtension(isGLES, extensionsStr, extensionsStrLength);
+            extensionsStr = spacerPos;
+        }
+    }
+
+    return KHRONOS_TRUE;
+}
+
+void <%=prefix%>GLShutdown(void) {
+    memset(&<%=prefix%>GL, 0, sizeof(<%=Prefix%>GLConfig));
+
+#if !defined(__EMSCRIPTEN__)
+    if (s_<%=prefix%>GLLib)
+    {
+#if defined(_WIN32)
+        FreeLibrary(s_<%=prefix%>GLLib);
+#else
+        dlclose(s_<%=prefix%>GLLib);
+#endif
+        s_<%=prefix%>GLLib = NULL;
+    }
+#endif
+
+}
+
+void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber) {
+    GLenum eErrorID = <%=prefix%>GL.<%=prefix%>GetError();
+    if (eErrorID != GL_NO_ERROR) {
+        do {
+            static const char* errMsg[] = {
+                "GL_INVALID_ENUM: An unacceptable value is specified for an enumerated argument.",
+                "GL_INVALID_VALUE: A numeric argument is out of range.",
+                "GL_INVALID_OPERATION: The specified operation is not allowed in the current state.",
+                "GL_STACK_OVERFLOW: This function caused a stack overflow.",
+                "GL_STACK_UNDERFLOW: This function would cause a stack underflow.",
+                "GL_OUT_OF_MEMORY: There is not enough memory left to execute the command.",
+                "GL_INVALID_FRAMEBUFFER_OPERATION: The command is trying to render to or read from the framebuffer while the currently bound framebuffer is not framebuffer complete.",
+                "GL_CONTEXT_LOST: The context has been lost, due to a graphics card reset."
+            };
+
+            khronos_usize_t errorIndex = eErrorID - GL_INVALID_ENUM;
+            if (errorIndex > sizeof(errMsg)) {
+                fprintf(stderr, "<%=prefix%>GLCheckError : file %s, line %d : Unknown error 0x%X\n", fileName, lineNumber, eErrorID);
+            } else {
+                fprintf(stderr, "<%=prefix%>GLCheckError : file %s, line %d : %s\n", fileName, lineNumber, errMsg[errorIndex]);
+            }
+        } while((eErrorID = <%=prefix%>GL.<%=prefix%>GetError()) != GL_NO_ERROR);
+    }
+}
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+#endif /* <%=PREFIX%>_IMPLEMENTATION */
 
 #endif /* _<%=PREFIX%>_GL_H_ */

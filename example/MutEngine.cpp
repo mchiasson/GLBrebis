@@ -25,6 +25,9 @@
  * For more information, please refer to <http://unlicense.org/>
  ******************************************************************************/
 
+#define MUTGL_IMPLEMENTATION 1
+#include <MutGL.h>
+
 #include <MutEngine.h>
 #include <MutShaderProgram.h>
 

@@ -1,3 +1,18 @@
+v1.0.6
+======
+* Fixed Windows build
+* Updated Copyright Notice
+* Added build instructions to the README.md
+
+v1.0.5
+======
+
+* marked GL_NV_ES3_1_compatibility as known, since it doesn't do anything
+* atempt to fix OSX where it wouldn't be able to load any GL symbols …
+* fixed the hunter build
+* removed duplicated emscripten_set_main_loop
+* replaced {0} by memset since zeroizing struct from initializer was in …
+
 v1.0.4
 ======
 

@@ -76,13 +76,13 @@ void GLBrebisHTTPDefaultRequestHandler::handleRequest(Poco::Net::HTTPServerReque
         }
     }
 
-    std::stringstream headerStream, sourceSteram, khrheaderStream, zipStream;
+    std::stringstream headerStream, khrheaderStream, zipStream;
 
     GLBrebisParser parser;
     parser.parse(gl_xml, sizeof(gl_xml));
     parser.parse(extra_xml, sizeof(extra_xml));
 
-    GLBrebisCodeGenerator::generateGL(prefix, include, true, parser.getResult(), sourceSteram, headerStream);
+    GLBrebisCodeGenerator::generateGL(prefix, true, parser.getResult(), headerStream);
 
     khrheaderStream << std::string((char*)khrplatform_h, sizeof(khrplatform_h));
 
@@ -93,7 +93,6 @@ void GLBrebisHTTPDefaultRequestHandler::handleRequest(Poco::Net::HTTPServerReque
     Poco::Zip::Compress c(zipStream, true);
 
     c.addFile(headerStream,    now, include + prefix + "GL.h");
-    c.addFile(sourceSteram,    now, prefix + "GL.c");
     c.addFile(khrheaderStream, now, "KHR/khrplatform.h");
 
     std::stringstream comment;

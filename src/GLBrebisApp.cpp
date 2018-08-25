@@ -90,12 +90,6 @@ void GLBrebisApp::defineOptions(Poco::Util::OptionSet &options)
                 .argument("<prefix>")
                 .callback(Poco::Util::OptionCallback<GLBrebisApp>(this, &GLBrebisApp::handlePrefix)));
 
-    options.addOption(Poco::Util::Option("include", "i", "include path prefix to use in the generated GL.c")
-                .required(false)
-                .repeatable(false)
-                .argument("<includepath>")
-                .callback(Poco::Util::OptionCallback<GLBrebisApp>(this, &GLBrebisApp::handleInclude)));
-
     options.addOption(Poco::Util::Option("zip", "z", "Create a zip archive containing all of the generated content.")
                 .required(false)
                 .repeatable(false)
@@ -126,10 +120,9 @@ int GLBrebisApp::main(const std::vector<std::string>& args)
     Poco::Logger &logger = Poco::Logger::get("GLBrebisApp");
 
     {
-        logger.information("Generating %sGL.c and %sGL.h ...", m_prefix, m_includePath + m_prefix);
-        std::ofstream source(m_prefix + "GL.c");
-        std::ofstream header(m_includePath + m_prefix + "GL.h");
-        GLBrebisCodeGenerator::generateGL(m_prefix, m_includePath, m_zip, parser.getResult(), source, header);
+        logger.information("Generating %sGL.h ...", m_prefix);
+        std::ofstream header(m_prefix + "GL.h");
+        GLBrebisCodeGenerator::generateGL(m_prefix, m_zip, parser.getResult(), header);
     }
 
     {
@@ -145,12 +138,10 @@ int GLBrebisApp::main(const std::vector<std::string>& args)
         std::ofstream out(m_prefix + "GL.zip", std::ios::binary);
         Poco::Zip::Compress zipFile(out, true);
 
-        Poco::Path header(m_includePath + m_prefix + "GL.h");
-        Poco::Path source(m_prefix + "GL.c");
+        Poco::Path header(m_prefix + "GL.h");
         Poco::Path khronos("KHR/khrplatform.h");
 
         zipFile.addFile(header, header);
-        zipFile.addFile(source, source);
         zipFile.addFile(khronos, khronos);
 
         std::stringstream comment;
@@ -188,25 +179,6 @@ void GLBrebisApp::handleHelp(const std::string& name, const std::string& value)
 void GLBrebisApp::handlePrefix(const std::string& name, const std::string& value)
 {
     m_prefix = value;
-}
-
-void GLBrebisApp::handleInclude(const std::string& name, const std::string& value)
-{
-    m_includePath = value;
-    if (m_includePath.length() > 0)
-    {
-        size_t lastCharPos = m_includePath.length()-1;
-        if (m_includePath[lastCharPos] == '\\')
-        {
-            m_includePath[lastCharPos] = '/';
-        }
-        else if(m_includePath[lastCharPos] != '/')
-        {
-            m_includePath += '/';
-        }
-
-        Poco::File(m_includePath).createDirectories();
-    }
 }
 
 void GLBrebisApp::handleZip(const std::string& name, const std::string& value)

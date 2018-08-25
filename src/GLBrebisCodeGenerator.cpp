@@ -28,7 +28,6 @@
 #include "GLBrebisCodeGenerator.h"
 #include "GLBrebisUtilities.h"
 
-#include "template/GL.c.template.h"
 #include "template/GL.h.template.h"
 
 #include <string>
@@ -44,10 +43,8 @@
 #include <Poco/DateTimeFormatter.h>
 
 void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
-                                       const std::string &includePath,
                                        bool zip,
                                        const GLBrebisData &result,
-                                       std::ostream &sourceOut,
                                        std::ostream &headerOut)
 {
     std::string Prefix = inPrefix; std::toupper(Prefix[0]);
@@ -103,7 +100,6 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
 
     std::stringstream funcPtrBlock;
     std::stringstream funcImplBlock;
-    std::stringstream funcDefineBlock;
     std::vector<GLBrebisData::Command> uniqueCommands = result.getAllUniqueCommands();
     for(size_t i = 0; i < uniqueCommands.size(); ++i)
     {
@@ -218,25 +214,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
         }
     }
 
-    std::string content;
-
-    //GLBrebisUtilities::readFile("template/GL.c.template", header);
-    content = std::string((char*)GL_c_template, sizeof(GL_c_template));
-    Poco::replaceInPlace(content, "<%=now%>", nowStr.c_str());
-    Poco::replaceInPlace(content, "<%=year%>", year.c_str());
-    Poco::replaceInPlace(content, "<%=prefix%>", prefix.c_str());
-    Poco::replaceInPlace(content, "<%=Prefix%>", Prefix.c_str());
-    Poco::replaceInPlace(content, "<%=PREFIX%>", PREFIX.c_str());
-    Poco::replaceInPlace(content, "<%=includePrefix%>", includePath.c_str());
-    Poco::replaceInPlace(content, "<%=glesAddExtensionBlock%>", glesAddExtensionBlock.str().c_str());
-    Poco::replaceInPlace(content, "<%=glAddExtensionBlock%>", glAddExtensionBlock.str().c_str());
-    Poco::replaceInPlace(content, "<%=getProcBlock%>", getProcBlock.str().c_str());
-    Poco::replaceInPlace(content, "<%=glSupportBlock%>", glSupportBlock.str().c_str());
-    Poco::replaceInPlace(content, "<%=glesSupportBlock%>", glesSupportBlock.str().c_str());
-    sourceOut << content;
-
-    //GLBrebisUtilities::readFile("template/GL.h.template", header);
-    content = std::string((char*)GL_h_template, sizeof(GL_h_template));
+    std::string content = std::string((char*)GL_h_template, sizeof(GL_h_template));
     Poco::replaceInPlace(content, "<%=now%>", nowStr.c_str());
     Poco::replaceInPlace(content, "<%=year%>", year.c_str());
     Poco::replaceInPlace(content, "<%=prefix%>", prefix.c_str());
@@ -249,7 +227,12 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
     Poco::replaceInPlace(content, "<%=IdCount%>", std::to_string(IdCount).c_str());
     Poco::replaceInPlace(content, "<%=funcPtrBlock%>", funcPtrBlock.str().c_str());
     Poco::replaceInPlace(content, "<%=funcImplBlock%>", funcImplBlock.str().c_str());
-    Poco::replaceInPlace(content, "<%=funcDefineBlock%>", funcDefineBlock.str().c_str());
-    headerOut << content;
+    Poco::replaceInPlace(content, "<%=glesAddExtensionBlock%>", glesAddExtensionBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=glAddExtensionBlock%>", glAddExtensionBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=getProcBlock%>", getProcBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=glSupportBlock%>", glSupportBlock.str().c_str());
+    Poco::replaceInPlace(content, "<%=glesSupportBlock%>", glesSupportBlock.str().c_str());
+    Poco::replaceInPlace(content, "\r\n", "\n");
+    headerOut << content << std::endl;
 
 }

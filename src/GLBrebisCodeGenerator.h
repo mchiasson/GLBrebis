@@ -35,10 +35,8 @@ class GLBrebisCodeGenerator
     GLBrebisCodeGenerator();
 public:
     static void generateGL(const std::string &prefix,
-                           const std::string &includePath,
                            bool zip,
                            const GLBrebisData &result,
-                           std::ostream &sourceOut,
                            std::ostream &headerOut);
 };
 

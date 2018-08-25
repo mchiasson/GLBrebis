@@ -50,26 +50,22 @@ usage: GLBrebis -p <prefix> [-i includepath] [-z]
 -h, --help                                Usage Information
 -p<prefix>, --prefix=<prefix>             Project prefix to append to every
                                           generated files and symbols
--i<includepath>, --include=<includepath>  include path prefix to use in the
-                                          generated GL.c
 -z, --zip                                 Create a zip archive containing all
                                           of the generated content.
 ```
 
 Example for a fictional project called 'Mut' :
 ```
-GLBrebis -p Mut -i mut
+GLBrebis -p Mut
 ```
-* `-p` is mandatory. If you do `-p Mut`, the script will generate `MutGL.c`, and `MutGL.h`, including symbols that will automatically be named after `Mut`.  For example, you will see `_MUT_GL_H_` header guards, and utility functions will be named `mutGLInit()` and `mutGLShutdown()`, etc.
-* `-i,--include` is optional. It's mostly used by `MutGL.c` to do `#include <mut/MutGL.h>` instead of just `#include <MutGL.h>` to help you match your application's file layout requirement.
+* `-p` is mandatory. If you do `-p Mut`, the script will generate `MutGL.h`, including symbols that will automatically be named after `Mut`.  For example, you will see `_MUT_GL_H_` header guards, and utility functions will be named `mutGLInit()` and `mutGLShutdown()`, etc.
 
-And if everything goes well, you should have `MutGL.c`, `mut/MutGL.h`, and `KHR/khrplatform.h` on your file system.
+And if everything goes well, you should have `MutGL.h`, and `KHR/khrplatform.h` on your file system.
 
 # How to use the generated extention wrangler code in my project?
 
 1. Drop-in the three generated files into your project
-2. Add `<prefix>GL.c` to your CMakeLists.txt/Makefile/VCProj/etc
-3. make sure you include `#include "<prefix>GL.h"` instead of including the regular.
+3. make sure you include `#include "<prefix>GL.h"` instead of including the system's GL or GLES header(s).
 4. create your window *and* your GL context.
 5. Once the gl context successfully created, simply call `bool success = <prefix>GLInit();`.
 6. When shutting down, don't forget to call `<prefix>GLShutdown();`
