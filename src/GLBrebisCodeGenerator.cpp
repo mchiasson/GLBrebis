@@ -63,11 +63,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
     for(size_t i = 0; i < uniqueDefines.size(); ++i)
     {
         defineBlock << "#define " << uniqueDefines[i].name;
-        /*if (uniqueDefines[i].alias.length() > 0)
-        {
-            defineBlock << " " << uniqueDefines[i].alias;
-        }
-        else */if (uniqueDefines[i].value.length() > 0)
+        if (uniqueDefines[i].value.length() > 0)
         {
             defineBlock << " " << uniqueDefines[i].value;
         }
@@ -115,7 +111,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
 
         /////////////// funcPtrBlock ////////////////////
 
-        funcPtrBlock << "    " << command.proto.signature << "(KHRONOS_APIENTRY * _" << &command.proto.name[2] << ")(";
+        funcPtrBlock << "    " << command.proto.signature << "(KHRONOS_APIENTRY * "<< prefix << &command.proto.name[2] << ")(";
         if (command.params.size() == 0)
         {
             funcPtrBlock << "void"; // for strict ANSI-C compliance
@@ -133,7 +129,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
 
         /////////////// funcImplBlock ////////////////////
 
-        funcImplBlock << PREFIX << "_FORCE_INLINE " << command.proto.signature << " " << prefix << &command.proto.name[2] << "(";
+        funcImplBlock << PREFIX << "_FORCE_INLINE " << command.proto.signature << " gl" << &command.proto.name[2] << "(";
         if (command.params.size() == 0)
         {
             funcImplBlock << "void"; // for strict ANSI-C compliance
@@ -156,7 +152,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
         {
             funcImplBlock << "return ";
         }
-        funcImplBlock << prefix << "GL._" << &command.proto.name[2] << "(";
+        funcImplBlock << prefix << "GL." << prefix << &command.proto.name[2] << "(";
         for (size_t j = 0; j < command.params.size(); ++j)
         {
             const GLBrebisData::Param &param = command.params[j];
@@ -164,11 +160,6 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
             funcImplBlock << param.name;
         }
         funcImplBlock << "); }" << std::endl;
-
-        /////////////// funcDefineBlock ////////////////////
-
-        funcDefineBlock << "#define " << command.proto.name << " " << prefix << &command.proto.name[2] << std::endl;
-
     }
 
     std::stringstream glesAddExtensionBlock;
@@ -191,7 +182,7 @@ void GLBrebisCodeGenerator::generateGL(const std::string &inPrefix,
     for(size_t i = 0; i < uniqueCommands.size(); ++i)
     {
         const GLBrebisData::Command &command = uniqueCommands[i];
-        getProcBlock << "    " << prefix << "GL._" << &command.proto.name[2] << " = (" << command.proto.signature << "(KHRONOS_APIENTRY *)(";
+        getProcBlock << "    " << prefix << "GL." << prefix << &command.proto.name[2] << " = (" << command.proto.signature << "(KHRONOS_APIENTRY *)(";
         if (command.params.size() == 0)
         {
             getProcBlock << "void"; // for strict ANSI-C compliance

@@ -130,17 +130,17 @@ khronos_int8_t <%=prefix%>GLInit(void) {
     memset(&<%=prefix%>GL, 0, sizeof(<%=Prefix%>GLConfig));
 
 <%=getProcBlock%>
-    if (!<%=prefix%>GL._GetError) {
+    if (!<%=prefix%>GL.<%=prefix%>GetError) {
         fprintf(stderr, "Could not find 'glGetError'\n");
         return KHRONOS_FALSE;
     }
 
-    if (!<%=prefix%>GL._GetString) {
+    if (!<%=prefix%>GL.<%=prefix%>GetString) {
         fprintf(stderr, "Could not find 'glGetString'\n");
         return KHRONOS_FALSE;
     }
 
-    version  = (const char*)<%=prefix%>GL._GetString(GL_VERSION);
+    version  = (const char*)<%=prefix%>GL.<%=prefix%>GetString(GL_VERSION);
 
     if(!version) {
         fprintf(stderr, "<%=prefix%>GLInit() : Missing GL context. Make sure your context is created and made current prior to calling <%=prefix%>GLInit.\n");
@@ -164,14 +164,14 @@ khronos_int8_t <%=prefix%>GLInit(void) {
     if (<%=prefix%>GL.support[GL_VERSION_3_0] || <%=prefix%>GL.support[GL_ES_VERSION_3_0]) {
         khronos_int32_t i = 0;
         khronos_int32_t nExtensionsCount = 0;
-        <%=prefix%>GL._GetIntegerv(GL_NUM_EXTENSIONS, &nExtensionsCount);
+        <%=prefix%>GL.<%=prefix%>GetIntegerv(GL_NUM_EXTENSIONS, &nExtensionsCount);
         while(i < nExtensionsCount)
         {
-            const char* extensionStr = (const char*)<%=prefix%>GL._GetStringi(GL_EXTENSIONS, i++);
+            const char* extensionStr = (const char*)<%=prefix%>GL.<%=prefix%>GetStringi(GL_EXTENSIONS, i++);
             <%=prefix%>GLAddExtension(isGLES, extensionStr, strlen(extensionStr));
         }
     } else {
-        const char* extensionsStr = (const char*)<%=prefix%>GL._GetString(GL_EXTENSIONS);
+        const char* extensionsStr = (const char*)<%=prefix%>GL.<%=prefix%>GetString(GL_EXTENSIONS);
         while (extensionsStr) {
             const char* spacerPos = strchr(extensionsStr, ' ');
             khronos_usize_t extensionsStrLength = spacerPos ? (khronos_usize_t)(spacerPos++ - extensionsStr) : strlen(extensionsStr);
@@ -209,7 +209,7 @@ void <%=prefix%>GLShutdown(void) {
 }
 
 void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber) {
-    GLenum eErrorID = <%=prefix%>GL._GetError();
+    GLenum eErrorID = <%=prefix%>GL.<%=prefix%>GetError();
     if (eErrorID != GL_NO_ERROR) {
         do {
             static const char* errMsg[] = {
@@ -229,6 +229,6 @@ void _<%=prefix%>GLCheckError(const char* fileName, int lineNumber) {
             } else {
                 fprintf(stderr, "<%=prefix%>GLCheckError : file %s, line %d : %s\n", fileName, lineNumber, errMsg[errorIndex]);
             }
-        } while((eErrorID = <%=prefix%>GL._GetError()) != GL_NO_ERROR);
+        } while((eErrorID = <%=prefix%>GL.<%=prefix%>GetError()) != GL_NO_ERROR);
     }
 }
