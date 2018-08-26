@@ -73,63 +73,63 @@ RECENT REVISION HISTORY:
 
 
 #if defined(__glu_h__)
-#error "GL/glu.h cannot be included before <%=Prefix%>GL.h"
+#error "GL/glu.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gl_h_)
-#error "GL/gl.h cannot be included before <%=Prefix%>GL.h"
+#error "GL/gl.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gl2_h_)
-#error "GL/gl2.h cannot be included before <%=Prefix%>GL.h"
+#error "GL/gl2.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__glcorearb_h_)
-#error "GL/glcorearb.h cannot be included before <%=Prefix%>GL.h"
+#error "GL/glcorearb.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gl20_h_)
-#error "GLES2/gl2.h cannot be included before <%=Prefix%>GL.h"
+#error "GLES2/gl2.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gl_es20_h_)
-#error "OpenGLES/ES2/gl.h cannot be included before <%=Prefix%>GL.h"
+#error "OpenGLES/ES2/gl.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gl30_h_)
-#error "GLES3/gl3.h cannot be included before <%=Prefix%>GL.h"
+#error "GLES3/gl3.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gl_es30_h_)
-#error "OpenGLES/ES3/gl.h cannot be included before <%=Prefix%>GL.h"
+#error "OpenGLES/ES3/gl.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gl31_h_)
-#error "GLES3/gl31.h cannot be included before <%=Prefix%>GL.h"
+#error "GLES3/gl31.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gl32_h_)
-#error "GLES3/gl32.h cannot be included before <%=Prefix%>GL.h"
+#error "GLES3/gl32.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__glext_h_)
-#error "GL/glext.h cannot be included before <%=Prefix%>GL.h"
+#error "GL/glext.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gl2ext_h_)
-#error "GL/glext.h cannot be included before <%=Prefix%>GL.h"
+#error "GL/glext.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gl_es20ext_h_)
-#error "OpenGLES/ES2/glext.h cannot be included before <%=Prefix%>GL.h"
+#error "OpenGLES/ES2/glext.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gl_es30ext_h_)
-#error "OpenGLES/ES3/glext.h cannot be included before <%=Prefix%>GL.h"
+#error "OpenGLES/ES3/glext.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #if defined(__gltypes_h_)
-#error "gltypes.h cannot be included before <%=Prefix%>GL.h"
+#error "gltypes.h cannot be included before <%=prefix%>_gl.h"
 #endif
 
 #define __glu_h__ 1
