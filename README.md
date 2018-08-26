@@ -1,7 +1,7 @@
 # GLBrebis
 A simple GL extension wrangler drop-in generator for OpenGL and OpenGL ES apps.
 
-this program will generate a set of highly portable C99 compliant OpenGL and OpenGL ES function wrangler code with any *prefix* customization that you want. Just generate your wrangler code, drop the two files into your project and start coding! It's as simple as that.
+this program will generate a set of highly portable ANSI C compliant OpenGL and OpenGL ES function wrangler code with any *prefix* customization that you want. Just generate your wrangler code, drop the two files into your project and start coding! It's as simple as that.
 
 This project replaces the need of using a 3rdparty library to wrangle your GL function pointers (e.g. GLEW). Works pretty much the same way than GLEW, but also adds GLES support, and to some useful utilities, such as `brebisGLSupport`:
 
@@ -73,3 +73,7 @@ Example for a fictional project called 'Cyclone' :
 4. Create your window *and* your GL context.
 5. Once the gl context successfully created, simply call `bool success = brebisGLInit();`.
 6. When shutting down, don't forget to call `brebisGLShutdown();`
+
+# What if I don't want to build GLBrebis and don't want to generate the header?
+
+You can always get the latest generated [BrebisGL.h](https://github.com/mchiasson/GLBrebis/raw/master/example/BrebisGL.h) found in the example project. However I cannot garantee that it will be up to the latest Khronos API and extensions. 
