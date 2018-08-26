@@ -54,11 +54,13 @@ usage: GLBrebis [-p <prefix>]
 
 Example for a fictional project called 'Mut' :
 ```
-GLBrebis -p Mut
+./GLBrebis -p Mut
 ```
-* `-p` is mandatory. If you do `-p Mut`, the script will generate `mut_gl.h`, including symbols that will automatically be named after `Mut`.  For example, you will see `_MUT_GL_H_` header guards, and utility functions will be named `mutGLInit()` and `mutGLShutdown()`, etc.
+* The script will generate `mut_gl.h`, including symbols that will automatically be named after `Mut`.  For example, you will see `_MUT_GL_H_` header guards, and utility functions will be named `mutGLInit()` and `mutGLShutdown()`, etc.
 
 And if everything goes well, you should have `mut_gl.h` on your file system.
+
+the `-p` parameter is option. If you don't specify it, it will default to use `stb` as the default prefix.. 
 
 # How to use the generated extention wrangler code in my project?
 
