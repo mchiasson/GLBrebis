@@ -1,9 +1,9 @@
 2018-08-25
 ==========
 
+  * downloading khronos api at runtime now (slower but better)
   * Updated changelog
   * changelog update helper script
-  * downloading khronos api at runtime now (slower but better)
   * Update README.md
   * downloading khronos api at build time now.
   * changed default prefix to 'Brebis'
