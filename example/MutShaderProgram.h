@@ -27,7 +27,7 @@
 #ifndef MUTSHADERPROGRAM_H
 #define MUTSHADERPROGRAM_H
 
-#include <stb_gl.h>
+#include <BrebisGL.h>
 #include <cstddef>
 #include <cinttypes>
 

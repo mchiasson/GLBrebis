@@ -45,20 +45,20 @@ const char * shaderProgramTypeToStr(GLenum type) {
 uint32_t MutShaderProgram::compile(const uint8_t *shaderSrc, size_t shaderSrcLen, GLenum type) {
     GLint compiled = 0, infoLen = 0;
     char* infoLog = nullptr;
-    GLuint shader = stbGLCheckErrorDebug(glCreateShader(type));
+    GLuint shader = brebisGLCheckErrorDebug(glCreateShader(type));
     if(shader) {
-        stbGLCheckErrorDebug(glShaderSource(shader, 1, (const GLchar **)&shaderSrc, (GLint*)&shaderSrcLen));
-        stbGLCheckErrorDebug(glCompileShader(shader));
-        stbGLCheckErrorDebug(glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled));
+        brebisGLCheckErrorDebug(glShaderSource(shader, 1, (const GLchar **)&shaderSrc, (GLint*)&shaderSrcLen));
+        brebisGLCheckErrorDebug(glCompileShader(shader));
+        brebisGLCheckErrorDebug(glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled));
         if(!compiled) {
-            stbGLCheckErrorDebug(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen));
+            brebisGLCheckErrorDebug(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen));
             if(infoLen > 1) {
                 infoLog = (char*)malloc(sizeof(char) * infoLen);
-                stbGLCheckErrorDebug(glGetShaderInfoLog(shader, infoLen, NULL, infoLog));
+                brebisGLCheckErrorDebug(glGetShaderInfoLog(shader, infoLen, NULL, infoLog));
                 std::cerr << "Error compiling " << shaderProgramTypeToStr(type) << " shader: " << infoLog << std::endl;
                 free(infoLog);
             }
-            stbGLCheckErrorDebug(glDeleteShader(shader));
+            brebisGLCheckErrorDebug(glDeleteShader(shader));
             shader = 0;
         }
     }
@@ -68,22 +68,22 @@ uint32_t MutShaderProgram::compile(const uint8_t *shaderSrc, size_t shaderSrcLen
 
 GLuint MutShaderProgram::link(GLuint vertexShader, GLuint fragmentShader) {
     GLint linked = 0, infoLen = 0;
-    GLuint shaderProgram = stbGLCheckErrorDebug(glCreateProgram());
+    GLuint shaderProgram = brebisGLCheckErrorDebug(glCreateProgram());
     char* infoLog = nullptr;
     if (shaderProgram) {
-        stbGLCheckErrorDebug(glAttachShader(shaderProgram, vertexShader));
-        stbGLCheckErrorDebug(glAttachShader(shaderProgram, fragmentShader));
-        stbGLCheckErrorDebug(glLinkProgram(shaderProgram));
-        stbGLCheckErrorDebug(glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linked));
+        brebisGLCheckErrorDebug(glAttachShader(shaderProgram, vertexShader));
+        brebisGLCheckErrorDebug(glAttachShader(shaderProgram, fragmentShader));
+        brebisGLCheckErrorDebug(glLinkProgram(shaderProgram));
+        brebisGLCheckErrorDebug(glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linked));
         if(!linked) {
-            stbGLCheckErrorDebug(glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLen));
+            brebisGLCheckErrorDebug(glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLen));
             if(infoLen > 1) {
                 infoLog = (char*)malloc(sizeof(char) * infoLen);
-                stbGLCheckErrorDebug(glGetProgramInfoLog(shaderProgram, infoLen, NULL, infoLog));
+                brebisGLCheckErrorDebug(glGetProgramInfoLog(shaderProgram, infoLen, NULL, infoLog));
                 std::cerr << "Error linking program: " << infoLog << std::endl;
                 free(infoLog);
             }
-            stbGLCheckErrorDebug(glDeleteProgram(shaderProgram));
+            brebisGLCheckErrorDebug(glDeleteProgram(shaderProgram));
             shaderProgram = 0;
         }
     }
@@ -102,10 +102,10 @@ GLuint MutShaderProgram::compileAndLink(const uint8_t *vertShaderSrc,
         program = link(vertex, fragment);
     }
     if (vertex) {
-        stbGLCheckErrorDebug(glDeleteShader(vertex));
+        brebisGLCheckErrorDebug(glDeleteShader(vertex));
     }
     if (fragment) {
-        stbGLCheckErrorDebug(glDeleteShader(fragment));
+        brebisGLCheckErrorDebug(glDeleteShader(fragment));
     }
     return program;
 }

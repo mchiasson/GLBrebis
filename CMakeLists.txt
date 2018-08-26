@@ -115,10 +115,19 @@ target_link_libraries(GLBrebisLib
     Poco::Foundation
     OpenSSL::SSL
     OpenSSL::Crypto
-    )
+)
 
 add_executable(GLBrebis src/GLBrebisApp.cpp)
 target_link_libraries(GLBrebis GLBrebisLib)
+
+add_custom_command(
+    TARGET
+        GLBrebis POST_BUILD
+    COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/GLBrebis
+    WORKING_DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}/example
+)
 
 ################################################################################
 # GLBrebis Example App

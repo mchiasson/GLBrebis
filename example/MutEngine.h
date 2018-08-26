@@ -27,7 +27,7 @@
 #ifndef GEOMETRYENGINE_H
 #define GEOMETRYENGINE_H
 
-#include <stb_gl.h>
+#include <BrebisGL.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 

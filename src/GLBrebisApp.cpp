@@ -48,7 +48,7 @@
 #include "xml/extra.xml.h"
 
 GLBrebisApp::GLBrebisApp() :
-    m_prefix("stb")
+    m_prefix("Brebis")
 {
     setUnixOptions(true);
 }
@@ -93,8 +93,8 @@ int GLBrebisApp::main(const std::vector<std::string>& args)
 
     Poco::Logger &logger = Poco::Logger::get("GLBrebisApp");
 
-    logger.information("Generating %s_gl.h ...", m_prefix);
-    std::ofstream header(m_prefix + "_gl.h");
+    logger.information("Generating %sGL.h ...", m_prefix);
+    std::ofstream header(m_prefix + "GL.h");
     GLBrebisCodeGenerator::generateHeader(m_prefix, parser.getResult(), header);
     logger.information("Done!");
 

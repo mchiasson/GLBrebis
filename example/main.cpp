@@ -52,9 +52,10 @@ void renderFrame();
 
 int main(int, char *[])
 {
+    SDL_LogSetPriority(0, SDL_LOG_PRIORITY_VERBOSE);
+
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR,
-                       "Unable to initialize SDL: %s\n", SDL_GetError());
+        SDL_LogCritical(0, "Unable to initialize SDL: %s\n", SDL_GetError());
         return 1;
     }
 
@@ -73,16 +74,14 @@ int main(int, char *[])
                               SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
     if (!window) {
-        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR,
-                       "Window could not be created: %s\n", SDL_GetError() );
+        SDL_LogCritical(0, "Window could not be created: %s\n", SDL_GetError() );
         SDL_Quit();
         return 2;
     }
 
     SDL_GLContext context = SDL_GL_CreateContext(window);
     if(!context) {
-        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR,
-                       "GL Context could not be created: %s\n", SDL_GetError() );
+        SDL_LogCritical(0, "GL Context could not be created: %s\n", SDL_GetError() );
         SDL_DestroyWindow(window);
         SDL_Quit();
         return 3;
@@ -90,10 +89,9 @@ int main(int, char *[])
 
     // Now that our GL context is created, we need to initialize our generated
     // GL wranger. Make sure it returns true!
-    if (stbGLInit() != KHRONOS_TRUE)
+    if (brebisGLInit() != KHRONOS_TRUE)
     {
-        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR,
-                       "Unable to initialize GLBrebis Wranger.\n");
+        SDL_LogCritical(0, "Unable to initialize GLBrebis Wranger.\n");
         SDL_GL_DeleteContext(context);
         SDL_DestroyWindow(window);
         SDL_Quit();
@@ -123,7 +121,7 @@ int main(int, char *[])
     engine = nullptr;
 
     // Don't forget to call this when you're done.
-    stbGLShutdown();
+    brebisGLShutdown();
 
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);

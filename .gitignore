@@ -4,7 +4,6 @@
 .vscode/
 
 # generated/downloaded file
-example/stb_gl.h
 KHR/khrplatform.h
 KHR/khrplatform.h.c
 KHR/khrplatform.h.h

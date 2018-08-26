@@ -44,8 +44,8 @@
 #include <Poco/DateTimeFormatter.h>
 
 void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
-                                       const GLBrebisData &result,
-                                       std::ostream &headerOut)
+                                           const GLBrebisData &result,
+                                           std::ostream &headerOut)
 {
     std::string Prefix = inPrefix;
     Prefix[0] = std::toupper(Prefix[0]);
