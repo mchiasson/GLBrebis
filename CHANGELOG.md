@@ -1,8 +1,8 @@
 2018-08-25
 ==========
 
-  * downloading khronos api at runtime now (slower but better)
   * Updated changelog
+  * downloading khronos api at runtime now (slower but better)
   * changelog update helper script
   * Update README.md
   * downloading khronos api at build time now.
