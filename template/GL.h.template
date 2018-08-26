@@ -1,6 +1,6 @@
 /*
-   <%=prefix%>_gl - v0.2 - http://nothings.org/stb
-   Public domain An ANSI C (C89) compliant GL/GLES extension wrangler
+   <%=prefix%>_gl.h - v0.2 - http://nothings.org/stb
+   A Public domain ANSI C (C89) compliant GL/GLES extension wrangler
    By Mathieu-André Chiasson (2017)
 
    No warranty implied; use at your own risk
