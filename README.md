@@ -64,8 +64,13 @@ the `-p` parameter is option. If you don't specify it, it will default to use `s
 
 # How to use the generated extention wrangler code in my project?
 
-1. Drop-in the three generated files into your project
-3. make sure you include `#include "<prefix>GL.h"` instead of including the system's GL or GLES header(s).
-4. create your window *and* your GL context.
-5. Once the gl context successfully created, simply call `bool success = <prefix>GLInit();`.
-6. When shutting down, don't forget to call `<prefix>GLShutdown();`
+1. Drop-in the generated `stb_gl.h` file into your project
+2. Make sure you include `#include "stb_gl.h"` instead of including the system's GL or GLES header(s).
+3. In one of the translation unit of your choice inside your project, either a `.c` or a `.cpp` file, you need to implement the generated `stb_gl.h` like so:
+```C++
+#define STB_GL_IMPLEMENTATION
+#include <stb_gl.h>
+```
+4. Create your window *and* your GL context.
+5. Once the gl context successfully created, simply call `bool success = stbGLInit();`.
+6. When shutting down, don't forget to call `stbGLShutdown();`
