@@ -46,7 +46,7 @@ struct GLBrebisData {
         std::string name;
         std::string api;
         std::string alias;
-        bool operator< (const Enum &other) {
+        bool operator< (const Enum &other) const {
             int result = value.compare(other.value);
             if (result == 0) { return name.compare(other.name) < 0; }
             else if (result < 0) { return true; }
@@ -81,7 +81,7 @@ struct GLBrebisData {
     {
         Proto proto;
         std::vector<Param> params;
-        bool operator< (const Command &other) { return proto.name.compare(other.proto.name) < 0; }
+        bool operator< (const Command &other) const { return proto.name.compare(other.proto.name) < 0; }
     };
 
     struct Feature
