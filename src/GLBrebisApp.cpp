@@ -34,7 +34,6 @@
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionCallback.h>
 #include <Poco/File.h>
-#include <Poco/Zip/Compress.h>
 
 #include <cctype>
 #include <sstream>
@@ -44,7 +43,6 @@
 #include "GLBrebisParser.h"
 #include "GLBrebisCodeGenerator.h"
 
-#include "xml/gl.xml.h"
 #include "xml/extra.xml.h"
 
 GLBrebisApp::GLBrebisApp() :
@@ -88,8 +86,8 @@ int GLBrebisApp::main(const std::vector<std::string>& args)
 {
     GLBrebisParser parser;
 
-    parser.parse(gl_xml, sizeof(gl_xml));
-    parser.parse(extra_xml, sizeof(extra_xml));
+    parser.parse(Poco::URI("https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml"));
+    parser.parse("xml/extra.xml");
 
     Poco::Logger &logger = Poco::Logger::get("GLBrebisApp");
 

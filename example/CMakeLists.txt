@@ -33,9 +33,8 @@ set(CMAKE_C_STANDARD 98)
 
 include(../cmake/HunterGate.cmake)
 HunterGate(
-    URL "https://github.com/ruslo/hunter/archive/v0.23.11.tar.gz"
-    SHA1 "b732407d782459f89950ab52bc0ff9612f3e4be2"
-    LOCAL # <----- Use cmake/Hunter/config.cmake
+    URL "https://github.com/ruslo/hunter/archive/v0.23.17.tar.gz"
+    SHA1 "a438452aa14fc5cbd58f080eee45f07351b27d2f"
 )
 
 ##

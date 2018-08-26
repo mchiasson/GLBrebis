@@ -29,7 +29,6 @@
 #include "GLBrebisUtilities.h"
 
 #include "template/GL.h.template.h"
-#include "KHR/khrplatform.h.h"
 
 #include <string>
 #include <cctype>
@@ -48,13 +47,16 @@ void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
                                            std::ostream &headerOut)
 {
     std::string Prefix = inPrefix;
-    Prefix[0] = std::toupper(Prefix[0]);
+    Prefix[0] = static_cast<char>(std::toupper(Prefix[0]));
     std::string prefix = Poco::toLower(inPrefix);
     std::string PREFIX = Poco::toUpper(inPrefix);
 
     Poco::DateTime now;
     std::string nowStr = Poco::DateTimeFormatter::format(now, Poco::DateTimeFormat::RFC1123_FORMAT);
     std::string year = "2017"; if (now.year() > 2017) { year += "-" + std::to_string(now.year());}
+
+    std::string khrplatform_h = GLBrebisUtilities::download(Poco::URI("https://raw.githubusercontent.com/KhronosGroup/EGL-Registry/master/api/KHR/khrplatform.h ${PROJECT_BINARY_DIR}/KHR/khrplatform.h"));
+
 
     std::vector<GLBrebisData::Enum> uniqueDefines = result.getAllUniqueDefines();
     std::stringstream defineBlock;
@@ -203,7 +205,11 @@ void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
         const GLBrebisData::Feature &feature = result.registry.features[i];
 
         int majorVersion=-1, minorVersion=-1;
+#ifdef _MSC_VER
+        sscanf_s(feature.number.c_str(), "%d.%d", &majorVersion, &minorVersion);
+#else
         sscanf(feature.number.c_str(), "%d.%d", &majorVersion, &minorVersion);
+#endif
 
         if (feature.api == "gl")
         {
@@ -215,13 +221,13 @@ void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
         }
     }
 
-    std::string content = std::string((char*)GL_h_template, sizeof(GL_h_template));
+    std::string content = std::string(reinterpret_cast<const char*>(GL_h_template), sizeof(GL_h_template));
     Poco::replaceInPlace(content, "<%=now%>", nowStr.c_str());
     Poco::replaceInPlace(content, "<%=year%>", year.c_str());
     Poco::replaceInPlace(content, "<%=prefix%>", prefix.c_str());
     Poco::replaceInPlace(content, "<%=Prefix%>", Prefix.c_str());
     Poco::replaceInPlace(content, "<%=PREFIX%>", PREFIX.c_str());
-    Poco::replaceInPlace(content, "#include <KHR/khrplatform.h>", (const char*)(khrplatform_h));
+    Poco::replaceInPlace(content, "#include <KHR/khrplatform.h>", khrplatform_h.c_str());
     Poco::replaceInPlace(content, "<%=defineBlock%>", defineBlock.str().c_str());
     Poco::replaceInPlace(content, "<%=versionBlock%>", versionBlock.str().c_str());
     Poco::replaceInPlace(content, "<%=extensionBlock%>", extensionBlock.str().c_str());
