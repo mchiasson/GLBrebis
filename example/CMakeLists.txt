@@ -29,7 +29,7 @@ cmake_minimum_required(VERSION 3.6)
 
 project(MutCube)
 
-set(CMAKE_C_STANDARD 98)
+set(CMAKE_C_STANDARD 90)
 
 include(../cmake/HunterGate.cmake)
 HunterGate(
