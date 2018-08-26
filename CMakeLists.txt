@@ -34,9 +34,16 @@ include(cmake/HunterGate.cmake)
 HunterGate(
     URL "https://github.com/ruslo/hunter/archive/v0.23.17.tar.gz"
     SHA1 "a438452aa14fc5cbd58f080eee45f07351b27d2f"
+    LOCAL
 )
 
 project(GLBrebis)
+
+################################################################################
+# OpenSSL / Crypto Libraries
+################################################################################
+hunter_add_package(OpenSSL)
+find_package(OpenSSL REQUIRED)
 
 ################################################################################
 # Poco C++ Libraries
@@ -107,6 +114,7 @@ target_link_libraries(GLBrebisLib
     PUBLIC
     RapidXML::RapidXML
     Poco::NetSSL
+    OpenSSL::Crypto
 )
 
 add_executable(GLBrebis src/GLBrebisApp.cpp src/GLBrebisApp.h)
@@ -119,6 +127,8 @@ add_custom_command(
         ${PROJECT_BINARY_DIR}/GLBrebis
     WORKING_DIRECTORY
         ${PROJECT_SOURCE_DIR}/example
+    COMMENT
+        "Upgrading example/BrebisGL.h to the latest..."
 )
 
 ################################################################################

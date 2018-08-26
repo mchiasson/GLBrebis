@@ -31,12 +31,16 @@
 #include <Poco/Net/HTTPSClientSession.h>
 #include <Poco/Net/HTTPServerResponse.h>
 #include <Poco/StreamCopier.h>
+#include <Poco/Logger.h>
 
 #include <iostream>
 #include <fstream>
 
 std::string GLBrebisUtilities::download(const Poco::URI &uri)
 {
+    Poco::Logger &logger = Poco::Logger::get("GLBrebisUtilities");
+    logger.information("Downloading %s ...\n", uri.getPath());
+
     std::string content;
     const Poco::Net::Context::Ptr context = new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_NONE, 9, false, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH");
     Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort(), context);
@@ -53,10 +57,13 @@ std::string GLBrebisUtilities::download(const Poco::URI &uri)
 
 void GLBrebisUtilities::readFile(const std::string &file, std::string &out)
 {
+    Poco::Logger &logger = Poco::Logger::get("GLBrebisUtilities");
+    logger.information("Reading %s ...\n", file);
+
     std::ifstream in(file.c_str());
 
     in.seekg(0, std::ios::end);
-    out.reserve(in.tellg());
+    out.reserve(static_cast<size_t>(in.tellg()));
     in.seekg(0, std::ios::beg);
 
     out.assign((std::istreambuf_iterator<char>(in)),
@@ -65,6 +72,9 @@ void GLBrebisUtilities::readFile(const std::string &file, std::string &out)
 
 void GLBrebisUtilities::writeFile(const std::string &file, const std::string &in)
 {
+    Poco::Logger &logger = Poco::Logger::get("GLBrebisUtilities");
+    logger.information("Saving %s ...\n", file);
+
     std::ofstream out(file.c_str(), std::ios::out | std::ios::trunc);
     out << in;
 }

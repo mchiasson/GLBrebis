@@ -55,8 +55,7 @@ void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
     std::string nowStr = Poco::DateTimeFormatter::format(now, Poco::DateTimeFormat::RFC1123_FORMAT);
     std::string year = "2017"; if (now.year() > 2017) { year += "-" + std::to_string(now.year());}
 
-    std::string khrplatform_h = GLBrebisUtilities::download(Poco::URI("https://raw.githubusercontent.com/KhronosGroup/EGL-Registry/master/api/KHR/khrplatform.h ${PROJECT_BINARY_DIR}/KHR/khrplatform.h"));
-
+    std::string khrplatform_h = GLBrebisUtilities::download(Poco::URI("https://raw.githubusercontent.com/KhronosGroup/EGL-Registry/master/api/KHR/khrplatform.h"));
 
     std::vector<GLBrebisData::Enum> uniqueDefines = result.getAllUniqueDefines();
     std::stringstream defineBlock;

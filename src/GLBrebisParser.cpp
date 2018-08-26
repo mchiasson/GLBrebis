@@ -59,12 +59,11 @@ GLBrebisParser::GLBrebisParser()
 
 void GLBrebisParser::parse(const Poco::URI &uri)
 {
-    Poco::Logger &logger = Poco::Logger::get("GLBrebisParser");
+    Poco::Logger &logger = Poco::Logger::get("GLBrebisUtilities");
 
-    logger.information("Downloading %s ... ", uri.getPath());
     m_rawcontent = GLBrebisUtilities::download(uri);
 
-    logger.information("Parsing %s ... ", uri.getPath());
+    logger.information("Parsing %s ...\n", uri.getPath());
     parse();
 }
 
@@ -72,16 +71,15 @@ void GLBrebisParser::parse(const std::string &path)
 {
     Poco::Logger &logger = Poco::Logger::get("GLBrebisParser");
 
-    logger.information("Loading %s ... ", path);
     GLBrebisUtilities::readFile(path, m_rawcontent);
 
-    logger.information("Parsing %s ... ", path);
+    logger.information("Parsing %s ...\n", path);
     parse();
 }
 
 void GLBrebisParser::parse(const unsigned char *buffer, size_t bufferSize)
 {
-    m_rawcontent = std::string((char*)buffer, bufferSize);
+    m_rawcontent = std::string(reinterpret_cast<const char*>(buffer), bufferSize);
     parse();
 }
 

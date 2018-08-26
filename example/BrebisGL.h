@@ -2,7 +2,7 @@
    BrebisGL.h
        A Public domain ANSI C (C89) compliant GL/GLES extension wrangler
 
-   Generated using GLBrebis on Sun, 26 Aug 2018 18:02:40 GMT
+   Generated using GLBrebis on Sun, 26 Aug 2018 23:11:45 GMT
    https://github.com/mchiasson/GLBrebis
 
    NO WARRANTY IMPLIED; USE AT YOUR OWN RISK
@@ -14615,6 +14615,10 @@ BREBIS_FORCE_INLINE void  glWriteMaskEXT(GLuint res, GLuint in, GLenum outX, GLe
 #include <stdio.h>
 #include <string.h>
 
+#if !defined(NDEBUG)
+#include <time.h>
+#endif
+
 #if defined(_WIN32) && !defined(__CYGWIN__)
 #ifndef WIN32_LEAN_AND_MEAN
     #define WIN32_LEAN_AND_MEAN 1
@@ -15522,6 +15526,9 @@ static void brebisGLAddExtension(khronos_int8_t isGLES, const char* const extens
         if (!brebisGL.support[GL_WIN_specular_fog] && (extensionStrLength == 19) && strncmp(extensionStr, "GL_WIN_specular_fog", extensionStrLength) == 0) { brebisGL.support[GL_WIN_specular_fog] = KHRONOS_TRUE; return; }
 
     }
+#if !defined(NDEBUG)
+    fprintf(stderr, "brebisGLInit() : Found unwrangled extension: %.*s\n", (int)extensionStrLength, extensionStr);
+#endif
 }
 
 khronos_int8_t brebisGLInit(void) {
@@ -15529,6 +15536,10 @@ khronos_int8_t brebisGLInit(void) {
     const char*     version = NULL;
     khronos_int32_t versionMajor = -1;
     khronos_int32_t versionMinor = -1;
+
+#if !defined(NDEBUG)
+    clock_t start = clock();
+#endif
 
 #if !defined(__EMSCRIPTEN__)
     if (s_brebisGLLib == NULL)
@@ -18865,6 +18876,14 @@ khronos_int8_t brebisGLInit(void) {
             extensionsStr = spacerPos;
         }
     }
+
+#if !defined(NDEBUG)
+    {
+        clock_t end = clock();
+        double elapsed_time = (end-start)/(double)CLOCKS_PER_SEC*1000.0;
+        fprintf(stderr, "brebisGLInit() : elapsed time: %.2fms\n", elapsed_time );
+    }
+#endif
 
     return KHRONOS_TRUE;
 }
