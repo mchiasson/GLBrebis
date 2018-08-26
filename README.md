@@ -47,9 +47,10 @@ cmake C:/git/GLBrebis -G "Visual Studio 15 2017 Win64"
 
 ```
 usage: GLBrebis [-p <prefix>]
--h, --help                                Usage Information
+-h, --help                                Usage Information.
 -p<prefix>, --prefix=<prefix>             Project prefix to append to every
-                                          generated files and symbols
+                                          generated files and symbols.
+                                          Default prefix is 'Brebis'.
 ```
 
 the `-p` parameter is optional. If you don't specify it, it will default to use `Brebis` as the default prefix..

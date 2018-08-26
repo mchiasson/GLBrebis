@@ -72,12 +72,12 @@ void GLBrebisApp::defineOptions(Poco::Util::OptionSet &options)
 {
     Application::defineOptions(options);
 
-    options.addOption(Poco::Util::Option("help", "h", "Usage Information")
+    options.addOption(Poco::Util::Option("help", "h", "Usage Information. ")
                 .required(false)
                 .repeatable(false)
                 .callback(Poco::Util::OptionCallback<GLBrebisApp>(this, &GLBrebisApp::handleHelp)));
 
-    options.addOption(Poco::Util::Option("prefix", "p", "Project prefix to append to every generated files and symbols")
+    options.addOption(Poco::Util::Option("prefix", "p", "Project prefix to append to every generated files and symbols. Default prefix is 'Brebis'.")
                 .required(false)
                 .repeatable(false)
                 .argument("<prefix>")
@@ -105,7 +105,7 @@ void GLBrebisApp::handleHelp(const std::string& name, const std::string& value)
 {
     Poco::Util::HelpFormatter helpFormatter(options());
     helpFormatter.setCommand(commandName());
-    helpFormatter.setUsage("-p <prefix>");
+    helpFormatter.setUsage("[-p <prefix>]");
     helpFormatter.format(std::cout);
     stopOptionsProcessing();
     exit(EXIT_USAGE);

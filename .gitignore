@@ -1,20 +1,3 @@
-# Garbage from IDE
 **/CMakeLists.txt.user
 **/*.autosave
 .vscode/
-
-# generated/downloaded file
-KHR/khrplatform.h
-KHR/khrplatform.h.c
-KHR/khrplatform.h.h
-template/GL.c.template.c
-template/GL.c.template.h
-template/GL.h.template.c
-template/GL.h.template.h
-xml/gl.xml
-xml/gl.xml.c
-xml/gl.xml.h
-xml/extra.xml.c
-xml/extra.xml.h
-
-
