@@ -43,7 +43,7 @@ cd desired/project/path
 cmake C:/git/GLBrebis -G "Visual Studio 15 2017 Win64"
 ```
 
-# How to generate my project's drop-in extention wrangler header and source?
+# How to generate my project's drop-in extention wrangler header?
 
 ```
 usage: GLBrebis [-p <prefix>]
@@ -55,17 +55,17 @@ usage: GLBrebis [-p <prefix>]
 
 the `-p` parameter is optional. If you don't specify it, it will default to use `Brebis` as the default prefix..
 
-Example for a fictional project called 'Mut' :
+Example for a fictional project called 'Cyclone' :
 ```
-./GLBrebis -p Mut
+./GLBrebis -p Cyclone
 ```
-* The script will generate `mut_gl.h`, including symbols that will automatically be named after `Mut`.  For example, you will see `_MUT_GL_H_` header guards, and utility functions will be named `mutGLInit()`, `mutGLCheckErrorDebug()`, `mutGLShutdown()`, etc.
+* The script will generate `CycloneGL.h`, including symbols that will automatically be named after `Cyclone`.  For example, you will see `_CYCLONE_GL_H_` header guards, and utility functions will be named `cycloneGLInit()`, `cycloneGLShutdown()`, `cycloneGLCheckErrorDebug(...)`, `cycloneGLSupport(...)`, etc.
 
 # How to use the generated extention wrangler code in my project?
 
 1. Drop-in the generated `BrebisGL.h` file into your project
 2. Make sure you include `#include "BrebisGL.h"` instead of including the system's GL or GLES header(s).
-3. In one of the translation unit of your choice inside your project, either a `.c` or a `.cpp` file, you need to implement the generated `BrebisGL.h` like so:
+3. Pick one translation unit of your choice inside your project (either a `.c` or a `.cpp` file) to implement the generated `BrebisGL.h` like so:
 ```C++
 #define BREBIS_GL_IMPLEMENTATION
 #include <BrebisGL.h>
