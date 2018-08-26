@@ -5,6 +5,7 @@ v1.0.8
  * Removed the generated .c file in favor of STB-style
  * Fixed build issue in linux, and removed the unecessary macros
  * windows.h->Windows.h case warning fix
+ * fixed generator build issue on Xcode
 
 v1.0.7
 ======
