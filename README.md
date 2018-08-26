@@ -46,12 +46,10 @@ cmake C:/git/GLBrebis -G "Visual Studio 15 2017 Win64"
 # How to generate my project's drop-in extention wrangler header and source?
 
 ```
-usage: GLBrebis -p <prefix> [-i includepath] [-z]
+usage: GLBrebis [-p <prefix>]
 -h, --help                                Usage Information
 -p<prefix>, --prefix=<prefix>             Project prefix to append to every
                                           generated files and symbols
--z, --zip                                 Create a zip archive containing all
-                                          of the generated content.
 ```
 
 Example for a fictional project called 'Mut' :
