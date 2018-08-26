@@ -30,7 +30,7 @@ And also comes with this very handy debugging tool that you can wrap around ever
 stbGLCheckErrorDebug(glBindBuffer(handle));
 ```
 
-`<prefix>GLCheckErrorDebug` checks the result of `glGetError` for you, parses the result and prints the error in `stderr` should an error be found. `glGetError` check is automatically removed when compiling in release.
+`stbGLCheckErrorDebug` checks the result of `glGetError` for you, parses the result and prints the error in `stderr` should an error be found. `glGetError` check is automatically removed when compiling in release.
 
 # How to build GLBrebis
 
@@ -52,15 +52,13 @@ usage: GLBrebis [-p <prefix>]
                                           generated files and symbols
 ```
 
+the `-p` parameter is option. If you don't specify it, it will default to use `stb` as the default prefix.. 
+
 Example for a fictional project called 'Mut' :
 ```
 ./GLBrebis -p Mut
 ```
-* The script will generate `mut_gl.h`, including symbols that will automatically be named after `Mut`.  For example, you will see `_MUT_GL_H_` header guards, and utility functions will be named `mutGLInit()` and `mutGLShutdown()`, etc.
-
-And if everything goes well, you should have `mut_gl.h` on your file system.
-
-the `-p` parameter is option. If you don't specify it, it will default to use `stb` as the default prefix.. 
+* The script will generate `mut_gl.h`, including symbols that will automatically be named after `Mut`.  For example, you will see `_MUT_GL_H_` header guards, and utility functions will be named `mutGLInit()`, `mutGLCheckErrorDebug()`, `mutGLShutdown()`, etc.
 
 # How to use the generated extention wrangler code in my project?
 
