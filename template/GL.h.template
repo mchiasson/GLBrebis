@@ -168,7 +168,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #error "gltypes.h cannot be included before <%=Prefix%>GL.h"
 #endif
 
-#define __glu_h__ 1
 #define __gl_h_ 1
 #define __gl2_h_ 1
 #define __glcorearb_h_ 1
