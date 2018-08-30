@@ -2,7 +2,7 @@
    BrebisGL.h
        A Public domain ANSI C (C89) compliant GL/GLES extension wrangler
 
-   Generated using GLBrebis on Thu, 30 Aug 2018 18:20:17 GMT
+   Generated using GLBrebis on Thu, 30 Aug 2018 18:55:55 GMT
    https://github.com/mchiasson/GLBrebis
 
    NO WARRANTY IMPLIED; USE AT YOUR OWN RISK
@@ -464,6 +464,12 @@ typedef enum {
 #define __gl_es20ext_h_ 1
 #define __gl_es30ext_h_ 1
 #define __gltypes_h_ 1
+
+#if defined(_WIN32) && !defined(__CYGWIN__)
+    #define WIN32_LEAN_AND_MEAN 1
+    #include <Windows.h>
+    #undef WIN32_LEAN_AND_MEAN
+#endif
 
 #if !defined(BREBIS_FORCE_INLINE)
     #if defined(_MSC_VER)
@@ -14617,16 +14623,11 @@ BREBIS_FORCE_INLINE void  glWriteMaskEXT(GLuint res, GLuint in, GLenum outX, GLe
 #include <string.h>
 
 #if !defined(NDEBUG)
-#include <time.h>
+    #include <time.h>
 #endif
 
-#if defined(_WIN32) && !defined(__CYGWIN__)
-#ifndef WIN32_LEAN_AND_MEAN
-    #define WIN32_LEAN_AND_MEAN 1
-#endif
-#include <Windows.h>
-#elif !defined(__EMSCRIPTEN__)
-#include <dlfcn.h>
+#if !defined(_WIN32) && !defined(__EMSCRIPTEN__)
+    #include <dlfcn.h>
 #endif
 
 #ifndef BREBIS_SSCANF
