@@ -1,6 +1,9 @@
 2018-08-29
 ==========
 
+  * now conveniently includes Windows.h to friendlier with GLU.h on
+    Windows.
+  * Updated changelog
   * fixed the inability to use GLU
 
 2018-08-25
