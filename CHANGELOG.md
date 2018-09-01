@@ -1,9 +1,16 @@
+2018-08-31
+==========
+
+  * logging the full qualified URLs for better clarity
+  * fixed windows build failure
+    I forgot to guard <dlfcn.h> on windows.
+
 2018-08-29
 ==========
 
+  * Updated changelog
   * now conveniently includes Windows.h to friendlier with GLU.h on
     Windows.
-  * Updated changelog
   * fixed the inability to use GLU
 
 2018-08-25
