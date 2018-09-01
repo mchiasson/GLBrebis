@@ -333,7 +333,7 @@ extern <%=Prefix%>GLConfig <%=prefix%>GL; /* global instance. */
     #include <time.h>
 #endif
 
-#if !defined(__EMSCRIPTEN__)
+#if !defined(_WIN32) && !defined(__EMSCRIPTEN__)
     #include <dlfcn.h>
 #endif
 
