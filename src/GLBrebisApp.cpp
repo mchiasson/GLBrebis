@@ -75,7 +75,7 @@ void GLBrebisApp::defineOptions(Poco::Util::OptionSet &options)
                 .repeatable(false)
                 .callback(Poco::Util::OptionCallback<GLBrebisApp>(this, &GLBrebisApp::handleHelp)));
 
-    options.addOption(Poco::Util::Option("prefix", "p", "Project prefix to append to every generated files and symbols. Default prefix is 'Brebis'.")
+    options.addOption(Poco::Util::Option("prefix", "p", "Project prefix to append to every generated symbols. Default prefix is 'Brebis'.")
                 .required(false)
                 .repeatable(false)
                 .argument("<prefix>")
