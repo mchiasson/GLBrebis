@@ -39,7 +39,7 @@
 std::string GLBrebisUtilities::download(const Poco::URI &uri)
 {
     Poco::Logger &logger = Poco::Logger::get("GLBrebisUtilities");
-    logger.information("Downloading %s ...\n", uri.getPath());
+    logger.information("Downloading %s ...\n", uri.toString());
 
     std::string content;
     const Poco::Net::Context::Ptr context = new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_NONE, 9, false, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH");
