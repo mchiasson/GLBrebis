@@ -1,7 +1,7 @@
 # GLBrebis
-A simple GL extension wrangler drop-in generator for OpenGL and OpenGL ES apps.
+STB-style single file GL extension wrangler header generator for OpenGL and OpenGL ES apps.
 
-this program will generate a set of highly portable ANSI C compliant OpenGL and OpenGL ES function wrangler code with any *prefix* customization that you want. Just generate your wrangler code, drop the two files into your project and start coding! It's as simple as that.
+this program will generate a set of highly portable ANSI C compliant OpenGL and OpenGL ES function wrangler code with any *prefix* customization that you want. Just generate your wrangler code, drop the header file into your project and start coding! It's as simple as that.
 
 This project replaces the need of using a 3rdparty library to wrangle your GL function pointers (e.g. GLEW). Works pretty much the same way than GLEW, but also adds GLES support, and to some useful utilities, such as `brebisGLSupport`:
 
@@ -49,7 +49,7 @@ cmake C:/git/GLBrebis -G "Visual Studio 15 2017 Win64"
 usage: GLBrebis [-p <prefix>]
 -h, --help                                Usage Information.
 -p<prefix>, --prefix=<prefix>             Project prefix to append to every
-                                          generated files and symbols.
+                                          generated symbols.
                                           Default prefix is 'Brebis'.
 ```
 
