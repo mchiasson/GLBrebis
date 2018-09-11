@@ -2,7 +2,7 @@
    BrebisGL.h
        A Public domain ANSI C (C89) compliant GL/GLES extension wrangler
 
-   Generated using GLBrebis on Thu, 30 Aug 2018 18:55:55 GMT
+   Generated using GLBrebis on Tue, 11 Sep 2018 21:35:58 GMT
    https://github.com/mchiasson/GLBrebis
 
    NO WARRANTY IMPLIED; USE AT YOUR OWN RISK
@@ -466,9 +466,13 @@ typedef enum {
 #define __gltypes_h_ 1
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
-    #define WIN32_LEAN_AND_MEAN 1
-    #include <Windows.h>
-    #undef WIN32_LEAN_AND_MEAN
+    #ifndef WIN32_LEAN_AND_MEAN
+        #define WIN32_LEAN_AND_MEAN 1
+        #include <Windows.h>
+        #undef WIN32_LEAN_AND_MEAN
+    #else
+        #include <Windows.h>
+    #endif
 #endif
 
 #if !defined(BREBIS_FORCE_INLINE)
@@ -6206,6 +6210,16 @@ typedef enum {
 #define GL_DEVICE_LUID_EXT 0x9599
 #define GL_DEVICE_NODE_MASK_EXT 0x959A
 #define GL_PROTECTED_MEMORY_OBJECT_EXT 0x959B
+#define GL_ATTACHED_MEMORY_OBJECT_NV 0x95A4
+#define GL_ATTACHED_MEMORY_OFFSET_NV 0x95A5
+#define GL_MEMORY_ATTACHABLE_ALIGNMENT_NV 0x95A6
+#define GL_MEMORY_ATTACHABLE_SIZE_NV 0x95A7
+#define GL_MEMORY_ATTACHABLE_NV 0x95A8
+#define GL_DETACHED_MEMORY_INCARNATION_NV 0x95A9
+#define GL_DETACHED_TEXTURES_NV 0x95AA
+#define GL_DETACHED_BUFFERS_NV 0x95AB
+#define GL_MAX_DETACHED_TEXTURES_NV 0x95AC
+#define GL_MAX_DETACHED_BUFFERS_NV 0x95AD
 #define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_OVR 0x9630
 #define GL_MAX_VIEWS_OVR 0x9631
 #define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_OVR 0x9632
@@ -7471,498 +7485,500 @@ typedef enum {
 #define GL_NV_light_max_exponent 595
 #undef GL_NV_gpu_multicast
 #define GL_NV_gpu_multicast 596
+#undef GL_NV_memory_attachment
+#define GL_NV_memory_attachment 597
 #undef GL_NV_multisample_coverage
-#define GL_NV_multisample_coverage 597
+#define GL_NV_multisample_coverage 598
 #undef GL_NV_multisample_filter_hint
-#define GL_NV_multisample_filter_hint 598
+#define GL_NV_multisample_filter_hint 599
 #undef GL_NV_non_square_matrices
-#define GL_NV_non_square_matrices 599
+#define GL_NV_non_square_matrices 600
 #undef GL_NV_occlusion_query
-#define GL_NV_occlusion_query 600
+#define GL_NV_occlusion_query 601
 #undef GL_NV_packed_depth_stencil
-#define GL_NV_packed_depth_stencil 601
+#define GL_NV_packed_depth_stencil 602
 #undef GL_NV_parameter_buffer_object
-#define GL_NV_parameter_buffer_object 602
+#define GL_NV_parameter_buffer_object 603
 #undef GL_NV_parameter_buffer_object2
-#define GL_NV_parameter_buffer_object2 603
+#define GL_NV_parameter_buffer_object2 604
 #undef GL_NV_path_rendering
-#define GL_NV_path_rendering 604
+#define GL_NV_path_rendering 605
 #undef GL_NV_path_rendering_shared_edge
-#define GL_NV_path_rendering_shared_edge 605
+#define GL_NV_path_rendering_shared_edge 606
 #undef GL_NV_pixel_data_range
-#define GL_NV_pixel_data_range 606
+#define GL_NV_pixel_data_range 607
 #undef GL_NV_pixel_buffer_object
-#define GL_NV_pixel_buffer_object 607
+#define GL_NV_pixel_buffer_object 608
 #undef GL_NV_point_sprite
-#define GL_NV_point_sprite 608
+#define GL_NV_point_sprite 609
 #undef GL_NV_polygon_mode
-#define GL_NV_polygon_mode 609
+#define GL_NV_polygon_mode 610
 #undef GL_NV_present_video
-#define GL_NV_present_video 610
+#define GL_NV_present_video 611
 #undef GL_NV_primitive_restart
-#define GL_NV_primitive_restart 611
+#define GL_NV_primitive_restart 612
 #undef GL_NV_query_resource
-#define GL_NV_query_resource 612
+#define GL_NV_query_resource 613
 #undef GL_NV_query_resource_tag
-#define GL_NV_query_resource_tag 613
+#define GL_NV_query_resource_tag 614
 #undef GL_NV_read_buffer
-#define GL_NV_read_buffer 614
+#define GL_NV_read_buffer 615
 #undef GL_NV_read_buffer_front
-#define GL_NV_read_buffer_front 615
+#define GL_NV_read_buffer_front 616
 #undef GL_NV_read_depth
-#define GL_NV_read_depth 616
+#define GL_NV_read_depth 617
 #undef GL_NV_read_depth_stencil
-#define GL_NV_read_depth_stencil 617
+#define GL_NV_read_depth_stencil 618
 #undef GL_NV_read_stencil
-#define GL_NV_read_stencil 618
+#define GL_NV_read_stencil 619
 #undef GL_NV_register_combiners
-#define GL_NV_register_combiners 619
+#define GL_NV_register_combiners 620
 #undef GL_NV_register_combiners2
-#define GL_NV_register_combiners2 620
+#define GL_NV_register_combiners2 621
 #undef GL_NV_robustness_video_memory_purge
-#define GL_NV_robustness_video_memory_purge 621
+#define GL_NV_robustness_video_memory_purge 622
 #undef GL_NV_sRGB_formats
-#define GL_NV_sRGB_formats 622
+#define GL_NV_sRGB_formats 623
 #undef GL_NV_sample_locations
-#define GL_NV_sample_locations 623
+#define GL_NV_sample_locations 624
 #undef GL_NV_sample_mask_override_coverage
-#define GL_NV_sample_mask_override_coverage 624
+#define GL_NV_sample_mask_override_coverage 625
 #undef GL_NV_shader_atomic_counters
-#define GL_NV_shader_atomic_counters 625
+#define GL_NV_shader_atomic_counters 626
 #undef GL_NV_shader_atomic_float
-#define GL_NV_shader_atomic_float 626
+#define GL_NV_shader_atomic_float 627
 #undef GL_NV_shader_atomic_float64
-#define GL_NV_shader_atomic_float64 627
+#define GL_NV_shader_atomic_float64 628
 #undef GL_NV_shader_atomic_fp16_vector
-#define GL_NV_shader_atomic_fp16_vector 628
+#define GL_NV_shader_atomic_fp16_vector 629
 #undef GL_NV_shader_atomic_int64
-#define GL_NV_shader_atomic_int64 629
+#define GL_NV_shader_atomic_int64 630
 #undef GL_NV_shader_buffer_load
-#define GL_NV_shader_buffer_load 630
+#define GL_NV_shader_buffer_load 631
 #undef GL_NV_shader_buffer_store
-#define GL_NV_shader_buffer_store 631
+#define GL_NV_shader_buffer_store 632
 #undef GL_NV_shader_noperspective_interpolation
-#define GL_NV_shader_noperspective_interpolation 632
+#define GL_NV_shader_noperspective_interpolation 633
 #undef GL_NV_shader_storage_buffer_object
-#define GL_NV_shader_storage_buffer_object 633
+#define GL_NV_shader_storage_buffer_object 634
 #undef GL_NV_shader_thread_group
-#define GL_NV_shader_thread_group 634
+#define GL_NV_shader_thread_group 635
 #undef GL_NV_shader_thread_shuffle
-#define GL_NV_shader_thread_shuffle 635
+#define GL_NV_shader_thread_shuffle 636
 #undef GL_NV_shadow_samplers_array
-#define GL_NV_shadow_samplers_array 636
+#define GL_NV_shadow_samplers_array 637
 #undef GL_NV_shadow_samplers_cube
-#define GL_NV_shadow_samplers_cube 637
+#define GL_NV_shadow_samplers_cube 638
 #undef GL_NV_stereo_view_rendering
-#define GL_NV_stereo_view_rendering 638
+#define GL_NV_stereo_view_rendering 639
 #undef GL_NV_tessellation_program5
-#define GL_NV_tessellation_program5 639
+#define GL_NV_tessellation_program5 640
 #undef GL_NV_texgen_emboss
-#define GL_NV_texgen_emboss 640
+#define GL_NV_texgen_emboss 641
 #undef GL_NV_texgen_reflection
-#define GL_NV_texgen_reflection 641
+#define GL_NV_texgen_reflection 642
 #undef GL_NV_texture_barrier
-#define GL_NV_texture_barrier 642
+#define GL_NV_texture_barrier 643
 #undef GL_NV_texture_border_clamp
-#define GL_NV_texture_border_clamp 643
+#define GL_NV_texture_border_clamp 644
 #undef GL_NV_texture_compression_s3tc_update
-#define GL_NV_texture_compression_s3tc_update 644
+#define GL_NV_texture_compression_s3tc_update 645
 #undef GL_NV_texture_compression_vtc
-#define GL_NV_texture_compression_vtc 645
+#define GL_NV_texture_compression_vtc 646
 #undef GL_NV_texture_env_combine4
-#define GL_NV_texture_env_combine4 646
+#define GL_NV_texture_env_combine4 647
 #undef GL_NV_texture_expand_normal
-#define GL_NV_texture_expand_normal 647
+#define GL_NV_texture_expand_normal 648
 #undef GL_NV_texture_multisample
-#define GL_NV_texture_multisample 648
+#define GL_NV_texture_multisample 649
 #undef GL_NV_texture_npot_2D_mipmap
-#define GL_NV_texture_npot_2D_mipmap 649
+#define GL_NV_texture_npot_2D_mipmap 650
 #undef GL_NV_texture_rectangle
-#define GL_NV_texture_rectangle 650
+#define GL_NV_texture_rectangle 651
 #undef GL_NV_texture_rectangle_compressed
-#define GL_NV_texture_rectangle_compressed 651
+#define GL_NV_texture_rectangle_compressed 652
 #undef GL_NV_texture_shader
-#define GL_NV_texture_shader 652
+#define GL_NV_texture_shader 653
 #undef GL_NV_texture_shader2
-#define GL_NV_texture_shader2 653
+#define GL_NV_texture_shader2 654
 #undef GL_NV_texture_shader3
-#define GL_NV_texture_shader3 654
+#define GL_NV_texture_shader3 655
 #undef GL_NV_transform_feedback
-#define GL_NV_transform_feedback 655
+#define GL_NV_transform_feedback 656
 #undef GL_NV_transform_feedback2
-#define GL_NV_transform_feedback2 656
+#define GL_NV_transform_feedback2 657
 #undef GL_NV_uniform_buffer_unified_memory
-#define GL_NV_uniform_buffer_unified_memory 657
+#define GL_NV_uniform_buffer_unified_memory 658
 #undef GL_NV_vdpau_interop
-#define GL_NV_vdpau_interop 658
+#define GL_NV_vdpau_interop 659
 #undef GL_NV_vertex_array_range
-#define GL_NV_vertex_array_range 659
+#define GL_NV_vertex_array_range 660
 #undef GL_NV_vertex_array_range2
-#define GL_NV_vertex_array_range2 660
+#define GL_NV_vertex_array_range2 661
 #undef GL_NV_vertex_attrib_integer_64bit
-#define GL_NV_vertex_attrib_integer_64bit 661
+#define GL_NV_vertex_attrib_integer_64bit 662
 #undef GL_NV_vertex_buffer_unified_memory
-#define GL_NV_vertex_buffer_unified_memory 662
+#define GL_NV_vertex_buffer_unified_memory 663
 #undef GL_NV_vertex_program
-#define GL_NV_vertex_program 663
+#define GL_NV_vertex_program 664
 #undef GL_NV_vertex_program1_1
-#define GL_NV_vertex_program1_1 664
+#define GL_NV_vertex_program1_1 665
 #undef GL_NV_vertex_program2
-#define GL_NV_vertex_program2 665
+#define GL_NV_vertex_program2 666
 #undef GL_NV_vertex_program2_option
-#define GL_NV_vertex_program2_option 666
+#define GL_NV_vertex_program2_option 667
 #undef GL_NV_vertex_program3
-#define GL_NV_vertex_program3 667
+#define GL_NV_vertex_program3 668
 #undef GL_NV_vertex_program4
-#define GL_NV_vertex_program4 668
+#define GL_NV_vertex_program4 669
 #undef GL_NV_video_capture
-#define GL_NV_video_capture 669
+#define GL_NV_video_capture 670
 #undef GL_NV_viewport_array
-#define GL_NV_viewport_array 670
+#define GL_NV_viewport_array 671
 #undef GL_NV_viewport_array2
-#define GL_NV_viewport_array2 671
+#define GL_NV_viewport_array2 672
 #undef GL_NV_viewport_swizzle
-#define GL_NV_viewport_swizzle 672
+#define GL_NV_viewport_swizzle 673
 #undef GL_OES_EGL_image
-#define GL_OES_EGL_image 673
+#define GL_OES_EGL_image 674
 #undef GL_OES_EGL_image_external
-#define GL_OES_EGL_image_external 674
+#define GL_OES_EGL_image_external 675
 #undef GL_OES_EGL_image_external_essl3
-#define GL_OES_EGL_image_external_essl3 675
+#define GL_OES_EGL_image_external_essl3 676
 #undef GL_OES_blend_equation_separate
-#define GL_OES_blend_equation_separate 676
+#define GL_OES_blend_equation_separate 677
 #undef GL_OES_blend_func_separate
-#define GL_OES_blend_func_separate 677
+#define GL_OES_blend_func_separate 678
 #undef GL_OES_blend_subtract
-#define GL_OES_blend_subtract 678
+#define GL_OES_blend_subtract 679
 #undef GL_OES_byte_coordinates
-#define GL_OES_byte_coordinates 679
+#define GL_OES_byte_coordinates 680
 #undef GL_OES_compressed_ETC1_RGB8_sub_texture
-#define GL_OES_compressed_ETC1_RGB8_sub_texture 680
+#define GL_OES_compressed_ETC1_RGB8_sub_texture 681
 #undef GL_OES_compressed_ETC1_RGB8_texture
-#define GL_OES_compressed_ETC1_RGB8_texture 681
+#define GL_OES_compressed_ETC1_RGB8_texture 682
 #undef GL_OES_compressed_paletted_texture
-#define GL_OES_compressed_paletted_texture 682
+#define GL_OES_compressed_paletted_texture 683
 #undef GL_OES_copy_image
-#define GL_OES_copy_image 683
+#define GL_OES_copy_image 684
 #undef GL_OES_depth24
-#define GL_OES_depth24 684
+#define GL_OES_depth24 685
 #undef GL_OES_depth32
-#define GL_OES_depth32 685
+#define GL_OES_depth32 686
 #undef GL_OES_depth_texture
-#define GL_OES_depth_texture 686
+#define GL_OES_depth_texture 687
 #undef GL_OES_draw_buffers_indexed
-#define GL_OES_draw_buffers_indexed 687
+#define GL_OES_draw_buffers_indexed 688
 #undef GL_OES_draw_elements_base_vertex
-#define GL_OES_draw_elements_base_vertex 688
+#define GL_OES_draw_elements_base_vertex 689
 #undef GL_OES_draw_texture
-#define GL_OES_draw_texture 689
+#define GL_OES_draw_texture 690
 #undef GL_OES_element_index_uint
-#define GL_OES_element_index_uint 690
+#define GL_OES_element_index_uint 691
 #undef GL_OES_extended_matrix_palette
-#define GL_OES_extended_matrix_palette 691
+#define GL_OES_extended_matrix_palette 692
 #undef GL_OES_fbo_render_mipmap
-#define GL_OES_fbo_render_mipmap 692
+#define GL_OES_fbo_render_mipmap 693
 #undef GL_OES_fixed_point
-#define GL_OES_fixed_point 693
+#define GL_OES_fixed_point 694
 #undef GL_OES_fragment_precision_high
-#define GL_OES_fragment_precision_high 694
+#define GL_OES_fragment_precision_high 695
 #undef GL_OES_framebuffer_object
-#define GL_OES_framebuffer_object 695
+#define GL_OES_framebuffer_object 696
 #undef GL_OES_geometry_point_size
-#define GL_OES_geometry_point_size 696
+#define GL_OES_geometry_point_size 697
 #undef GL_OES_geometry_shader
-#define GL_OES_geometry_shader 697
+#define GL_OES_geometry_shader 698
 #undef GL_OES_get_program_binary
-#define GL_OES_get_program_binary 698
+#define GL_OES_get_program_binary 699
 #undef GL_OES_gpu_shader5
-#define GL_OES_gpu_shader5 699
+#define GL_OES_gpu_shader5 700
 #undef GL_OES_mapbuffer
-#define GL_OES_mapbuffer 700
+#define GL_OES_mapbuffer 701
 #undef GL_OES_matrix_get
-#define GL_OES_matrix_get 701
+#define GL_OES_matrix_get 702
 #undef GL_OES_matrix_palette
-#define GL_OES_matrix_palette 702
+#define GL_OES_matrix_palette 703
 #undef GL_OES_packed_depth_stencil
-#define GL_OES_packed_depth_stencil 703
+#define GL_OES_packed_depth_stencil 704
 #undef GL_OES_point_size_array
-#define GL_OES_point_size_array 704
+#define GL_OES_point_size_array 705
 #undef GL_OES_point_sprite
-#define GL_OES_point_sprite 705
+#define GL_OES_point_sprite 706
 #undef GL_OES_primitive_bounding_box
-#define GL_OES_primitive_bounding_box 706
+#define GL_OES_primitive_bounding_box 707
 #undef GL_OES_query_matrix
-#define GL_OES_query_matrix 707
+#define GL_OES_query_matrix 708
 #undef GL_OES_read_format
-#define GL_OES_read_format 708
+#define GL_OES_read_format 709
 #undef GL_OES_required_internalformat
-#define GL_OES_required_internalformat 709
+#define GL_OES_required_internalformat 710
 #undef GL_OES_rgb8_rgba8
-#define GL_OES_rgb8_rgba8 710
+#define GL_OES_rgb8_rgba8 711
 #undef GL_OES_sample_shading
-#define GL_OES_sample_shading 711
+#define GL_OES_sample_shading 712
 #undef GL_OES_sample_variables
-#define GL_OES_sample_variables 712
+#define GL_OES_sample_variables 713
 #undef GL_OES_shader_image_atomic
-#define GL_OES_shader_image_atomic 713
+#define GL_OES_shader_image_atomic 714
 #undef GL_OES_shader_io_blocks
-#define GL_OES_shader_io_blocks 714
+#define GL_OES_shader_io_blocks 715
 #undef GL_OES_shader_multisample_interpolation
-#define GL_OES_shader_multisample_interpolation 715
+#define GL_OES_shader_multisample_interpolation 716
 #undef GL_OES_single_precision
-#define GL_OES_single_precision 716
+#define GL_OES_single_precision 717
 #undef GL_OES_standard_derivatives
-#define GL_OES_standard_derivatives 717
+#define GL_OES_standard_derivatives 718
 #undef GL_OES_stencil1
-#define GL_OES_stencil1 718
+#define GL_OES_stencil1 719
 #undef GL_OES_stencil4
-#define GL_OES_stencil4 719
+#define GL_OES_stencil4 720
 #undef GL_OES_stencil8
-#define GL_OES_stencil8 720
+#define GL_OES_stencil8 721
 #undef GL_OES_stencil_wrap
-#define GL_OES_stencil_wrap 721
+#define GL_OES_stencil_wrap 722
 #undef GL_OES_surfaceless_context
-#define GL_OES_surfaceless_context 722
+#define GL_OES_surfaceless_context 723
 #undef GL_OES_tessellation_point_size
-#define GL_OES_tessellation_point_size 723
+#define GL_OES_tessellation_point_size 724
 #undef GL_OES_tessellation_shader
-#define GL_OES_tessellation_shader 724
+#define GL_OES_tessellation_shader 725
 #undef GL_OES_texture_3D
-#define GL_OES_texture_3D 725
+#define GL_OES_texture_3D 726
 #undef GL_OES_texture_border_clamp
-#define GL_OES_texture_border_clamp 726
+#define GL_OES_texture_border_clamp 727
 #undef GL_OES_texture_buffer
-#define GL_OES_texture_buffer 727
+#define GL_OES_texture_buffer 728
 #undef GL_OES_texture_compression_astc
-#define GL_OES_texture_compression_astc 728
+#define GL_OES_texture_compression_astc 729
 #undef GL_OES_texture_cube_map
-#define GL_OES_texture_cube_map 729
+#define GL_OES_texture_cube_map 730
 #undef GL_OES_texture_cube_map_array
-#define GL_OES_texture_cube_map_array 730
+#define GL_OES_texture_cube_map_array 731
 #undef GL_OES_texture_env_crossbar
-#define GL_OES_texture_env_crossbar 731
+#define GL_OES_texture_env_crossbar 732
 #undef GL_OES_texture_float
-#define GL_OES_texture_float 732
+#define GL_OES_texture_float 733
 #undef GL_OES_texture_float_linear
-#define GL_OES_texture_float_linear 733
+#define GL_OES_texture_float_linear 734
 #undef GL_OES_texture_half_float
-#define GL_OES_texture_half_float 734
+#define GL_OES_texture_half_float 735
 #undef GL_OES_texture_half_float_linear
-#define GL_OES_texture_half_float_linear 735
+#define GL_OES_texture_half_float_linear 736
 #undef GL_OES_texture_mirrored_repeat
-#define GL_OES_texture_mirrored_repeat 736
+#define GL_OES_texture_mirrored_repeat 737
 #undef GL_OES_texture_npot
-#define GL_OES_texture_npot 737
+#define GL_OES_texture_npot 738
 #undef GL_OES_texture_stencil8
-#define GL_OES_texture_stencil8 738
+#define GL_OES_texture_stencil8 739
 #undef GL_OES_texture_storage_multisample_2d_array
-#define GL_OES_texture_storage_multisample_2d_array 739
+#define GL_OES_texture_storage_multisample_2d_array 740
 #undef GL_OES_texture_view
-#define GL_OES_texture_view 740
+#define GL_OES_texture_view 741
 #undef GL_OES_vertex_array_object
-#define GL_OES_vertex_array_object 741
+#define GL_OES_vertex_array_object 742
 #undef GL_OES_vertex_half_float
-#define GL_OES_vertex_half_float 742
+#define GL_OES_vertex_half_float 743
 #undef GL_OES_vertex_type_10_10_10_2
-#define GL_OES_vertex_type_10_10_10_2 743
+#define GL_OES_vertex_type_10_10_10_2 744
 #undef GL_OES_viewport_array
-#define GL_OES_viewport_array 744
+#define GL_OES_viewport_array 745
 #undef GL_OML_interlace
-#define GL_OML_interlace 745
+#define GL_OML_interlace 746
 #undef GL_OML_resample
-#define GL_OML_resample 746
+#define GL_OML_resample 747
 #undef GL_OML_subsample
-#define GL_OML_subsample 747
+#define GL_OML_subsample 748
 #undef GL_OVR_multiview
-#define GL_OVR_multiview 748
+#define GL_OVR_multiview 749
 #undef GL_OVR_multiview2
-#define GL_OVR_multiview2 749
+#define GL_OVR_multiview2 750
 #undef GL_OVR_multiview_multisampled_render_to_texture
-#define GL_OVR_multiview_multisampled_render_to_texture 750
+#define GL_OVR_multiview_multisampled_render_to_texture 751
 #undef GL_PGI_misc_hints
-#define GL_PGI_misc_hints 751
+#define GL_PGI_misc_hints 752
 #undef GL_PGI_vertex_hints
-#define GL_PGI_vertex_hints 752
+#define GL_PGI_vertex_hints 753
 #undef GL_QCOM_alpha_test
-#define GL_QCOM_alpha_test 753
+#define GL_QCOM_alpha_test 754
 #undef GL_QCOM_binning_control
-#define GL_QCOM_binning_control 754
+#define GL_QCOM_binning_control 755
 #undef GL_QCOM_driver_control
-#define GL_QCOM_driver_control 755
+#define GL_QCOM_driver_control 756
 #undef GL_QCOM_extended_get
-#define GL_QCOM_extended_get 756
+#define GL_QCOM_extended_get 757
 #undef GL_QCOM_extended_get2
-#define GL_QCOM_extended_get2 757
+#define GL_QCOM_extended_get2 758
 #undef GL_QCOM_framebuffer_foveated
-#define GL_QCOM_framebuffer_foveated 758
+#define GL_QCOM_framebuffer_foveated 759
 #undef GL_QCOM_texture_foveated
-#define GL_QCOM_texture_foveated 759
+#define GL_QCOM_texture_foveated 760
 #undef GL_QCOM_perfmon_global_mode
-#define GL_QCOM_perfmon_global_mode 760
+#define GL_QCOM_perfmon_global_mode 761
 #undef GL_QCOM_shader_framebuffer_fetch_noncoherent
-#define GL_QCOM_shader_framebuffer_fetch_noncoherent 761
+#define GL_QCOM_shader_framebuffer_fetch_noncoherent 762
 #undef GL_QCOM_shader_framebuffer_fetch_rate
-#define GL_QCOM_shader_framebuffer_fetch_rate 762
+#define GL_QCOM_shader_framebuffer_fetch_rate 763
 #undef GL_QCOM_tiled_rendering
-#define GL_QCOM_tiled_rendering 763
+#define GL_QCOM_tiled_rendering 764
 #undef GL_QCOM_writeonly_rendering
-#define GL_QCOM_writeonly_rendering 764
+#define GL_QCOM_writeonly_rendering 765
 #undef GL_REND_screen_coordinates
-#define GL_REND_screen_coordinates 765
+#define GL_REND_screen_coordinates 766
 #undef GL_S3_s3tc
-#define GL_S3_s3tc 766
+#define GL_S3_s3tc 767
 #undef GL_SGIS_detail_texture
-#define GL_SGIS_detail_texture 767
+#define GL_SGIS_detail_texture 768
 #undef GL_SGIS_fog_function
-#define GL_SGIS_fog_function 768
+#define GL_SGIS_fog_function 769
 #undef GL_SGIS_generate_mipmap
-#define GL_SGIS_generate_mipmap 769
+#define GL_SGIS_generate_mipmap 770
 #undef GL_SGIS_multisample
-#define GL_SGIS_multisample 770
+#define GL_SGIS_multisample 771
 #undef GL_SGIS_pixel_texture
-#define GL_SGIS_pixel_texture 771
+#define GL_SGIS_pixel_texture 772
 #undef GL_SGIS_point_line_texgen
-#define GL_SGIS_point_line_texgen 772
+#define GL_SGIS_point_line_texgen 773
 #undef GL_SGIS_point_parameters
-#define GL_SGIS_point_parameters 773
+#define GL_SGIS_point_parameters 774
 #undef GL_SGIS_sharpen_texture
-#define GL_SGIS_sharpen_texture 774
+#define GL_SGIS_sharpen_texture 775
 #undef GL_SGIS_texture4D
-#define GL_SGIS_texture4D 775
+#define GL_SGIS_texture4D 776
 #undef GL_SGIS_texture_border_clamp
-#define GL_SGIS_texture_border_clamp 776
+#define GL_SGIS_texture_border_clamp 777
 #undef GL_SGIS_texture_color_mask
-#define GL_SGIS_texture_color_mask 777
+#define GL_SGIS_texture_color_mask 778
 #undef GL_SGIS_texture_edge_clamp
-#define GL_SGIS_texture_edge_clamp 778
+#define GL_SGIS_texture_edge_clamp 779
 #undef GL_SGIS_texture_filter4
-#define GL_SGIS_texture_filter4 779
+#define GL_SGIS_texture_filter4 780
 #undef GL_SGIS_texture_lod
-#define GL_SGIS_texture_lod 780
+#define GL_SGIS_texture_lod 781
 #undef GL_SGIS_texture_select
-#define GL_SGIS_texture_select 781
+#define GL_SGIS_texture_select 782
 #undef GL_SGIX_async
-#define GL_SGIX_async 782
+#define GL_SGIX_async 783
 #undef GL_SGIX_async_histogram
-#define GL_SGIX_async_histogram 783
+#define GL_SGIX_async_histogram 784
 #undef GL_SGIX_async_pixel
-#define GL_SGIX_async_pixel 784
+#define GL_SGIX_async_pixel 785
 #undef GL_SGIX_blend_alpha_minmax
-#define GL_SGIX_blend_alpha_minmax 785
+#define GL_SGIX_blend_alpha_minmax 786
 #undef GL_SGIX_calligraphic_fragment
-#define GL_SGIX_calligraphic_fragment 786
+#define GL_SGIX_calligraphic_fragment 787
 #undef GL_SGIX_clipmap
-#define GL_SGIX_clipmap 787
+#define GL_SGIX_clipmap 788
 #undef GL_SGIX_convolution_accuracy
-#define GL_SGIX_convolution_accuracy 788
+#define GL_SGIX_convolution_accuracy 789
 #undef GL_SGIX_depth_pass_instrument
-#define GL_SGIX_depth_pass_instrument 789
+#define GL_SGIX_depth_pass_instrument 790
 #undef GL_SGIX_depth_texture
-#define GL_SGIX_depth_texture 790
+#define GL_SGIX_depth_texture 791
 #undef GL_SGIX_flush_raster
-#define GL_SGIX_flush_raster 791
+#define GL_SGIX_flush_raster 792
 #undef GL_SGIX_fog_offset
-#define GL_SGIX_fog_offset 792
+#define GL_SGIX_fog_offset 793
 #undef GL_SGIX_fragment_lighting
-#define GL_SGIX_fragment_lighting 793
+#define GL_SGIX_fragment_lighting 794
 #undef GL_SGIX_framezoom
-#define GL_SGIX_framezoom 794
+#define GL_SGIX_framezoom 795
 #undef GL_SGIX_igloo_interface
-#define GL_SGIX_igloo_interface 795
+#define GL_SGIX_igloo_interface 796
 #undef GL_SGIX_instruments
-#define GL_SGIX_instruments 796
+#define GL_SGIX_instruments 797
 #undef GL_SGIX_interlace
-#define GL_SGIX_interlace 797
+#define GL_SGIX_interlace 798
 #undef GL_SGIX_ir_instrument1
-#define GL_SGIX_ir_instrument1 798
+#define GL_SGIX_ir_instrument1 799
 #undef GL_SGIX_list_priority
-#define GL_SGIX_list_priority 799
+#define GL_SGIX_list_priority 800
 #undef GL_SGIX_pixel_texture
-#define GL_SGIX_pixel_texture 800
+#define GL_SGIX_pixel_texture 801
 #undef GL_SGIX_pixel_tiles
-#define GL_SGIX_pixel_tiles 801
+#define GL_SGIX_pixel_tiles 802
 #undef GL_SGIX_polynomial_ffd
-#define GL_SGIX_polynomial_ffd 802
+#define GL_SGIX_polynomial_ffd 803
 #undef GL_SGIX_reference_plane
-#define GL_SGIX_reference_plane 803
+#define GL_SGIX_reference_plane 804
 #undef GL_SGIX_resample
-#define GL_SGIX_resample 804
+#define GL_SGIX_resample 805
 #undef GL_SGIX_scalebias_hint
-#define GL_SGIX_scalebias_hint 805
+#define GL_SGIX_scalebias_hint 806
 #undef GL_SGIX_shadow
-#define GL_SGIX_shadow 806
+#define GL_SGIX_shadow 807
 #undef GL_SGIX_shadow_ambient
-#define GL_SGIX_shadow_ambient 807
+#define GL_SGIX_shadow_ambient 808
 #undef GL_SGIX_sprite
-#define GL_SGIX_sprite 808
+#define GL_SGIX_sprite 809
 #undef GL_SGIX_subsample
-#define GL_SGIX_subsample 809
+#define GL_SGIX_subsample 810
 #undef GL_SGIX_tag_sample_buffer
-#define GL_SGIX_tag_sample_buffer 810
+#define GL_SGIX_tag_sample_buffer 811
 #undef GL_SGIX_texture_add_env
-#define GL_SGIX_texture_add_env 811
+#define GL_SGIX_texture_add_env 812
 #undef GL_SGIX_texture_coordinate_clamp
-#define GL_SGIX_texture_coordinate_clamp 812
+#define GL_SGIX_texture_coordinate_clamp 813
 #undef GL_SGIX_texture_lod_bias
-#define GL_SGIX_texture_lod_bias 813
+#define GL_SGIX_texture_lod_bias 814
 #undef GL_SGIX_texture_multi_buffer
-#define GL_SGIX_texture_multi_buffer 814
+#define GL_SGIX_texture_multi_buffer 815
 #undef GL_SGIX_texture_scale_bias
-#define GL_SGIX_texture_scale_bias 815
+#define GL_SGIX_texture_scale_bias 816
 #undef GL_SGIX_vertex_preclip
-#define GL_SGIX_vertex_preclip 816
+#define GL_SGIX_vertex_preclip 817
 #undef GL_SGIX_ycrcb
-#define GL_SGIX_ycrcb 817
+#define GL_SGIX_ycrcb 818
 #undef GL_SGIX_ycrcb_subsample
-#define GL_SGIX_ycrcb_subsample 818
+#define GL_SGIX_ycrcb_subsample 819
 #undef GL_SGIX_ycrcba
-#define GL_SGIX_ycrcba 819
+#define GL_SGIX_ycrcba 820
 #undef GL_SGI_color_matrix
-#define GL_SGI_color_matrix 820
+#define GL_SGI_color_matrix 821
 #undef GL_SGI_color_table
-#define GL_SGI_color_table 821
+#define GL_SGI_color_table 822
 #undef GL_SGI_texture_color_table
-#define GL_SGI_texture_color_table 822
+#define GL_SGI_texture_color_table 823
 #undef GL_SUNX_constant_data
-#define GL_SUNX_constant_data 823
+#define GL_SUNX_constant_data 824
 #undef GL_SUN_convolution_border_modes
-#define GL_SUN_convolution_border_modes 824
+#define GL_SUN_convolution_border_modes 825
 #undef GL_SUN_global_alpha
-#define GL_SUN_global_alpha 825
+#define GL_SUN_global_alpha 826
 #undef GL_SUN_mesh_array
-#define GL_SUN_mesh_array 826
+#define GL_SUN_mesh_array 827
 #undef GL_SUN_slice_accum
-#define GL_SUN_slice_accum 827
+#define GL_SUN_slice_accum 828
 #undef GL_SUN_triangle_list
-#define GL_SUN_triangle_list 828
+#define GL_SUN_triangle_list 829
 #undef GL_SUN_vertex
-#define GL_SUN_vertex 829
+#define GL_SUN_vertex 830
 #undef GL_VIV_shader_binary
-#define GL_VIV_shader_binary 830
+#define GL_VIV_shader_binary 831
 #undef GL_WIN_phong_shading
-#define GL_WIN_phong_shading 831
+#define GL_WIN_phong_shading 832
 #undef GL_WIN_specular_fog
-#define GL_WIN_specular_fog 832
+#define GL_WIN_specular_fog 833
 #undef GL_EXT_Cg_shader
-#define GL_EXT_Cg_shader 833
+#define GL_EXT_Cg_shader 834
 #undef GL_EXTX_framebuffer_mixed_formats
-#define GL_EXTX_framebuffer_mixed_formats 834
+#define GL_EXTX_framebuffer_mixed_formats 835
 #undef GL_EXT_texture_compression_dxt1
-#define GL_EXT_texture_compression_dxt1 835
+#define GL_EXT_texture_compression_dxt1 836
 #undef GL_EXT_texture_edge_clamp
-#define GL_EXT_texture_edge_clamp 836
+#define GL_EXT_texture_edge_clamp 837
 #undef GL_EXT_texture_storage
-#define GL_EXT_texture_storage 837
+#define GL_EXT_texture_storage 838
 #undef GL_EXT_import_sync_object
-#define GL_EXT_import_sync_object 838
+#define GL_EXT_import_sync_object 839
 #undef GL_KTX_buffer_region
-#define GL_KTX_buffer_region 839
+#define GL_KTX_buffer_region 840
 #undef GL_NV_ES1_1_compatibility
-#define GL_NV_ES1_1_compatibility 840
+#define GL_NV_ES1_1_compatibility 841
 #undef GL_NV_ES3_1_compatibility
-#define GL_NV_ES3_1_compatibility 841
+#define GL_NV_ES3_1_compatibility 842
 #undef GL_EXT_texture_lod
-#define GL_EXT_texture_lod 842
+#define GL_EXT_texture_lod 843
 
 #ifdef __cplusplus
 extern "C" {
@@ -8112,7 +8128,7 @@ typedef void (KHRONOS_APIENTRY *GLVULKANPROCNV)(void);
 
 typedef struct BrebisGLConfig
 {
-    khronos_int8_t support[843];
+    khronos_int8_t support[844];
 
     void (KHRONOS_APIENTRY * brebisAccum)(GLenum, GLfloat);
     void (KHRONOS_APIENTRY * brebisAccumxOES)(GLenum, GLfixed);
@@ -8271,6 +8287,7 @@ typedef struct BrebisGLConfig
     void (KHRONOS_APIENTRY * brebisBlitFramebufferNV)(GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLbitfield, GLenum);
     void (KHRONOS_APIENTRY * brebisBlitNamedFramebuffer)(GLuint, GLuint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLbitfield, GLenum);
     void (KHRONOS_APIENTRY * brebisBufferAddressRangeNV)(GLenum, GLuint, GLuint64EXT, GLsizeiptr);
+    void (KHRONOS_APIENTRY * brebisBufferAttachMemoryNV)(GLenum, GLuint, GLuint64);
     void (KHRONOS_APIENTRY * brebisBufferData)(GLenum, GLsizeiptr, const void *, GLenum);
     void (KHRONOS_APIENTRY * brebisBufferDataARB)(GLenum, GLsizeiptrARB, const void *, GLenum);
     void (KHRONOS_APIENTRY * brebisBufferPageCommitmentARB)(GLenum, GLintptr, GLsizeiptr, GLboolean);
@@ -9109,6 +9126,7 @@ typedef struct BrebisGLConfig
     void (KHRONOS_APIENTRY * brebisGetMaterialxOES)(GLenum, GLenum, GLfixed);
     void (KHRONOS_APIENTRY * brebisGetMaterialxv)(GLenum, GLenum, GLfixed *);
     void (KHRONOS_APIENTRY * brebisGetMaterialxvOES)(GLenum, GLenum, GLfixed *);
+    void (KHRONOS_APIENTRY * brebisGetMemoryObjectDetachedResourcesuivNV)(GLuint, GLenum, GLint, GLsizei, GLuint *);
     void (KHRONOS_APIENTRY * brebisGetMemoryObjectParameterivEXT)(GLuint, GLenum, GLint *);
     void (KHRONOS_APIENTRY * brebisGetMinmax)(GLenum, GLboolean, GLenum, GLenum, void *);
     void (KHRONOS_APIENTRY * brebisGetMinmaxEXT)(GLenum, GLboolean, GLenum, GLenum, void *);
@@ -9868,6 +9886,7 @@ typedef struct BrebisGLConfig
     void (KHRONOS_APIENTRY * brebisMulticastGetQueryObjectui64vNV)(GLuint, GLuint, GLenum, GLuint64 *);
     void (KHRONOS_APIENTRY * brebisMulticastGetQueryObjectuivNV)(GLuint, GLuint, GLenum, GLuint *);
     void (KHRONOS_APIENTRY * brebisMulticastWaitSyncNV)(GLuint, GLbitfield);
+    void (KHRONOS_APIENTRY * brebisNamedBufferAttachMemoryNV)(GLuint, GLuint, GLuint64);
     void (KHRONOS_APIENTRY * brebisNamedBufferData)(GLuint, GLsizeiptr, const void *, GLenum);
     void (KHRONOS_APIENTRY * brebisNamedBufferDataEXT)(GLuint, GLsizeiptr, const void *, GLenum);
     void (KHRONOS_APIENTRY * brebisNamedBufferPageCommitmentARB)(GLuint, GLintptr, GLsizeiptr, GLboolean);
@@ -10362,6 +10381,7 @@ typedef struct BrebisGLConfig
     void (KHRONOS_APIENTRY * brebisRequestResidentProgramsNV)(GLsizei, const GLuint *);
     void (KHRONOS_APIENTRY * brebisResetHistogram)(GLenum);
     void (KHRONOS_APIENTRY * brebisResetHistogramEXT)(GLenum);
+    void (KHRONOS_APIENTRY * brebisResetMemoryObjectParameterNV)(GLuint, GLenum);
     void (KHRONOS_APIENTRY * brebisResetMinmax)(GLenum);
     void (KHRONOS_APIENTRY * brebisResetMinmaxEXT)(GLenum);
     void (KHRONOS_APIENTRY * brebisResizeBuffersMESA)(void);
@@ -10521,6 +10541,7 @@ typedef struct BrebisGLConfig
     GLboolean(KHRONOS_APIENTRY * brebisTestFenceAPPLE)(GLuint);
     GLboolean(KHRONOS_APIENTRY * brebisTestFenceNV)(GLuint);
     GLboolean(KHRONOS_APIENTRY * brebisTestObjectAPPLE)(GLenum, GLuint);
+    void (KHRONOS_APIENTRY * brebisTexAttachMemoryNV)(GLenum, GLuint, GLuint64);
     void (KHRONOS_APIENTRY * brebisTexBuffer)(GLenum, GLenum, GLuint);
     void (KHRONOS_APIENTRY * brebisTexBufferARB)(GLenum, GLenum, GLuint);
     void (KHRONOS_APIENTRY * brebisTexBufferEXT)(GLenum, GLenum, GLuint);
@@ -10684,6 +10705,7 @@ typedef struct BrebisGLConfig
     void (KHRONOS_APIENTRY * brebisTexSubImage3DEXT)(GLenum, GLint, GLint, GLint, GLint, GLsizei, GLsizei, GLsizei, GLenum, GLenum, const void *);
     void (KHRONOS_APIENTRY * brebisTexSubImage3DOES)(GLenum, GLint, GLint, GLint, GLint, GLsizei, GLsizei, GLsizei, GLenum, GLenum, const void *);
     void (KHRONOS_APIENTRY * brebisTexSubImage4DSGIS)(GLenum, GLint, GLint, GLint, GLint, GLint, GLsizei, GLsizei, GLsizei, GLsizei, GLenum, GLenum, const void *);
+    void (KHRONOS_APIENTRY * brebisTextureAttachMemoryNV)(GLuint, GLuint, GLuint64);
     void (KHRONOS_APIENTRY * brebisTextureBarrier)(void);
     void (KHRONOS_APIENTRY * brebisTextureBarrierNV)(void);
     void (KHRONOS_APIENTRY * brebisTextureBuffer)(GLuint, GLenum, GLuint);
@@ -11524,6 +11546,7 @@ BREBIS_FORCE_INLINE void  glBlitFramebufferEXT(GLint srcX0, GLint srcY0, GLint s
 BREBIS_FORCE_INLINE void  glBlitFramebufferNV(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter) { brebisGL.brebisBlitFramebufferNV(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter); }
 BREBIS_FORCE_INLINE void  glBlitNamedFramebuffer(GLuint readFramebuffer, GLuint drawFramebuffer, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter) { brebisGL.brebisBlitNamedFramebuffer(readFramebuffer, drawFramebuffer, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter); }
 BREBIS_FORCE_INLINE void  glBufferAddressRangeNV(GLenum pname, GLuint index, GLuint64EXT address, GLsizeiptr length) { brebisGL.brebisBufferAddressRangeNV(pname, index, address, length); }
+BREBIS_FORCE_INLINE void  glBufferAttachMemoryNV(GLenum target, GLuint memory, GLuint64 offset) { brebisGL.brebisBufferAttachMemoryNV(target, memory, offset); }
 BREBIS_FORCE_INLINE void  glBufferData(GLenum target, GLsizeiptr size, const void * data, GLenum usage) { brebisGL.brebisBufferData(target, size, data, usage); }
 BREBIS_FORCE_INLINE void  glBufferDataARB(GLenum target, GLsizeiptrARB size, const void * data, GLenum usage) { brebisGL.brebisBufferDataARB(target, size, data, usage); }
 BREBIS_FORCE_INLINE void  glBufferPageCommitmentARB(GLenum target, GLintptr offset, GLsizeiptr size, GLboolean commit) { brebisGL.brebisBufferPageCommitmentARB(target, offset, size, commit); }
@@ -12362,6 +12385,7 @@ BREBIS_FORCE_INLINE void  glGetMaterialiv(GLenum face, GLenum pname, GLint * par
 BREBIS_FORCE_INLINE void  glGetMaterialxOES(GLenum face, GLenum pname, GLfixed param) { brebisGL.brebisGetMaterialxOES(face, pname, param); }
 BREBIS_FORCE_INLINE void  glGetMaterialxv(GLenum face, GLenum pname, GLfixed * params) { brebisGL.brebisGetMaterialxv(face, pname, params); }
 BREBIS_FORCE_INLINE void  glGetMaterialxvOES(GLenum face, GLenum pname, GLfixed * params) { brebisGL.brebisGetMaterialxvOES(face, pname, params); }
+BREBIS_FORCE_INLINE void  glGetMemoryObjectDetachedResourcesuivNV(GLuint memory, GLenum pname, GLint first, GLsizei count, GLuint * params) { brebisGL.brebisGetMemoryObjectDetachedResourcesuivNV(memory, pname, first, count, params); }
 BREBIS_FORCE_INLINE void  glGetMemoryObjectParameterivEXT(GLuint memoryObject, GLenum pname, GLint * params) { brebisGL.brebisGetMemoryObjectParameterivEXT(memoryObject, pname, params); }
 BREBIS_FORCE_INLINE void  glGetMinmax(GLenum target, GLboolean reset, GLenum format, GLenum type, void * values) { brebisGL.brebisGetMinmax(target, reset, format, type, values); }
 BREBIS_FORCE_INLINE void  glGetMinmaxEXT(GLenum target, GLboolean reset, GLenum format, GLenum type, void * values) { brebisGL.brebisGetMinmaxEXT(target, reset, format, type, values); }
@@ -13121,6 +13145,7 @@ BREBIS_FORCE_INLINE void  glMulticastGetQueryObjectivNV(GLuint gpu, GLuint id, G
 BREBIS_FORCE_INLINE void  glMulticastGetQueryObjectui64vNV(GLuint gpu, GLuint id, GLenum pname, GLuint64 * params) { brebisGL.brebisMulticastGetQueryObjectui64vNV(gpu, id, pname, params); }
 BREBIS_FORCE_INLINE void  glMulticastGetQueryObjectuivNV(GLuint gpu, GLuint id, GLenum pname, GLuint * params) { brebisGL.brebisMulticastGetQueryObjectuivNV(gpu, id, pname, params); }
 BREBIS_FORCE_INLINE void  glMulticastWaitSyncNV(GLuint signalGpu, GLbitfield waitGpuMask) { brebisGL.brebisMulticastWaitSyncNV(signalGpu, waitGpuMask); }
+BREBIS_FORCE_INLINE void  glNamedBufferAttachMemoryNV(GLuint buffer, GLuint memory, GLuint64 offset) { brebisGL.brebisNamedBufferAttachMemoryNV(buffer, memory, offset); }
 BREBIS_FORCE_INLINE void  glNamedBufferData(GLuint buffer, GLsizeiptr size, const void * data, GLenum usage) { brebisGL.brebisNamedBufferData(buffer, size, data, usage); }
 BREBIS_FORCE_INLINE void  glNamedBufferDataEXT(GLuint buffer, GLsizeiptr size, const void * data, GLenum usage) { brebisGL.brebisNamedBufferDataEXT(buffer, size, data, usage); }
 BREBIS_FORCE_INLINE void  glNamedBufferPageCommitmentARB(GLuint buffer, GLintptr offset, GLsizeiptr size, GLboolean commit) { brebisGL.brebisNamedBufferPageCommitmentARB(buffer, offset, size, commit); }
@@ -13615,6 +13640,7 @@ BREBIS_FORCE_INLINE void  glReplacementCodeusvSUN(const GLushort * code) { brebi
 BREBIS_FORCE_INLINE void  glRequestResidentProgramsNV(GLsizei n, const GLuint * programs) { brebisGL.brebisRequestResidentProgramsNV(n, programs); }
 BREBIS_FORCE_INLINE void  glResetHistogram(GLenum target) { brebisGL.brebisResetHistogram(target); }
 BREBIS_FORCE_INLINE void  glResetHistogramEXT(GLenum target) { brebisGL.brebisResetHistogramEXT(target); }
+BREBIS_FORCE_INLINE void  glResetMemoryObjectParameterNV(GLuint memory, GLenum pname) { brebisGL.brebisResetMemoryObjectParameterNV(memory, pname); }
 BREBIS_FORCE_INLINE void  glResetMinmax(GLenum target) { brebisGL.brebisResetMinmax(target); }
 BREBIS_FORCE_INLINE void  glResetMinmaxEXT(GLenum target) { brebisGL.brebisResetMinmaxEXT(target); }
 BREBIS_FORCE_INLINE void  glResizeBuffersMESA(void) { brebisGL.brebisResizeBuffersMESA(); }
@@ -13774,6 +13800,7 @@ BREBIS_FORCE_INLINE void  glTessellationModeAMD(GLenum mode) { brebisGL.brebisTe
 BREBIS_FORCE_INLINE GLboolean glTestFenceAPPLE(GLuint fence) { return brebisGL.brebisTestFenceAPPLE(fence); }
 BREBIS_FORCE_INLINE GLboolean glTestFenceNV(GLuint fence) { return brebisGL.brebisTestFenceNV(fence); }
 BREBIS_FORCE_INLINE GLboolean glTestObjectAPPLE(GLenum object, GLuint name) { return brebisGL.brebisTestObjectAPPLE(object, name); }
+BREBIS_FORCE_INLINE void  glTexAttachMemoryNV(GLenum target, GLuint memory, GLuint64 offset) { brebisGL.brebisTexAttachMemoryNV(target, memory, offset); }
 BREBIS_FORCE_INLINE void  glTexBuffer(GLenum target, GLenum internalformat, GLuint buffer) { brebisGL.brebisTexBuffer(target, internalformat, buffer); }
 BREBIS_FORCE_INLINE void  glTexBufferARB(GLenum target, GLenum internalformat, GLuint buffer) { brebisGL.brebisTexBufferARB(target, internalformat, buffer); }
 BREBIS_FORCE_INLINE void  glTexBufferEXT(GLenum target, GLenum internalformat, GLuint buffer) { brebisGL.brebisTexBufferEXT(target, internalformat, buffer); }
@@ -13937,6 +13964,7 @@ BREBIS_FORCE_INLINE void  glTexSubImage3D(GLenum target, GLint level, GLint xoff
 BREBIS_FORCE_INLINE void  glTexSubImage3DEXT(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void * pixels) { brebisGL.brebisTexSubImage3DEXT(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels); }
 BREBIS_FORCE_INLINE void  glTexSubImage3DOES(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void * pixels) { brebisGL.brebisTexSubImage3DOES(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels); }
 BREBIS_FORCE_INLINE void  glTexSubImage4DSGIS(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint woffset, GLsizei width, GLsizei height, GLsizei depth, GLsizei size4d, GLenum format, GLenum type, const void * pixels) { brebisGL.brebisTexSubImage4DSGIS(target, level, xoffset, yoffset, zoffset, woffset, width, height, depth, size4d, format, type, pixels); }
+BREBIS_FORCE_INLINE void  glTextureAttachMemoryNV(GLuint texture, GLuint memory, GLuint64 offset) { brebisGL.brebisTextureAttachMemoryNV(texture, memory, offset); }
 BREBIS_FORCE_INLINE void  glTextureBarrier(void) { brebisGL.brebisTextureBarrier(); }
 BREBIS_FORCE_INLINE void  glTextureBarrierNV(void) { brebisGL.brebisTextureBarrierNV(); }
 BREBIS_FORCE_INLINE void  glTextureBuffer(GLuint texture, GLenum internalformat, GLuint buffer) { brebisGL.brebisTextureBuffer(texture, internalformat, buffer); }
@@ -15387,6 +15415,7 @@ static void brebisGLAddExtension(khronos_int8_t isGLES, const char* const extens
         if (!brebisGL.support[GL_NV_half_float] && (extensionStrLength == 16) && strncmp(extensionStr, "GL_NV_half_float", extensionStrLength) == 0) { brebisGL.support[GL_NV_half_float] = KHRONOS_TRUE; return; }
         if (!brebisGL.support[GL_NV_internalformat_sample_query] && (extensionStrLength == 33) && strncmp(extensionStr, "GL_NV_internalformat_sample_query", extensionStrLength) == 0) { brebisGL.support[GL_NV_internalformat_sample_query] = KHRONOS_TRUE; return; }
         if (!brebisGL.support[GL_NV_light_max_exponent] && (extensionStrLength == 24) && strncmp(extensionStr, "GL_NV_light_max_exponent", extensionStrLength) == 0) { brebisGL.support[GL_NV_light_max_exponent] = KHRONOS_TRUE; return; }
+        if (!brebisGL.support[GL_NV_memory_attachment] && (extensionStrLength == 23) && strncmp(extensionStr, "GL_NV_memory_attachment", extensionStrLength) == 0) { brebisGL.support[GL_NV_memory_attachment] = KHRONOS_TRUE; return; }
         if (!brebisGL.support[GL_NV_multisample_coverage] && (extensionStrLength == 26) && strncmp(extensionStr, "GL_NV_multisample_coverage", extensionStrLength) == 0) { brebisGL.support[GL_NV_multisample_coverage] = KHRONOS_TRUE; return; }
         if (!brebisGL.support[GL_NV_multisample_filter_hint] && (extensionStrLength == 29) && strncmp(extensionStr, "GL_NV_multisample_filter_hint", extensionStrLength) == 0) { brebisGL.support[GL_NV_multisample_filter_hint] = KHRONOS_TRUE; return; }
         if (!brebisGL.support[GL_NV_occlusion_query] && (extensionStrLength == 21) && strncmp(extensionStr, "GL_NV_occlusion_query", extensionStrLength) == 0) { brebisGL.support[GL_NV_occlusion_query] = KHRONOS_TRUE; return; }
@@ -15717,6 +15746,7 @@ khronos_int8_t brebisGLInit(void) {
     brebisGL.brebisBlitFramebufferNV = (void (KHRONOS_APIENTRY *)(GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLbitfield, GLenum))brebisGLGetProcAddress("glBlitFramebufferNV");
     brebisGL.brebisBlitNamedFramebuffer = (void (KHRONOS_APIENTRY *)(GLuint, GLuint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLbitfield, GLenum))brebisGLGetProcAddress("glBlitNamedFramebuffer");
     brebisGL.brebisBufferAddressRangeNV = (void (KHRONOS_APIENTRY *)(GLenum, GLuint, GLuint64EXT, GLsizeiptr))brebisGLGetProcAddress("glBufferAddressRangeNV");
+    brebisGL.brebisBufferAttachMemoryNV = (void (KHRONOS_APIENTRY *)(GLenum, GLuint, GLuint64))brebisGLGetProcAddress("glBufferAttachMemoryNV");
     brebisGL.brebisBufferData = (void (KHRONOS_APIENTRY *)(GLenum, GLsizeiptr, const void *, GLenum))brebisGLGetProcAddress("glBufferData");
     brebisGL.brebisBufferDataARB = (void (KHRONOS_APIENTRY *)(GLenum, GLsizeiptrARB, const void *, GLenum))brebisGLGetProcAddress("glBufferDataARB");
     brebisGL.brebisBufferPageCommitmentARB = (void (KHRONOS_APIENTRY *)(GLenum, GLintptr, GLsizeiptr, GLboolean))brebisGLGetProcAddress("glBufferPageCommitmentARB");
@@ -16555,6 +16585,7 @@ khronos_int8_t brebisGLInit(void) {
     brebisGL.brebisGetMaterialxOES = (void (KHRONOS_APIENTRY *)(GLenum, GLenum, GLfixed))brebisGLGetProcAddress("glGetMaterialxOES");
     brebisGL.brebisGetMaterialxv = (void (KHRONOS_APIENTRY *)(GLenum, GLenum, GLfixed *))brebisGLGetProcAddress("glGetMaterialxv");
     brebisGL.brebisGetMaterialxvOES = (void (KHRONOS_APIENTRY *)(GLenum, GLenum, GLfixed *))brebisGLGetProcAddress("glGetMaterialxvOES");
+    brebisGL.brebisGetMemoryObjectDetachedResourcesuivNV = (void (KHRONOS_APIENTRY *)(GLuint, GLenum, GLint, GLsizei, GLuint *))brebisGLGetProcAddress("glGetMemoryObjectDetachedResourcesuivNV");
     brebisGL.brebisGetMemoryObjectParameterivEXT = (void (KHRONOS_APIENTRY *)(GLuint, GLenum, GLint *))brebisGLGetProcAddress("glGetMemoryObjectParameterivEXT");
     brebisGL.brebisGetMinmax = (void (KHRONOS_APIENTRY *)(GLenum, GLboolean, GLenum, GLenum, void *))brebisGLGetProcAddress("glGetMinmax");
     brebisGL.brebisGetMinmaxEXT = (void (KHRONOS_APIENTRY *)(GLenum, GLboolean, GLenum, GLenum, void *))brebisGLGetProcAddress("glGetMinmaxEXT");
@@ -17314,6 +17345,7 @@ khronos_int8_t brebisGLInit(void) {
     brebisGL.brebisMulticastGetQueryObjectui64vNV = (void (KHRONOS_APIENTRY *)(GLuint, GLuint, GLenum, GLuint64 *))brebisGLGetProcAddress("glMulticastGetQueryObjectui64vNV");
     brebisGL.brebisMulticastGetQueryObjectuivNV = (void (KHRONOS_APIENTRY *)(GLuint, GLuint, GLenum, GLuint *))brebisGLGetProcAddress("glMulticastGetQueryObjectuivNV");
     brebisGL.brebisMulticastWaitSyncNV = (void (KHRONOS_APIENTRY *)(GLuint, GLbitfield))brebisGLGetProcAddress("glMulticastWaitSyncNV");
+    brebisGL.brebisNamedBufferAttachMemoryNV = (void (KHRONOS_APIENTRY *)(GLuint, GLuint, GLuint64))brebisGLGetProcAddress("glNamedBufferAttachMemoryNV");
     brebisGL.brebisNamedBufferData = (void (KHRONOS_APIENTRY *)(GLuint, GLsizeiptr, const void *, GLenum))brebisGLGetProcAddress("glNamedBufferData");
     brebisGL.brebisNamedBufferDataEXT = (void (KHRONOS_APIENTRY *)(GLuint, GLsizeiptr, const void *, GLenum))brebisGLGetProcAddress("glNamedBufferDataEXT");
     brebisGL.brebisNamedBufferPageCommitmentARB = (void (KHRONOS_APIENTRY *)(GLuint, GLintptr, GLsizeiptr, GLboolean))brebisGLGetProcAddress("glNamedBufferPageCommitmentARB");
@@ -17808,6 +17840,7 @@ khronos_int8_t brebisGLInit(void) {
     brebisGL.brebisRequestResidentProgramsNV = (void (KHRONOS_APIENTRY *)(GLsizei, const GLuint *))brebisGLGetProcAddress("glRequestResidentProgramsNV");
     brebisGL.brebisResetHistogram = (void (KHRONOS_APIENTRY *)(GLenum))brebisGLGetProcAddress("glResetHistogram");
     brebisGL.brebisResetHistogramEXT = (void (KHRONOS_APIENTRY *)(GLenum))brebisGLGetProcAddress("glResetHistogramEXT");
+    brebisGL.brebisResetMemoryObjectParameterNV = (void (KHRONOS_APIENTRY *)(GLuint, GLenum))brebisGLGetProcAddress("glResetMemoryObjectParameterNV");
     brebisGL.brebisResetMinmax = (void (KHRONOS_APIENTRY *)(GLenum))brebisGLGetProcAddress("glResetMinmax");
     brebisGL.brebisResetMinmaxEXT = (void (KHRONOS_APIENTRY *)(GLenum))brebisGLGetProcAddress("glResetMinmaxEXT");
     brebisGL.brebisResizeBuffersMESA = (void (KHRONOS_APIENTRY *)(void))brebisGLGetProcAddress("glResizeBuffersMESA");
@@ -17967,6 +18000,7 @@ khronos_int8_t brebisGLInit(void) {
     brebisGL.brebisTestFenceAPPLE = (GLboolean(KHRONOS_APIENTRY *)(GLuint))brebisGLGetProcAddress("glTestFenceAPPLE");
     brebisGL.brebisTestFenceNV = (GLboolean(KHRONOS_APIENTRY *)(GLuint))brebisGLGetProcAddress("glTestFenceNV");
     brebisGL.brebisTestObjectAPPLE = (GLboolean(KHRONOS_APIENTRY *)(GLenum, GLuint))brebisGLGetProcAddress("glTestObjectAPPLE");
+    brebisGL.brebisTexAttachMemoryNV = (void (KHRONOS_APIENTRY *)(GLenum, GLuint, GLuint64))brebisGLGetProcAddress("glTexAttachMemoryNV");
     brebisGL.brebisTexBuffer = (void (KHRONOS_APIENTRY *)(GLenum, GLenum, GLuint))brebisGLGetProcAddress("glTexBuffer");
     brebisGL.brebisTexBufferARB = (void (KHRONOS_APIENTRY *)(GLenum, GLenum, GLuint))brebisGLGetProcAddress("glTexBufferARB");
     brebisGL.brebisTexBufferEXT = (void (KHRONOS_APIENTRY *)(GLenum, GLenum, GLuint))brebisGLGetProcAddress("glTexBufferEXT");
@@ -18130,6 +18164,7 @@ khronos_int8_t brebisGLInit(void) {
     brebisGL.brebisTexSubImage3DEXT = (void (KHRONOS_APIENTRY *)(GLenum, GLint, GLint, GLint, GLint, GLsizei, GLsizei, GLsizei, GLenum, GLenum, const void *))brebisGLGetProcAddress("glTexSubImage3DEXT");
     brebisGL.brebisTexSubImage3DOES = (void (KHRONOS_APIENTRY *)(GLenum, GLint, GLint, GLint, GLint, GLsizei, GLsizei, GLsizei, GLenum, GLenum, const void *))brebisGLGetProcAddress("glTexSubImage3DOES");
     brebisGL.brebisTexSubImage4DSGIS = (void (KHRONOS_APIENTRY *)(GLenum, GLint, GLint, GLint, GLint, GLint, GLsizei, GLsizei, GLsizei, GLsizei, GLenum, GLenum, const void *))brebisGLGetProcAddress("glTexSubImage4DSGIS");
+    brebisGL.brebisTextureAttachMemoryNV = (void (KHRONOS_APIENTRY *)(GLuint, GLuint, GLuint64))brebisGLGetProcAddress("glTextureAttachMemoryNV");
     brebisGL.brebisTextureBarrier = (void (KHRONOS_APIENTRY *)(void))brebisGLGetProcAddress("glTextureBarrier");
     brebisGL.brebisTextureBarrierNV = (void (KHRONOS_APIENTRY *)(void))brebisGLGetProcAddress("glTextureBarrierNV");
     brebisGL.brebisTextureBuffer = (void (KHRONOS_APIENTRY *)(GLuint, GLenum, GLuint))brebisGLGetProcAddress("glTextureBuffer");
