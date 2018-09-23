@@ -79,7 +79,7 @@ void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
 
     std::stringstream versionBlock;
     for(size_t i = 0; i < result.registry.features.size(); ++i)
-{
+    {
         const GLBrebisData::Feature &feature = result.registry.features[i];
         versionBlock << "#undef " << feature.name << std::endl;
         versionBlock << "#define " << feature.name << " " << IdCount++ << std::endl;
@@ -106,10 +106,11 @@ void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
     for(size_t i = 0; i < uniqueCommands.size(); ++i)
     {
         const GLBrebisData::Command &command = uniqueCommands[i];
+        std::string protoName(&command.proto.name[2]);
 
         /////////////// funcPtrBlock ////////////////////
 
-        funcPtrBlock << "    " << command.proto.signature << "(KHRONOS_APIENTRY * "<< prefix << &command.proto.name[2] << ")(";
+        funcPtrBlock << "    " << command.proto.signature << "(KHRONOS_APIENTRY * "<< prefix << protoName << ")(";
         if (command.params.size() == 0)
         {
             funcPtrBlock << "void"; // for strict ANSI-C compliance
@@ -127,7 +128,7 @@ void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
 
         /////////////// funcImplBlock ////////////////////
 
-        funcImplBlock << PREFIX << "_FORCE_INLINE " << command.proto.signature << " gl" << &command.proto.name[2] << "(";
+        funcImplBlock << PREFIX << "_FORCE_INLINE " << command.proto.signature << " " << prefix << protoName << "(";
         if (command.params.size() == 0)
         {
             funcImplBlock << "void"; // for strict ANSI-C compliance
@@ -150,7 +151,7 @@ void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
         {
             funcImplBlock << "return ";
         }
-        funcImplBlock << prefix << "GL." << prefix << &command.proto.name[2] << "(";
+        funcImplBlock << prefix << "GL." << prefix << protoName << "(";
         for (size_t j = 0; j < command.params.size(); ++j)
         {
             const GLBrebisData::Param &param = command.params[j];
@@ -158,6 +159,7 @@ void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
             funcImplBlock << param.name;
         }
         funcImplBlock << "); }" << std::endl;
+        funcImplBlock << "#define " << command.proto.name << " " << prefix << protoName << std::endl;
     }
 
     std::stringstream glesAddExtensionBlock;
@@ -180,7 +182,9 @@ void GLBrebisCodeGenerator::generateHeader(const std::string &inPrefix,
     for(size_t i = 0; i < uniqueCommands.size(); ++i)
     {
         const GLBrebisData::Command &command = uniqueCommands[i];
-        getProcBlock << "    " << prefix << "GL." << prefix << &command.proto.name[2] << " = (" << command.proto.signature << "(KHRONOS_APIENTRY *)(";
+        std::string protoName(&command.proto.name[2]);
+
+        getProcBlock << "    " << prefix << "GL." << prefix << protoName << " = (" << command.proto.signature << "(KHRONOS_APIENTRY *)(";
         if (command.params.size() == 0)
         {
             getProcBlock << "void"; // for strict ANSI-C compliance
